@@ -16,6 +16,12 @@ class Usuario extends BaseModel
         'estado',
     ];
 
+    public function obtenerTodos(): array
+    {
+        return $this->orderBy('created_at', 'DESC')
+            ->findAll();
+    }
+    
     public function obtenerPorUsername($username)
     {
         return $this->where('username', $username)->first();
