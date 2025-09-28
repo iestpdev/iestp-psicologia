@@ -28,7 +28,7 @@
 
     <!-- Navigation -->
     <nav class="nav flex-column mt-2">
-        <a href="<?= base_url('/') ?>" class="nav-link active">
+        <a href="<?= base_url('/') ?>" class="nav-link">
             <ion-icon name="home-outline"></ion-icon>
             Home
         </a>
