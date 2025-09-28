@@ -168,6 +168,17 @@ CREATE TABLE diagnosticos(
 	FOREIGN KEY (cita_id) REFERENCES citas(id)
 )ENGINE=INNODB;
 
+CREATE TABLE administradores(
+	id						BIGINT AUTO_INCREMENT PRIMARY KEY,
+	nombres				VARCHAR(70) NOT NULL,
+	apellidos			VARCHAR(70) NOT NULL,
+	dni               CHAR(8) NOT NULL,
+   telefono          VARCHAR(9) NULL,
+   created_at			DATETIME NULL,
+	updated_at			DATETIME NULL,
+	deleted_at			DATETIME NULL
+)ENGINE=INNODB;
+
 CREATE TABLE usuarios(
 	id							BIGINT AUTO_INCREMENT PRIMARY KEY,
 	correo_institucional VARCHAR(50) NOT NULL,
@@ -175,11 +186,13 @@ CREATE TABLE usuarios(
    userpass 				TEXT NOT NULL,
    docente_id				BIGINT NULL,
    psicologo_id			BIGINT NULL,
+   administrador_id		BIGINT NULL,
    rol             		ENUM('ADMIN', 'PSICOLOGO','DOCENTE'),
    estado					BOOLEAN DEFAULT TRUE,
 	created_at				DATETIME NULL,
 	updated_at				DATETIME NULL,
 	deleted_at				DATETIME NULL,
 	FOREIGN KEY (docente_id) REFERENCES docentes(id),
-	FOREIGN KEY (psicologo_id) REFERENCES psicologos(id)							
+	FOREIGN KEY (psicologo_id) REFERENCES psicologos(id),
+	FOREIGN KEY (administrador_id) REFERENCES administradores(id)			
 )ENGINE=INNODB;

@@ -2,5 +2,6 @@
 
 $routes->get('/usuarios', 'UsuarioController::index');
 
-
-$routes->get('/api/usuarios', 'UsuarioController::getUsuarios');
+$routes->group('api', function($routes) {
+    $routes->get('usuarios', 'DataTableController::getUsuarios');
+});

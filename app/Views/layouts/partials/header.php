@@ -13,6 +13,7 @@
     <!-- custom styles -->
     <link rel="stylesheet" href="/css/common.css">
     <link rel="stylesheet" href="/css/sidebar.css">
+    <link rel="stylesheet" href="/css/tabla.css">
     <title>IESTP Psicología</title>
 </head>
 <body>
