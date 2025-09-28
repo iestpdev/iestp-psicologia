@@ -7,6 +7,12 @@
     flex: 1;
     padding: 20px;
     transition: margin-right 0.3s;
+    margin-right: 0; /* por defecto ocupa todo */
+}
+
+/* Cuando el sidebar está abierto */
+.main-content.with-sidebar {
+    margin-right: 300px; /* mismo ancho del sidebar */
 }
 
 .sidebar {
@@ -20,8 +26,10 @@
     transition: transform 0.3s;
     box-shadow: -5px 0 15px rgba(0, 0, 0, 0.05);
     overflow-y: auto;
+    z-index: 1000; /* siempre encima */
 }
 
+/* Oculto */
 .sidebar.collapsed {
     transform: translateX(100%);
 }
@@ -30,7 +38,7 @@
     position: fixed;
     right: 310px;
     top: 20px;
-    z-index: 1000;
+    z-index: 1100; /* más arriba que el sidebar */
     transition: right 0.3s;
 }
 
@@ -63,9 +71,9 @@ ion-icon {
     margin-right: 0.5rem;
 }
 
-.icon{
-  min-width: 60px;
-  height: 60px;
+.icon {
+    min-width: 60px;
+    height: 60px;
 }
 
 .sidebar-header {
@@ -80,18 +88,14 @@ ion-icon {
     font-size: 0.75rem;
 }
 
-.user-status {
-    width: 10px;
-    height: 10px;
-    background: #10b981;
-    border-radius: 50%;
-    display: inline-block;
-    margin-right: 5px;
-}
 
 @media (max-width: 768px) {
     .sidebar {
         width: 100%;
+    }
+
+    .main-content.with-sidebar {
+        margin-right: 100%; /* si ocupa todo el ancho */
     }
 
     .toggle-btn {

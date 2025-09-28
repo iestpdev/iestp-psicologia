@@ -19,7 +19,6 @@
             <div>
                 <h6 class="mb-0">Dante Luque</h6>
                 <small class="text-muted">
-                    <span class="user-status"></span>
                     administrador
                 </small>
             </div>
