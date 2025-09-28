@@ -5,4 +5,11 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-$routes->get('/', 'Home::index');
+
+// rutas por módulos
+require APPPATH . 'Routes/AuthRoutes.php';
+require APPPATH . 'Routes/HomeRoutes.php';
+require APPPATH . 'Routes/UsuarioRoutes.php';
+require APPPATH . 'Routes/AlumnoRoutes.php';
+require APPPATH . 'Routes/DerivacionRoutes.php';
+require APPPATH . 'Routes/CitaRoutes.php';
