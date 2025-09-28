@@ -80,7 +80,7 @@ CREATE TABLE parientes(
 	FOREIGN KEY (parentesco_id) REFERENCES parentescos(id)
 )ENGINE=INNODB;
 
-CREATE TABLE alumno_pariente(
+CREATE TABLE familiares(
 	id						BIGINT AUTO_INCREMENT PRIMARY KEY,
 	alumno_id			BIGINT NOT NULL,
 	pariente_id			BIGINT NOT NULL,
