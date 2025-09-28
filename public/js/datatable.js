@@ -2,7 +2,7 @@
 $.extend(true, $.fn.dataTable.defaults, {
     processing: true,
     serverSide: true,
-    pageLength: 3,
+    pageLength: 5,
     lengthChange: false,
     ordering: false,
     language: {

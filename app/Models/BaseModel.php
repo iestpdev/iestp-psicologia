@@ -27,6 +27,10 @@ class BaseModel extends Model
 
         $builder->select($this->getVisibleFields());
 
+        if ($this->useSoftDeletes && !empty($this->deletedField)) {
+            $builder->where("{$this->table}.{$this->deletedField}", null);
+        }
+
         // Filtro de búsqueda global
         if (!empty($busqueda) && !empty($this->searchableFields)) {
             $builder->groupStart();

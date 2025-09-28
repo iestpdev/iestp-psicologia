@@ -115,7 +115,8 @@
             }
         ], {
             // extraOptions
-            dom: 'lrtip' // quitando el buscador default de DataTables
+            dom: 'lrtip', // quitando el buscador default de DataTables
+            responsive: true  
         });
 
         // Vinculando input search personalizado con DataTables

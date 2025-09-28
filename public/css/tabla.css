@@ -1,59 +1,58 @@
-/* Quitar borde superior e inferior de la tabla */
-#tablaUsuarios,
-#tablaUsuarios th,
-#tablaUsuarios td {
-    border-top: none !important;
-    border-bottom: none !important;
-}
+/* ======Estilos de la libreria Datatable====== */
 
-/* Mantener las líneas divisorias internas */
-#tablaUsuarios tbody tr {
-    border-bottom: 1px solid #e5e7eb; /* gris claro */
+/* Quitar borde superior e inferior de la tabla */
+.tabla #tablaUsuarios,
+.tabla #tablaUsuarios th,
+.tabla #tablaUsuarios td {
+    border-top: none;
+    border-bottom: none;
 }
 
 /* Contenedor de la paginación */
-.dataTables_wrapper .dataTables_paginate {
+.tabla .dataTables_wrapper .dataTables_paginate {
     margin-top: 15px;
-    text-align: center; /* a la derecha, cámbialo a center si lo prefieres */
+    text-align: center;
+    float: none;
 }
 
 /* Botones */
-.dataTables_wrapper .dataTables_paginate .paginate_button {
+.tabla .dataTables_wrapper .dataTables_paginate .paginate_button {
     display: inline-block;
     margin: 0 3px;
     padding: 5px 10px;
     border-radius: 6px;
-    background: #f3f4f6; /* gris claro */
-    color: #374151; /* gris oscuro */
+    background: var(--gray);
+    color: #374151; 
     font-size: 0.875rem;
     cursor: pointer;
     transition: all 0.2s ease;
-    border: 1px solid #d1d5db;
+    border: 1px solid var(--black2);
 }
 
 /* Hover */
-.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+.tabla .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
     background: var(--blue);
-    color: white !important;
+    color: var(--white);
     border-color: var(--blue);
 }
 
 /* Botón activo (página actual) */
-.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+.tabla .dataTables_wrapper .dataTables_paginate .paginate_button.current {
     background: var(--blue);
-    color: white !important;
+    color: var(--white) !important;
     border-color: var(--blue);
     font-weight: 600;
 }
 
-/* Botón deshabilitado (prev/next cuando no aplica) */
-.dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
-    background: #e5e7eb !important;
-    color: #9ca3af !important;
+/* Botón deshabilitado */
+.tabla .dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
+    background: #e5e7eb;
+    color: var(--black2);
     cursor: not-allowed;
-    border: 1px solid #d1d5db;
+    border: 1px solid var(--black2);
 }
 
+/* ======Estilos personalizados del contenedor de tabla====== */
 .tabla {
     position: relative;
     display: grid;
