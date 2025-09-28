@@ -81,9 +81,9 @@ CREATE TABLE parientes(
 )ENGINE=INNODB;
 
 CREATE TABLE alumno_pariente(
+	id						BIGINT AUTO_INCREMENT PRIMARY KEY,
 	alumno_id			BIGINT NOT NULL,
 	pariente_id			BIGINT NOT NULL,
-	PRIMARY KEY(alumno_id, pariente_id),
 	created_at			DATETIME NULL,
 	updated_at			DATETIME NULL,
 	deleted_at			DATETIME NULL,
@@ -175,7 +175,7 @@ CREATE TABLE usuarios(
    userpass 				TEXT NOT NULL,
    docente_id				BIGINT NULL,
    psicologo_id			BIGINT NULL,
-   es_admin					BOOLEAN DEFAULT FALSE,
+   rol             		ENUM('ADMIN', 'PSICOLOGO','DOCENTE'),
    estado					BOOLEAN DEFAULT TRUE,
 	created_at				DATETIME NULL,
 	updated_at				DATETIME NULL,
