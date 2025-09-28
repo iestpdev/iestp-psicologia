@@ -19,4 +19,38 @@
     </tbody>
 </table>
 
+<?= $this->include('shared/table/datatable_init') ?>
+<script>
+    $(document).ready(function() {
+        initDataTable('#tablaUsuarios', "<?= base_url('api/usuarios') ?>", [{
+                data: "id"
+            },
+            {
+                data: "correo_institucional"
+            },
+            {
+                data: "username"
+            },
+            {
+                data: "rol"
+            },
+            {
+                data: "created_at"
+            },
+            {
+                data: "estado"
+            },
+            {
+                data: null,
+                render: function(data, type, row) {
+                    return `
+                    <button class="btn btn-sm btn-warning">Editar</button>
+                    <button class="btn btn-sm btn-danger">Eliminar</button>
+                `;
+                }
+            }
+        ]);
+    });
+</script>
+
 <?= $this->endSection() ?>
