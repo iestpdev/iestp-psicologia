@@ -4,23 +4,19 @@
 <div class="tabla">
     <div class="TableHeader">
         <h2>USUARIOS</h2>
-        <div class="searchInput">
-            <label>
-                <input
-                    type="text"
-                    id="customSearch"
-                    placeholder="Buscar..." />
-                <ion-icon name="search-outline"></ion-icon>
-            </label>
-        </div>
+
+        <?= view('shared/inputs/searchInput', [
+            'id' => 'searchUsuarios',
+            'placeholder' => 'DNI, nombres o apellidos'
+        ]) ?>
 
         <div>
-            <a href="<?= base_url('usuarios/create') ?>" class="btn btn-primary">
+            <a href="<?= base_url('usuarios/crear') ?>" class="btn btn-primary">
                 Agregar
             </a>
         </div>
     </div>
-    <table id="tablaUsuarios">
+    <table id="datatable">
         <thead>
             <tr>
                 <th>N°</th>
@@ -43,7 +39,7 @@
 <?= $this->include('shared/table/datatable_init') ?>
 <script>
     $(document).ready(function() {
-        const table = initDataTable('#tablaUsuarios', "<?= base_url('api/usuarios') ?>", [{
+        const table = initDataTable('#datatable', "<?= base_url('api/usuarios') ?>", [{
                 data: null,
                 render: function(data, type, row) {
                     if (row.rol === 'DOCENTE') {
@@ -116,13 +112,11 @@
         ], {
             // extraOptions
             dom: 'lrtip', // quitando el buscador default de DataTables
-            responsive: true  
+            responsive: true
         });
 
         // Vinculando input search personalizado con DataTables
-        $('#customSearch').on('keyup', function() {
-            table.search(this.value).draw();
-        });
+        attachSearchInput(table, 'searchUsuarios');
     });
 </script>
 

@@ -16,3 +16,10 @@
   --black1: #222;
   --black2: #999;
 }
+
+/* ===== master ===== */
+.contenedor {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+}

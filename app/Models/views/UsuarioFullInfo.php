@@ -36,22 +36,16 @@ class UsuarioFullInfo extends BaseModel
     ];
 
     protected array $searchableFields = [
-        'correo_institucional',
-        'username',
-
         'docente_nombres',
         'docente_apellidos',
         'docente_dni',
-        'docente_telefono',
 
         'psicologo_nombres',
         'psicologo_apellidos',
         'psicologo_dni',
-        'psicologo_telefono',
 
         'administrador_nombres',
         'administrador_apellidos',
         'administrador_dni',
-        'administrador_telefono',
     ];
 }

@@ -1,9 +1,9 @@
 /* ======Estilos de la libreria Datatable====== */
 
 /* Quitar borde superior e inferior de la tabla */
-.tabla #tablaUsuarios,
-.tabla #tablaUsuarios th,
-.tabla #tablaUsuarios td {
+.tabla #datatable,
+.tabla #datatable th,
+.tabla #datatable td {
     border-top: none;
     border-bottom: none;
 }
@@ -54,21 +54,24 @@
 
 /* ======Estilos personalizados del contenedor de tabla====== */
 .tabla {
-    position: relative;
-    display: grid;
+    width: 100%;
     background: var(--white);
     padding: 20px;
     box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
     border-radius: 20px;
     overflow-x: auto;
 }
+.tabla table {
+    width: 100% !important;
+    border-collapse: collapse;
+}
 
 .TableHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 15px;
 }
-
 .TableHeader h2 {
     font-weight: 600;
     color: var(--blue);

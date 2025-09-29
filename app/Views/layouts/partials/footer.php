@@ -9,14 +9,8 @@
 </script>
 
 <!-- custom scripts-->
-<script>
-    function toggleSidebar() {
-        const sidebar = document.getElementById('sidebar');
-        const toggleBtn = document.querySelector('.toggle-btn');
-        sidebar.classList.toggle('collapsed');
-        toggleBtn.classList.toggle('collapsed');
-    }
-</script>
+<script src="<?= base_url('js/partials/sidebar.js') ?>"></script>
+
 </body>
 
 </html>

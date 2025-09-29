@@ -11,3 +11,4 @@
 
 <!-- Tu JS personalizado -->
 <script src="<?= base_url('js/datatable.js') ?>"></script>
+<script src="<?= base_url('js/inputs/searchInput.js') ?>"></script>
