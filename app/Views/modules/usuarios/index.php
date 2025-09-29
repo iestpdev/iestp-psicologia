@@ -99,12 +99,14 @@
                 }
             },
             {
-                data: null,
+                data: "id",
                 orderable: false,
                 searchable: false,
-                render: function() {
+                render: function(data) {
                     return `
-                        <button class="btn btn-sm btn-warning">Editar</button>
+                        <a id="editar-${data}" href="<?= base_url('usuarios/editar/') ?>${data}" class="btn btn-sm btn-warning">
+                        Editar
+                        </a>
                         <button class="btn btn-sm btn-danger">Eliminar</button>
                     `;
                 }

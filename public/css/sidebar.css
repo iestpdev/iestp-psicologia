@@ -111,6 +111,7 @@
 }
 
 .brand {
+    position: relative;
     margin-bottom: 40px;
     margin-left: -5px;
     pointer-events: none;
@@ -123,4 +124,21 @@
 .brand a .icon {
     height: 45px;
     font-size: 2rem;
+}
+
+.cerrar-sidebar {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    font-size: 1.8rem;
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    background: transparent;
+    border: none;
+    display: none;
 }

@@ -5,6 +5,10 @@
         <span class="icon"><img src="<?= base_url('assets/images/logo.png') ?>" class="icon" alt="Logo"></span>
         <span class="title">I.E.S.T.P "CHINCHA"</span>
       </a>
+      <!-- Botón de cerrar FUERA del <a> -->
+      <button class="cerrar-sidebar" type="button" onclick="cerrarSidebar(); event.stopPropagation();">
+        <ion-icon name="menu-outline"></ion-icon>
+      </button>
     </li>
 
     <li>

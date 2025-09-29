@@ -8,4 +8,14 @@ class UsuarioController extends BaseController
     {
         return view('modules/usuarios/index');
     }
+
+    public function crear(): string
+    {
+        return view('modules/usuarios/crear');
+    }
+
+    public function editar($usuarioId): string
+    {
+        return view('modules/usuarios/editar');
+    }
 }
