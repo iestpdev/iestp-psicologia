@@ -2,31 +2,46 @@
 
 namespace App\Controllers;
 
-use App\Models\Views\UsuarioFullInfo;
+use CodeIgniter\Controller;
 
 class DataTableController extends BaseController
 {
-    public function getUsuarios()
+    public function getData($modelName)
     {
         $request = service('request');
 
-        $inicio   = (int) $request->getGet('start');            // desde qué registro
-        $cantidad = (int) $request->getGet('length');           // cuántos registros mostrar
-        $busqueda = $request->getGet('search')['value'] ?? '';  // texto buscado
-        $peticion = $request->getGet('draw');                   // número de petición (DataTables)
+        $inicio   = (int) $request->getGet('start');
+        $cantidad = (int) $request->getGet('length');
+        $busqueda = $request->getGet('search')['value'] ?? '';
+        $peticion = $request->getGet('draw');
 
-        $usuarioModel = new UsuarioFullInfo();
+        // construyendo el namespace completo del modelo
+        $modelClass = "App\\Models\\Views\\" . $modelName;
 
-        $usuarios = $usuarioModel->getDatatables($inicio, $cantidad, $busqueda);
+        if (!class_exists($modelClass)) {
+            return $this->response->setJSON([
+                "error" => "Modelo {$modelName} no encontrado"
+            ]);
+        }
 
-        $totalRegistros     = $usuarioModel->countAll();
-        $registrosFiltrados = $usuarioModel->countFiltered($busqueda);
+        $model = new $modelClass();
+
+        if (
+            !method_exists($model, 'getDatatables') ||
+            !method_exists($model, 'countFiltered')
+        ) {
+            return $this->response->setJSON([
+                "error" => "El modelo {$modelName} no implementa los métodos requeridos"
+            ]);
+        }
+
+        $data = $model->getDatatables($inicio, $cantidad, $busqueda);
 
         return $this->response->setJSON([
             "draw" => intval($peticion),
-            "recordsTotal" => $totalRegistros,
-            "recordsFiltered" => $registrosFiltrados,
-            "data" => $usuarios
+            "recordsTotal" => $model->countAll(),
+            "recordsFiltered" => $model->countFiltered($busqueda),
+            "data" => $data
         ]);
     }
 }

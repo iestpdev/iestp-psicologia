@@ -39,7 +39,7 @@
 <?= $this->include('shared/table/datatable') ?>
 <script>
     $(document).ready(function() {
-        const table = initDataTable('#datatable', "<?= base_url('api/usuarios') ?>", [{
+        const table = initDataTable('#datatable', "<?= base_url('datatable/UsuarioFullInfo') ?>", [{
                 data: null,
                 render: function(data, type, row) {
                     if (row.rol === 'DOCENTE') {
