@@ -19,6 +19,7 @@ class UsuarioFullInfo extends BaseModel
         'updated_at',
         'deleted_at',
 
+        'persona_id',
         'nombres',
         'apellidos',
         'dni',
