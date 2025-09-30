@@ -21,4 +21,9 @@ class Alumno extends BaseModel
         'religion_id',
         'estado_civil_id',
     ];
+
+    public function crear(array $data): int
+    {
+        return $this->insert($data, true);
+    }
 }

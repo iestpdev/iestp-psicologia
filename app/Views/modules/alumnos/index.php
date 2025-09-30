@@ -39,24 +39,29 @@
 <?= $this->include('shared/table/datatable') ?>
 <script>
     $(document).ready(function() {
-        const table = initDataTable("<?= base_url('api/datatable/AlumnoFullInfo') ?>", [
-            {
+        const table = initDataTable("<?= base_url('api/datatable/AlumnoFullInfo') ?>", [{
                 data: "dni"
             },
             {
                 data: null,
                 render: function(data, type, row) {
-                     return row.nombres + ' ' + row.apellidos;
+                    return row.nombres + ' ' + row.apellidos;
                 }
             },
             {
                 data: "programa_estudio"
             },
             {
-                data: "ciclo"
+                data: "ciclo",
+                render: function(data) {
+                    return getCicloText(data);
+                }
             },
             {
-                data: "turno"
+                data: "turno",
+                render: function(data) {
+                    return getTurnoText(data);
+                }
             },
             {
                 data: "id",

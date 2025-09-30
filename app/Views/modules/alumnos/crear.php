@@ -58,10 +58,10 @@
                     Programa de estudio <span class="required-mark">*</span>
                   </label>
                   <select name="programa_estudio" class="form-control-custom" required>
-                    <option value="">Seleccione un programa</option>
-                    <option value="ING_SISTEMAS">Ingeniería de Sistemas</option>
-                    <option value="ADMIN_EMPRESAS">Administración de Empresas</option>
-                    <option value="PSICOLOGIA">Psicología</option>
+                    <option value="">-- Seleccione un programa--</option>
+                    <?php foreach ($programas_estudios as $programas): ?>
+                      <option value="<?= $programas['id'] ?>"><?= esc($programas['nombre']) ?></option>
+                    <?php endforeach; ?>
                   </select>
                 </div>
               </div>
@@ -89,8 +89,8 @@
                     Turno <span class="required-mark">*</span>
                   </label>
                   <div>
-                    <label><input type="radio" name="turno" value="Mañana" required> Mañana</label>
-                    <label><input type="radio" name="turno" value="Tarde" required> Tarde</label>
+                    <label><input type="radio" name="turno" value="M" required> Mañana</label>
+                    <label><input type="radio" name="turno" value="T" required> Tarde</label>
                   </div>
                 </div>
               </div>
@@ -125,8 +125,8 @@
                     Sexo <span class="required-mark">*</span>
                   </label>
                   <div>
-                    <label><input type="radio" name="sexo" value="Masculino" required> Masculino</label>
-                    <label><input type="radio" name="sexo" value="Femenino" required> Femenino</label>
+                    <label><input type="radio" name="sexo" value="M" required> Masculino</label>
+                    <label><input type="radio" name="sexo" value="F" required> Femenino</label>
                   </div>
                 </div>
               </div>
@@ -163,10 +163,10 @@
                     Religión <span class="required-mark">*</span>
                   </label>
                   <select name="religion" class="form-control-custom" required>
-                    <option value="">Seleccione una religión</option>
-                    <option value="CATOLICA">Católica</option>
-                    <option value="EVANGELICA">Evangélica</option>
-                    <option value="NINGUNA">Ninguna</option>
+                    <option value="">-- Seleccione una religión--</option>
+                    <?php foreach ($religiones as $religion): ?>
+                      <option value="<?= $religion['id'] ?>"><?= esc($religion['nombre']) ?></option>
+                    <?php endforeach; ?>
                   </select>
                 </div>
               </div>
@@ -178,11 +178,10 @@
                     Estado civil <span class="required-mark">*</span>
                   </label>
                   <select name="estado_civil" class="form-control-custom" required>
-                    <option value="">Seleccione estado civil</option>
-                    <option value="SOLTERO">Soltero(a)</option>
-                    <option value="CASADO">Casado(a)</option>
-                    <option value="DIVORCIADO">Divorciado(a)</option>
-                    <option value="VIUDO">Viudo(a)</option>
+                    <option value="">-- Seleccione un estado civil--</option>
+                    <?php foreach ($estados_civiles as $estado_civil): ?>
+                      <option value="<?= $estado_civil['id'] ?>"><?= esc($estado_civil['nombre']) ?></option>
+                    <?php endforeach; ?>
                   </select>
                 </div>
               </div>
