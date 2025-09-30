@@ -10,5 +10,5 @@
 <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 
 <!-- Tu JS personalizado -->
-<script src="<?= base_url('js/datatable.js') ?>"></script>
-<script src="<?= base_url('js/inputs/searchInput.js') ?>"></script>
+<script src="<?= base_url('js/shared/table/datatable.js') ?>"></script>
+<script src="<?= base_url('js/shared/inputs/searchInput.js') ?>"></script>

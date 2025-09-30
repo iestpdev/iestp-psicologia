@@ -9,7 +9,7 @@
 </script>
 
 <!-- custom scripts-->
-<script src="<?= base_url('js/partials/sidebar.js') ?>"></script>
+<script src="<?= base_url('js/layouts/partials/sidebar.js') ?>"></script>
 
 </body>
 

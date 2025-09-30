@@ -10,4 +10,5 @@ $routes->group('usuarios', function ($routes) {
 
 $routes->group('api', function ($routes) {
     $routes->get('usuarios', 'DataTableController::getUsuarios');
+    $routes->get('usuarios/add', 'DataTableController::saveUsuario');
 });

@@ -27,6 +27,7 @@
 .navegacion li {
     border-top-left-radius: 30px;
     border-bottom-left-radius: 30px;
+    margin-left: 15px;
 }
 
 .navegacion li a {
@@ -56,7 +57,7 @@
 
 /* Pseudoelementos para la curva */
 .navegacion ul li:hover a::before,
-.navegacion ul li.hovered a::before {
+.navegacion ul li.hovered a::before { /* curva superior derecha*/
     content: "";
     position: absolute;
     right: 0;
@@ -70,7 +71,7 @@
 }
 
 .navegacion ul li:hover a::after,
-.navegacion ul li.hovered a::after {
+.navegacion ul li.hovered a::after { /* curva inferior derecha*/
     content: "";
     position: absolute;
     right: 0;
@@ -84,20 +85,16 @@
 }
 
 .navegacion .icon {
-    min-width: 60px;
-    margin-right: 5px;
-    text-align: center;
+    min-width: 45px;
+    height: 45px;
+    font-size: 1.5rem;
+    text-align: left;
+    margin-top: -5px;
 }
 
 .navegacion .icon ion-icon {
     font-size: 1.75rem;
     margin-right: 0.5rem;
-}
-
-.navegacion .icon {
-    min-width: 45px;
-    height: 45px;
-    font-size: 1.5rem;
 }
 
 .navegacion ul li a .title {
@@ -123,6 +120,7 @@
 
 .brand a .icon {
     height: 45px;
+    margin-left: -7px;
     font-size: 2rem;
 }
 

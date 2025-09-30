@@ -18,4 +18,10 @@ class UsuarioController extends BaseController
     {
         return view('modules/usuarios/editar');
     }
+
+    public function saveUsuario()
+    {
+        // Lógica para guardar el usuario
+        return redirect()->to(base_url('usuarios'));
+    }
 }
