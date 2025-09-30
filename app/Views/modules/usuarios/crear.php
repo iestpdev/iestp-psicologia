@@ -1,6 +1,9 @@
 <?= $this->extend('layouts/master') ?>
 <?= $this->section('content') ?>
 
+<?= $this->include('messages/msg-success') ?>
+<?= $this->include('messages/msg-error') ?>
+
 <div class="form-container">
     <div class="container">
         <div class="row justify-content-center">

@@ -17,6 +17,10 @@ if (!function_exists('runValidation')) {
             case 'usuario_create':
                 $validationClass = new \App\Validations\Usuarios\UsuarioCreate();
                 break;
+            //personas
+            case 'persona_create':
+                $validationClass = new \App\Validations\Personas\PersonaCreate();
+                break;
             default:
                 throw new \Exception("No hay validación definida para la entidad: {$entity}");
         }

@@ -19,33 +19,15 @@ class UsuarioFullInfo extends BaseModel
         'updated_at',
         'deleted_at',
 
-        'docente_nombres',
-        'docente_apellidos',
-        'docente_dni',
-        'docente_telefono',
-
-        'psicologo_nombres',
-        'psicologo_apellidos',
-        'psicologo_dni',
-        'psicologo_telefono',
-
-        'administrador_nombres',
-        'administrador_apellidos',
-        'administrador_dni',
-        'administrador_telefono',
+        'nombres',
+        'apellidos',
+        'dni',
+        'telefono',
     ];
 
     protected array $searchableFields = [
-        'docente_nombres',
-        'docente_apellidos',
-        'docente_dni',
-
-        'psicologo_nombres',
-        'psicologo_apellidos',
-        'psicologo_dni',
-
-        'administrador_nombres',
-        'administrador_apellidos',
-        'administrador_dni',
+        'nombres',
+        'apellidos',
+        'dni',
     ];
 }

@@ -1,2 +1,2 @@
 <?php
-$routes->get('datatable/(:segment)', 'DataTableController::getData/$1');
+$routes->get('api/datatable/(:segment)', 'DataTableController::getData/$1');

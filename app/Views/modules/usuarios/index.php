@@ -1,6 +1,9 @@
 <?= $this->extend('layouts/master') ?>
 <?= $this->section('content') ?>
 
+<?= $this->include('messages/msg-success') ?>
+<?= $this->include('messages/msg-error') ?>
+
 <div class="tabla">
     <div class="TableHeader">
         <h2>USUARIOS</h2>
@@ -39,30 +42,14 @@
 <?= $this->include('shared/table/datatable') ?>
 <script>
     $(document).ready(function() {
-        const table = initDataTable('#datatable', "<?= base_url('datatable/UsuarioFullInfo') ?>", [{
-                data: null,
-                render: function(data, type, row) {
-                    if (row.rol === 'DOCENTE') {
-                        return row.docente_dni ?? '-';
-                    } else if (row.rol === 'PSICOLOGO') {
-                        return row.psicologo_dni ?? '-';
-                    } else if (row.rol === 'ADMIN') {
-                        return row.administrador_dni ?? '-';
-                    }
-                    return '-';
-                }
+        const table = initDataTable('#datatable', "<?= base_url('api/datatable/UsuarioFullInfo') ?>", [
+            {
+                data: "dni"
             },
             {
                 data: null,
                 render: function(data, type, row) {
-                    if (row.rol === 'DOCENTE') {
-                        return row.docente_nombres + ' ' + row.docente_apellidos;
-                    } else if (row.rol === 'PSICOLOGO') {
-                        return row.psicologo_nombres + ' ' + row.psicologo_apellidos;
-                    } else if (row.rol === 'ADMIN') {
-                        return row.administrador_nombres + ' ' + row.administrador_apellidos;
-                    }
-                    return '-';
+                     return row.nombres + ' ' + row.apellidos;
                 }
             },
             {
@@ -72,17 +59,7 @@
                 data: "username"
             },
             {
-                data: null,
-                render: function(data, type, row) {
-                    if (row.rol === 'DOCENTE') {
-                        return row.docente_telefono ?? '-';
-                    } else if (row.rol === 'PSICOLOGO') {
-                        return row.psicologo_telefono ?? '-';
-                    } else if (row.rol === 'ADMIN') {
-                        return row.administrador_telefono ?? '-';
-                    }
-                    return '-';
-                }
+                data: "telefono"
             },
             {
                 data: "rol"

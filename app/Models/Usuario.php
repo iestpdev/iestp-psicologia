@@ -10,9 +10,7 @@ class Usuario extends BaseModel
         'correo_institucional',
         'username',
         'userpass',
-        'docente_id',
-        'psicologo_id',
-        'administrador_id',
+        'persona_id',
         'rol',
         'estado',
     ];

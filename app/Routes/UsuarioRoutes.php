@@ -7,7 +7,6 @@ $routes->group('usuarios', function ($routes) {
 });
 
 
-
 $routes->group('api', function ($routes) {
-    $routes->get('usuarios/add', 'DataTableController::saveUsuario');
+    $routes->post('usuarios/add', 'UsuarioController::saveUsuario');
 });

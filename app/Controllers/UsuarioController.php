@@ -2,6 +2,9 @@
 
 namespace App\Controllers;
 
+use App\Models\Persona;
+use App\Models\Usuario;
+
 class UsuarioController extends BaseController
 {
     public function index(): string
@@ -21,7 +24,41 @@ class UsuarioController extends BaseController
 
     public function saveUsuario()
     {
-        // Lógica para guardar el usuario
-        return redirect()->to(base_url('usuarios'));
+        helper('validation');
+        $errors = [];
+        $errors = array_merge($errors, runValidation('persona_create', $this->request));
+        $errors = array_merge($errors, runValidation('usuario_create', $this->request));
+
+        if (!empty($errors)) return redirect()->to('/usuarios/crear')->withInput()->with('errors', $errors);
+
+        $db = \Config\Database::connect();
+        $db->transBegin();
+        try {
+            $personaModel = new Persona();
+            $personaId = $personaModel->crear([
+                'nombres'   => $this->request->getPost('nombres'),
+                'apellidos' => $this->request->getPost('apellidos'),
+                'dni'       => $this->request->getPost('dni'),
+                'telefono'  => $this->request->getPost('telefono'),
+            ]);
+            if (!$personaId) throw new \Exception("Error al crear Persona");
+
+            $usuarioModel = new Usuario();
+            $usuarioId = $usuarioModel->crear([
+                'correo_institucional' => $this->request->getPost('correo'),
+                'username'             => $this->request->getPost('username'),
+                'userpass'             => $this->request->getPost('userpass'),
+                'persona_id'           => $personaId,
+                'rol'                  => $this->request->getPost('rol'),
+                'estado'               => true,
+            ]);
+            if (!$usuarioId) throw new \Exception("Error al crear Usuario");
+
+            $db->transCommit();
+            return redirect()->to('/usuarios')->with('success', 'Usuario registrado con éxito');
+        } catch (\Throwable $e) {
+            $db->transRollback();
+            return redirect()->back()->withInput()->with('error', 'Hubo un error: ' . $e->getMessage());
+        }
     }
 }

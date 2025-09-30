@@ -2,18 +2,16 @@
 
 namespace App\Controllers;
 
-use CodeIgniter\Controller;
-
 class DataTableController extends BaseController
 {
     public function getData($modelName)
     {
         $request = service('request');
 
-        $inicio   = (int) $request->getGet('start');
-        $cantidad = (int) $request->getGet('length');
-        $busqueda = $request->getGet('search')['value'] ?? '';
-        $peticion = $request->getGet('draw');
+        $inicio   = (int) $request->getGet('start');            // desde qué registro
+        $cantidad = (int) $request->getGet('length');           // cuántos registros mostrar
+        $busqueda = $request->getGet('search')['value'] ?? '';  // texto buscado
+        $peticion = $request->getGet('draw');                   // número de petición (DataTables)
 
         // construyendo el namespace completo del modelo
         $modelClass = "App\\Models\\Views\\" . $modelName;
