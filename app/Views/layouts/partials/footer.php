@@ -10,7 +10,7 @@
 
 <!-- custom scripts-->
 <script src="<?= base_url('js/layouts/partials/sidebar.js') ?>"></script>
-
+<script src="<?= base_url('js/utils.js') ?>"></script>
 </body>
 
 </html>

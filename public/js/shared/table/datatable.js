@@ -2,7 +2,7 @@
 $.extend(true, $.fn.dataTable.defaults, {
     processing: true,
     serverSide: true,
-    pageLength: 5,
+    pageLength: 10,
     lengthChange: false,
     ordering: false,
     language: {
@@ -18,7 +18,7 @@ $.extend(true, $.fn.dataTable.defaults, {
  * @param {Array} columns - Columnas DataTables (sin el índice, se agrega solo)
  * @param {Object} extraOptions - Opciones adicionales de DataTables (opcional)
  */
-function initDataTable(selector, ajaxUrl, columns, extraOptions = {}) {
+function initDataTable(ajaxUrl, columns, extraOptions = {}) {
     // Siempre agregamos la columna de índice inverso al inicio
     columns.unshift({
         data: null,
@@ -30,7 +30,7 @@ function initDataTable(selector, ajaxUrl, columns, extraOptions = {}) {
         }
     });
 
-    return $(selector).DataTable($.extend(true, {
+    return $('#datatable').DataTable($.extend(true, {
         ajax: {
             url: ajaxUrl,
             type: "GET"
