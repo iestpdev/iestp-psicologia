@@ -39,7 +39,7 @@
 <?= $this->include('shared/table/datatable') ?>
 <script>
     $(document).ready(function() {
-        const table = initDataTable('#datatable', "<?= base_url('api/datatable/AlumnoFullInfo') ?>", [
+        const table = initDataTable("<?= base_url('api/datatable/AlumnoFullInfo') ?>", [
             {
                 data: "dni"
             },
