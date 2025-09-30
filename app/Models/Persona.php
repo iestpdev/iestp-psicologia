@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-class Docente extends BaseModel
+class Persona extends BaseModel
 {
-    protected $table      = 'psicologos';
+    protected $table      = 'personas';
     protected $primaryKey = 'id';
     protected $allowedFields = [
         'nombres',
@@ -12,4 +12,9 @@ class Docente extends BaseModel
         'dni',
         'telefono',
     ];
+
+    public function crear(array $data): int
+    {
+        return $this->insert($data, true);
+    }
 }

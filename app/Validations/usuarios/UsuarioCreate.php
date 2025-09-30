@@ -5,20 +5,18 @@ namespace App\Validations\Usuarios;
 class UsuarioCreate
 {
     public array $rules = [
-        'nombres'    => 'required|min_length[2]',
-        'apellidos'  => 'required|min_length[2]',
-        'username'   => 'required|is_unique_soft[usuarios.username]|min_length[4]|max_length[70]',
-        'userpass'   => 'required|regex_match[/^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/]',
+        'correo' => 'required|valid_email|regex_match[/^[\w\.-]+@iestpchincha\.edu\.pe$/]|is_unique_soft[usuarios.correo_institucional]',
+        'username' => 'required|is_unique_soft[usuarios.username]|min_length[4]|max_length[70]',
+        'password' => 'required|regex_match[/^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/]',
+        'rol' => 'required|in_list[ADMIN,PSICOLOGO,DOCENTE]',
     ];
 
     public array $errors = [
-        'nombres' => [
-            'required' => 'El nombre es obligatorio',
-            'min_length' => 'El nombre debe tener mínimo 2 caracteres',
-        ],
-        'apellidos' => [
-            'required' => 'El apellido es obligatorio',
-            'min_length' => 'El apellido debe tener mínimo 2 caracteres',
+        'correo' => [
+            'required' => 'Debe ingresar el correo institucional',
+            'valid_email' => 'El correo no es válido',
+            'regex_match' => 'El correo debe ser del dominio @iestpchincha.edu.pe',
+            'is_unique_soft' => 'Este correo ya está registrado',
         ],
         'username' => [
             'required' => 'El usuario es obligatorio',
@@ -26,9 +24,13 @@ class UsuarioCreate
             'min_length' => 'El usuario debe tener mínimo 4 caracteres',
             'max_length' => 'El usuario no puede superar 70 caracteres',
         ],
-        'userpass' => [
+        'password' => [
             'required' => 'Debe ingresar una contraseña',
             'regex_match' => 'La contraseña debe tener al menos una mayúscula, un número y un carácter especial',
+        ],
+        'rol' => [
+            'required' => 'Debe seleccionar un rol',
+            'in_list' => 'El rol seleccionado no es válido',
         ],
     ];
 }

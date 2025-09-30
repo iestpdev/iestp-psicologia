@@ -13,6 +13,17 @@
     <!-- custom styles -->
     <link rel="stylesheet" href="/css/common.css">
     <link rel="stylesheet" href="/css/sidebar.css">
+    <link rel="stylesheet" href="/css/master.css">
+    <link rel="stylesheet" href="/css/topbar.css">
+
+    <!-- custom styles - shared -->
+    <link rel="stylesheet" href="/css/shared/tabla/tabla.css">
+    <link rel="stylesheet" href="/css/shared/inputs/searchInput.css">
+    <link rel="stylesheet" href="/css/shared/buttons/submitButton.css">
+    <link rel="stylesheet" href="/css/shared/forms/formHeader.css">
+    <link rel="stylesheet" href="/css/shared/forms/formContainer.css">
+    
+    <link rel="stylesheet" href="/css/responsive.css">
     <title>IESTP Psicología</title>
 </head>
 <body>

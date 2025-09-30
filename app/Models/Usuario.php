@@ -10,74 +10,10 @@ class Usuario extends BaseModel
         'correo_institucional',
         'username',
         'userpass',
-        'docente_id',
-        'psicologo_id',
+        'persona_id',
         'rol',
         'estado',
     ];
-
-    protected $columnOrder = [
-        'id',
-        'correo_institucional',
-        'username',
-        'rol',
-        'created_at',
-        'estado'
-    ];
-
-    public function getDatatables($start, $length, $searchValue, $orderColumn, $orderDir)
-    {
-        $builder = $this->db->table($this->table);
-
-        // Seleccionamos los campos
-        $builder->select('*');
-
-        // Filtro de búsqueda global
-        if (!empty($searchValue)) {
-            $builder->groupStart()
-                ->like('correo_institucional', $searchValue)
-                ->orLike('username', $searchValue)
-                ->orLike('rol', $searchValue)
-                ->groupEnd();
-        }
-
-        // Ordenamiento
-        if (isset($this->columnOrder[$orderColumn])) {
-            $builder->orderBy($this->columnOrder[$orderColumn], $orderDir);
-        } else {
-            $builder->orderBy('id', 'DESC'); // default
-        }
-
-        // Paginación
-        if ($length != -1) {
-            $builder->limit($length, $start);
-        }
-
-        $query = $builder->get();
-        return $query->getResultArray();
-    }
-
-    public function countAll()
-    {
-        return $this->db->table($this->table)->countAllResults();
-    }
-
-    public function countFiltered($searchValue)
-    {
-        $builder = $this->db->table($this->table);
-        $builder->select('COUNT(*) as total');
-
-        if (!empty($searchValue)) {
-            $builder->groupStart()
-                ->like('correo_institucional', $searchValue)
-                ->orLike('username', $searchValue)
-                ->orLike('rol', $searchValue)
-                ->groupEnd();
-        }
-
-        return $builder->get()->getRow()->total;
-    }
-
 
     public function obtenerPorUsername($username)
     {

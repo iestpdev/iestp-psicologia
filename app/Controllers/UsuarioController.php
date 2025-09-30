@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\Persona;
 use App\Models\Usuario;
 
 class UsuarioController extends BaseController
@@ -11,29 +12,53 @@ class UsuarioController extends BaseController
         return view('modules/usuarios/index');
     }
 
-    public function getUsuarios()
+    public function crear(): string
     {
-        $request = service('request');
+        return view('modules/usuarios/crear');
+    }
 
-        $start  = $request->getGet('start');
-        $length = $request->getGet('length');
-        $search = $request->getGet('search')['value'];
-        $orderColumn = $request->getGet('order')[0]['column'];
-        $orderDir    = $request->getGet('order')[0]['dir'];
-        $draw        = $request->getGet('draw');
+    public function editar($usuarioId): string
+    {
+        return view('modules/usuarios/editar');
+    }
 
-        $usuarioModel = new \App\Models\Usuario();
+    public function saveUsuario()
+    {
+        helper('validation');
+        $errors = [];
+        $errors = array_merge($errors, runValidation('persona_create', $this->request));
+        $errors = array_merge($errors, runValidation('usuario_create', $this->request));
 
-        $data = $usuarioModel->getDatatables($start, $length, $search, $orderColumn, $orderDir);
+        if (!empty($errors)) return redirect()->to('/usuarios/crear')->withInput()->with('errors', $errors);
 
-        $totalRecords = $usuarioModel->countAll();
-        $filteredRecords = $usuarioModel->countFiltered($search);
+        $db = \Config\Database::connect();
+        $db->transBegin();
+        try {
+            $personaModel = new Persona();
+            $personaId = $personaModel->crear([
+                'nombres'   => $this->request->getPost('nombres'),
+                'apellidos' => $this->request->getPost('apellidos'),
+                'dni'       => $this->request->getPost('dni'),
+                'telefono'  => $this->request->getPost('telefono'),
+            ]);
+            if (!$personaId) throw new \Exception("Error al crear Persona");
 
-        return $this->response->setJSON([
-            "draw" => intval($draw),
-            "recordsTotal" => $totalRecords,
-            "recordsFiltered" => $filteredRecords,
-            "data" => $data
-        ]);
+            $usuarioModel = new Usuario();
+            $usuarioId = $usuarioModel->crear([
+                'correo_institucional' => $this->request->getPost('correo'),
+                'username'             => $this->request->getPost('username'),
+                'userpass'             => $this->request->getPost('userpass'),
+                'persona_id'           => $personaId,
+                'rol'                  => $this->request->getPost('rol'),
+                'estado'               => true,
+            ]);
+            if (!$usuarioId) throw new \Exception("Error al crear Usuario");
+
+            $db->transCommit();
+            return redirect()->to('/usuarios')->with('success', 'Usuario registrado con éxito');
+        } catch (\Throwable $e) {
+            $db->transRollback();
+            return redirect()->back()->withInput()->with('error', 'Hubo un error: ' . $e->getMessage());
+        }
     }
 }

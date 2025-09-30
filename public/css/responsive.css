@@ -1,0 +1,48 @@
+/* ===== Responsive ===== */
+@media (max-width: 991px) {
+    .navegacion {
+        left: -300px;
+    }
+
+    /* oculto */
+    .navegacion.activado {
+        left: 0;
+        width: 300px;
+    }
+
+    .navegacion.activado .cerrar-sidebar {
+        display: flex !important;
+        /* visible solo en móviles cuando sidebar está activo */
+    }
+
+    .main {
+        left: 0;
+        width: 100%;
+    }
+
+    .main.activado {
+        left: 300px;
+        width: calc(100% - 300px);
+    }
+
+    .brand .title {
+        padding-right: 40px;
+    }
+}
+
+@media (max-width: 768px) {
+    .titulo-label {
+        display: none;
+    }
+
+    .form-card {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .main.activado {
+        left: 0;
+        width: 100%;
+    }
+}
