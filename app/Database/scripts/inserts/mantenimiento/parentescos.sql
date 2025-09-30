@@ -1,0 +1,17 @@
+INSERT INTO parentescos (nombre, created_at, updated_at, deleted_at) VALUES
+('Padre/Madre', NOW(), NULL, NULL),
+('Hijo(a)', NOW(), NULL, NULL),
+('Hermano(a)', NOW(), NULL, NULL),
+('Abuelo(a)', NOW(), NULL, NULL),
+('Nieto(a)', NOW(), NULL, NULL),
+('Tío(a)', NOW(), NULL, NULL),
+('Sobrino(a)', NOW(), NULL, NULL),
+('Primo(a)', NOW(), NULL, NULL),
+('Esposo(a)', NOW(), NULL, NULL),
+('Padrastro/Madrastra', NOW(), NULL, NULL),
+('Hijastro(a)', NOW(), NULL, NULL),
+('Cuñado(a)', NOW(), NULL, NULL),
+('Suegro(a)', NOW(), NULL, NULL),
+('Yerno/Nuera', NOW(), NULL, NULL),
+('Tutor legal', NOW(), NULL, NULL),
+('Otro', NOW(), NULL, NULL);
