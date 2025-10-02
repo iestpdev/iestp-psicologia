@@ -2,8 +2,7 @@ CREATE OR REPLACE VIEW view_alumnos_full_info AS
 SELECT 
 	a.id,
 	a.dni,
-	a.apellidos,
-	a.nombres,
+	CONCAT(a.nombres, ' ', a.apellidos) AS alumno_nombres_completos,
 	a.ciclo,
 	a.turno,
 	a.created_at,

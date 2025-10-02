@@ -13,8 +13,9 @@ class AlumnoCreate
         'ciclo'             => 'required|in_list[1,2,3,4,5,6]',
         'turno'             => 'required|in_list[M,T]',
         'sexo'              => 'required|in_list[M,F]',
-        'direccion_nac'     => 'required|min_length[5]|max_length[255]',
-        'fecha_nac'         => 'required|valid_date',
+        'direccion_nac'     => 'permit_empty|min_length[5]|max_length[255]',
+        'domicilio'         => 'permit_empty|min_length[5]|max_length[255]',
+        'fecha_nac'         => 'permit_empty|valid_date',
         'religion'          => 'required|is_natural_no_zero',
         'estado_civil'      => 'required|is_natural_no_zero',
     ];
@@ -57,12 +58,14 @@ class AlumnoCreate
             'in_list'         => 'Seleccione un sexo válido',
         ],
         'direccion_nac' => [
-            'required'        => 'La dirección de nacimiento es obligatoria',
             'min_length'      => 'La dirección de nacimiento debe tener al menos 5 caracteres',
             'max_length'      => 'La dirección de nacimiento no puede superar los 255 caracteres',
         ],
+        'domicilio' => [
+            'min_length'      => 'El domicilio debe tener al menos 5 caracteres',
+            'max_length'      => 'El domicilio no puede superar los 255 caracteres',
+        ],
         'fecha_nac' => [
-            'required'        => 'La fecha de nacimiento es obligatoria',
             'valid_date'      => 'La fecha de nacimiento no es válida',
         ],
         'religion' => [

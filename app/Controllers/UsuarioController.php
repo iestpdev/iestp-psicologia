@@ -7,6 +7,7 @@ use App\Models\Usuario;
 
 class UsuarioController extends BaseController
 {
+    /* return VIEW -- */
     public function index(): string
     {
         return view('modules/usuarios/index');
@@ -21,6 +22,30 @@ class UsuarioController extends BaseController
     {
         return view('modules/usuarios/editar');
     }
+    /* -- return VIEW */
+
+    public function deleteUsuario($id)
+    {
+        $usuarioModel = new Usuario();
+        $personaModel = new Persona();
+
+        $db = \Config\Database::connect();
+        $db->transBegin();
+
+        try {
+            $usuario = $usuarioModel->getById($id);
+            if (!$usuario) throw new \Exception("Usuario no encontrado");
+            if (!$usuarioModel->eliminar($id)) throw new \Exception("Error al eliminar usuario");
+            if (!$personaModel->eliminar($usuario['persona_id'])) throw new \Exception("Error al eliminar persona asociada");
+
+            $db->transCommit();
+            return redirect()->to('/usuarios')->with('success', 'Usuario eliminado correctamente');
+        } catch (\Throwable $e) {
+            $db->transRollback();
+            return redirect()->to('/usuarios')->with('error', 'Hubo un error: ' . $e->getMessage());
+        }
+    }
+
 
     public function saveUsuario()
     {
@@ -60,5 +85,20 @@ class UsuarioController extends BaseController
             $db->transRollback();
             return redirect()->back()->withInput()->with('error', 'Hubo un error: ' . $e->getMessage());
         }
+    }
+
+    public function obtenerDocentes($dni = null)
+    {
+        $usuarioModel = new Usuario();
+        if ($dni) {
+            $docentes = $usuarioModel->obtenerDocentes($dni);
+        } else {
+            $docentes = $usuarioModel->obtenerDocentes();
+        }
+
+        return $this->response->setJSON([
+            'status' => 'success',
+            'data'   => $docentes
+        ]);
     }
 }

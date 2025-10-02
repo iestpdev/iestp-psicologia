@@ -20,15 +20,13 @@ class UsuarioFullInfo extends BaseModel
         'deleted_at',
 
         'persona_id',
-        'nombres',
-        'apellidos',
+        'persona_nombres_completos',
         'dni',
         'telefono',
     ];
 
     protected array $searchableFields = [
-        'nombres',
-        'apellidos',
+        'persona_nombres_completos',
         'dni',
     ];
 }

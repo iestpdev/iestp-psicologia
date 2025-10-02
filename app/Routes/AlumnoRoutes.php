@@ -9,4 +9,5 @@ $routes->group('alumnos', function ($routes) {
 
 $routes->group('api', function ($routes) {
     $routes->post('alumnos/add', 'AlumnoController::saveAlumno');
+    $routes->get('alumnos/obtener-alumnos', 'AlumnoController::obtenerAlumnos');
 });

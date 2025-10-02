@@ -19,6 +19,7 @@
     <!-- custom styles - shared -->
     <link rel="stylesheet" href="/css/shared/tabla/tabla.css">
     <link rel="stylesheet" href="/css/shared/inputs/searchInput.css">
+    <link rel="stylesheet" href="/css/shared/textarea/textarea.css">
     <link rel="stylesheet" href="/css/shared/buttons/submitButton.css">
     <link rel="stylesheet" href="/css/shared/forms/formHeader.css">
     <link rel="stylesheet" href="/css/shared/forms/formContainer.css">

@@ -121,7 +121,7 @@ CREATE TABLE derivaciones(
 	usuario_id			BIGINT NOT NULL,
 	alumno_id			BIGINT NOT NULL,
 	motivo				TEXT NOT NULL,
-	urgencia				ENUM('1','2','3') NOT NULL,
+	urgencia				ENUM('BAJA','MEDIA','ALTA') NOT NULL,
 	recibido				BOOLEAN DEFAULT FALSE,
 	created_at			DATETIME NULL,
 	updated_at			DATETIME NULL,

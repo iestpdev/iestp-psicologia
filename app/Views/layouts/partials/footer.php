@@ -4,9 +4,7 @@
 <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 <!-- lucide icons -->
 <script src="https://unpkg.com/lucide@latest"></script>
-<script>
-    lucide.createIcons();
-</script>
+<script>lucide.createIcons();</script>
 
 <!-- custom scripts-->
 <script src="<?= base_url('js/layouts/partials/sidebar.js') ?>"></script>

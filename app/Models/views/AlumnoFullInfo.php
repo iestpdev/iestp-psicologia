@@ -12,8 +12,7 @@ class AlumnoFullInfo extends BaseModel
     protected array $visibleFields = [
         'id',
         'dni',
-        'apellidos',
-        'nombres',
+        'alumno_nombres_completos',
         'ciclo',
         'turno',
         'created_at',
@@ -31,8 +30,7 @@ class AlumnoFullInfo extends BaseModel
     ];
 
     protected array $searchableFields = [
-        'nombres',
-        'apellidos',
+        'alumno_nombres_completos',
         'dni',
     ];
 }
