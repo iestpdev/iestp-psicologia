@@ -8,4 +8,14 @@ class DerivacionController extends BaseController
     {
         return view('modules/derivaciones/index');
     }
+
+    public function crear(): string
+    {
+        return view('modules/derivaciones/crear');
+    }
+
+    public function editar($usuarioId): string
+    {
+        return view('modules/derivaciones/editar');
+    }
 }

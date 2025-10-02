@@ -113,10 +113,10 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label class="form-label">
-                    Domicilio <span class="required-mark">*</span>
+                    Domicilio
                   </label>
                   <input type="text" name="domicilio" class="form-control-custom"
-                    placeholder="Ingrese el domicilio" required>
+                    placeholder="Ingrese el domicilio">
                 </div>
               </div>
               <div class="col-md-4">
@@ -137,19 +137,19 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label class="form-label">
-                    Dirección de nacimiento <span class="required-mark">*</span>
+                    Dirección de nacimiento
                   </label>
                   <input type="text" name="direccion_nac" class="form-control-custom"
-                    placeholder="Ingrese la dirección de nacimiento" required>
+                    placeholder="Ingrese la dirección de nacimiento">
                 </div>
               </div>
 
               <div class="col-md-6">
                 <div class="form-group">
                   <label class="form-label">
-                    Fecha de nacimiento <span class="required-mark">*</span>
+                    Fecha de nacimiento
                   </label>
-                  <input type="date" name="fecha_nac" class="form-control-custom" required>
+                  <input type="date" name="fecha_nac" class="form-control-custom">
                 </div>
               </div>
             </div>

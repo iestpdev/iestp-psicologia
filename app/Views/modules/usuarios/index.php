@@ -47,10 +47,7 @@
                 data: "dni"
             },
             {
-                data: null,
-                render: function(data, type, row) {
-                     return row.nombres + ' ' + row.apellidos;
-                }
+                data: "persona_nombres_completos",
             },
             {
                 data: "correo_institucional"
@@ -84,7 +81,9 @@
                         <a id="editar-${data}" href="<?= base_url('usuarios/editar/') ?>${data}" class="btn btn-sm btn-warning">
                         Editar
                         </a>
-                        <button class="btn btn-sm btn-danger">Eliminar</button>
+                        <a id="eliminar-${data}" href="<?= base_url('api/usuarios/delete/') ?>${data}" class="btn btn-sm btn-danger">
+                        Eliminar
+                        </a>
                     `;
                 }
             }

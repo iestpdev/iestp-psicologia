@@ -17,4 +17,9 @@ class Persona extends BaseModel
     {
         return $this->insert($data, true);
     }
+    
+    public function eliminar(int $id): bool
+    {
+        return $this->delete($id);
+    }
 }

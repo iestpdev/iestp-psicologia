@@ -9,4 +9,8 @@ $routes->group('usuarios', function ($routes) {
 
 $routes->group('api', function ($routes) {
     $routes->post('usuarios/add', 'UsuarioController::saveUsuario');
+     $routes->get('usuarios/delete/(:num)', 'UsuarioController::deleteUsuario/$1');
+
+     $routes->get('usuarios/obtener-docentes', 'UsuarioController::obtenerDocentes');
+     $routes->get('usuarios/obtener-docentes/(:num)', 'UsuarioController::obtenerDocentes/$1');
 });

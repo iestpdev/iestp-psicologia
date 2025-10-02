@@ -43,10 +43,7 @@
                 data: "dni"
             },
             {
-                data: null,
-                render: function(data, type, row) {
-                    return row.nombres + ' ' + row.apellidos;
-                }
+                data: "alumno_nombres_completos",
             },
             {
                 data: "programa_estudio"

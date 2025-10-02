@@ -20,6 +20,11 @@ class Usuario extends BaseModel
         return $this->where('username', $username)->first();
     }
 
+    public function getById(int $id)
+    {
+        return $this->find($id);
+    }
+
     public function crear(array $data): int
     {
         $data['userpass'] = password_hash($data['userpass'], PASSWORD_BCRYPT);
@@ -40,5 +45,28 @@ class Usuario extends BaseModel
     public function eliminar(int $id): bool
     {
         return $this->delete($id);
+    }
+
+    public function obtenerDocentes(?string $dni = null): array
+    {
+        $builder = $this->db->table($this->table . ' u')
+            ->select("
+            p.id AS persona_id,
+            CONCAT(p.nombres, ' ', p.apellidos) AS persona_nombres_completos,
+            p.dni,
+            u.id,
+            u.rol,
+            u.created_at,
+            u.updated_at,
+            u.deleted_at
+        ")
+            ->join('personas p', 'u.persona_id = p.id', 'left')
+            ->where('u.rol', 'DOCENTE');
+
+        if (!empty($dni)) {
+            $builder->where('p.dni', $dni);
+        }
+
+        return $builder->get()->getResultArray();
     }
 }

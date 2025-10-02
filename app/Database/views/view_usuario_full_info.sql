@@ -11,10 +11,9 @@ SELECT
 
     -- Info Persona
     p.id AS persona_id,
-    p.nombres,
-    p.apellidos,
+    CONCAT(p.nombres, ' ', p.apellidos) AS persona_nombres_completos,
     p.dni,
     p.telefono
 
 FROM usuarios u
-LEFT JOIN personas p ON u.persona_id = p.id
+LEFT JOIN personas p ON u.persona_id = p.id;
