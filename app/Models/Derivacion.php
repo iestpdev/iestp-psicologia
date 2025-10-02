@@ -7,10 +7,15 @@ class Derivacion extends BaseModel
     protected $table      = 'derivaciones';
     protected $primaryKey = 'id';
     protected $allowedFields = [
-        'docente_id',
+        'usuario_id',
         'alumno_id',
         'motivo',
         'urgencia',
         'recibido',
     ];
+
+    public function crear(array $data): int
+    {
+        return $this->insert($data, true);
+    }
 }

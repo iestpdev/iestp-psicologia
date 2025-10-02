@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Alumno;
+use App\Models\Derivacion;
 use App\Models\Mantenimiento\ProgramaEstudio;
 use App\Models\Usuario;
 
@@ -30,5 +31,28 @@ class DerivacionController extends BaseController
     public function editar($usuarioId): string
     {
         return view('modules/derivaciones/editar');
+    }
+
+    public function saveDerivacion()
+    {
+        helper('validation');
+        $errors = runValidation('derivacion_create', $this->request);
+        if (!empty($errors)) return redirect()->to('/derivaciones/crear')->withInput()->with('errors', $errors);
+        
+        try {
+            $derivacionModel = new Derivacion();
+            $derivacionId = $derivacionModel->crear([
+                'usuario_id' => $this->request->getPost('docente'),
+                'alumno_id'  => $this->request->getPost('alumno'),
+                'motivo'     => $this->request->getPost('motivo'),
+                'urgencia'   => $this->request->getPost('urgencia'),
+                'recibido'   => false
+            ]);
+
+            if (!$derivacionId) throw new \Exception("Error al registrar la derivación");
+            return redirect()->to('/derivaciones')->with('success', 'Derivación registrada con éxito');
+        } catch (\Throwable $e) {
+            return redirect()->back()->withInput()->with('error', 'Hubo un error: ' . $e->getMessage());
+        }
     }
 }
