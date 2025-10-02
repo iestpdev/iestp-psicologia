@@ -107,7 +107,7 @@ CREATE TABLE usuarios(
 	correo_institucional VARCHAR(50) NOT NULL,
 	username 				VARCHAR(18) NOT NULL,
    userpass 				TEXT NOT NULL,
-   persona_id   		   BIGINT NULL,
+   persona_id   		   BIGINT NOT NULL,
    rol             		ENUM('ADMIN', 'PSICOLOGO','DOCENTE'),
    estado					BOOLEAN DEFAULT TRUE,
 	created_at				DATETIME NULL,
@@ -132,20 +132,22 @@ CREATE TABLE derivaciones(
 
 CREATE TABLE citas(
 	id						BIGINT AUTO_INCREMENT PRIMARY KEY,
-	tipo_derivacion	ENUM('AUTONOMO','DOCENTE','PARIENTE') NOT NULL,
+	tipo_derivacion	ENUM('AUTONOMO','DOCENTE','FAMLIAR') NOT NULL,
 	atencion_fech		DATE NULL,
 	hora_inicio			TIME NOT NULL,
 	hora_fin				TIME NOT NULL,
 	asistencia			ENUM('PENDIENTE','ASISTIDO', 'AUSENTE') NOT NULL,
 	usuario_id			BIGINT NOT NULL,
-	alumno_id			BIGINT NULL,
+	alumno_id			BIGINT NOT NULL,
 	derivacion_id		BIGINT NULL,
+	familiar_id			BIGINT NULL,
 	created_at			DATETIME NULL,
 	updated_at			DATETIME NULL,
 	deleted_at			DATETIME NULL,
 	FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
 	FOREIGN KEY (alumno_id) REFERENCES alumnos(id),
-	FOREIGN KEY (derivacion_id) REFERENCES derivaciones(id)
+	FOREIGN KEY (derivacion_id) REFERENCES derivaciones(id),
+	FOREIGN KEY (familiar_id) REFERENCES familiares(id)
 )ENGINE=INNODB;
 
 CREATE TABLE detalle_cita(
@@ -157,16 +159,5 @@ CREATE TABLE detalle_cita(
 	aspecto_fisico		VARCHAR(255) NULL,
 	aseo_personal		VARCHAR(255) NULL,
 	conducta				VARCHAR(255) NULL,
-	FOREIGN KEY (cita_id) REFERENCES citas(id)
-)ENGINE=INNODB;
-
-CREATE TABLE diagnosticos(
-	id						BIGINT AUTO_INCREMENT PRIMARY KEY,
-	cita_id				BIGINT NOT NULL,
-	condicion_code		VARCHAR(20) NULL,
-	analisis				TEXT NOT NULL,
-	created_at			DATETIME NULL,
-	updated_at			DATETIME NULL,
-	deleted_at			DATETIME NULL,
 	FOREIGN KEY (cita_id) REFERENCES citas(id)
 )ENGINE=INNODB;
