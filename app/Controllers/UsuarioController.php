@@ -90,10 +90,12 @@ class UsuarioController extends BaseController
     public function obtenerDocentes($dni = null)
     {
         $usuarioModel = new Usuario();
-        if ($dni) $docentes = $usuarioModel->obtenerDocentes($dni);
-        
-        $docentes = $usuarioModel->obtenerDocentes();
-        
+        if ($dni) {
+            $docentes = $usuarioModel->obtenerDocentes($dni);
+        } else {
+            $docentes = $usuarioModel->obtenerDocentes();
+        }
+
         return $this->response->setJSON([
             'status' => 'success',
             'data'   => $docentes

@@ -62,4 +62,20 @@ class AlumnoController extends BaseController
             return redirect()->back()->withInput()->with('error', 'Hubo un error: ' . $e->getMessage());
         }
     }
+
+    public function obtenerAlumnos()
+    {
+        $dni = $this->request->getGet('dni');
+        $programa_estudio_id = $this->request->getGet('programa_estudio_id');
+        $ciclo = $this->request->getGet('ciclo');
+        $turno = $this->request->getGet('turno');
+
+        $alumnoModel = new Alumno();
+        $alumnos = $alumnoModel->obtenerAlumnos($dni, $programa_estudio_id, $ciclo, $turno);
+
+        return $this->response->setJSON([
+            'status' => 'success',
+            'data'   => $alumnos
+        ]);
+    }
 }
