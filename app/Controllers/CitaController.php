@@ -11,10 +11,6 @@ class CitaController extends BaseController
 
     public function generarAsistidasPdf()
     {
-        if ($this->request->getMethod() !== 'post') {
-            return $this->response->setStatusCode(405)->setBody('Método no permitido');
-        }
-
         $fechaFiltro = $this->request->getPost('fechaFiltro'); // "YYYY-MM"
         if (empty($fechaFiltro)) {
             return $this->response->setStatusCode(400)->setBody('Selecciona un mes y año');
