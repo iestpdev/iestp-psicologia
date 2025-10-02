@@ -15,5 +15,6 @@ class Cita extends BaseModel
         'psicologo_id',
         'alumno_id',
         'derivacion_id',
+        'familiar_id'
     ];
 }

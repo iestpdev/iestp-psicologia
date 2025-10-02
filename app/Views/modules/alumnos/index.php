@@ -6,7 +6,7 @@
 
 <div class="tabla">
     <div class="TableHeader">
-        <h2>Alumnos</h2>
+        <h2>ALUMNOS</h2>
 
         <?= view('shared/inputs/searchInput', [
             'id' => 'searchAlumnos',
