@@ -40,7 +40,7 @@
     </li>
 
     <li>
-      <a href="<?= base_url('/consultas') ?>">
+      <a href="<?= base_url('/citas') ?>">
         <span class="icon"><ion-icon name="heart-circle-outline"></ion-icon></span>
         <span class="title">Consultas</span>
       </a>

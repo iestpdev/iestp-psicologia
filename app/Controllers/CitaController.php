@@ -9,6 +9,16 @@ class CitaController extends BaseController
         return view('modules/citas/index');
     }
 
+    public function crear(): string
+    {
+        return view('modules/citas/crear');
+    }
+
+    public function editar($usuarioId): string
+    {
+        return view('modules/citas/editar');
+    }
+
     public function generarAsistidasPdf()
     {
         $fechaFiltro = $this->request->getPost('fechaFiltro'); // "YYYY-MM"
@@ -26,9 +36,9 @@ class CitaController extends BaseController
 
         $data = [
             'estilos' => view('reports/estilos'),
-            'rows'    => $rows,
-            'year'    => $year,
-            'month'   => $month,
+            'rows' => $rows,
+            'year' => $year,
+            'month' => $month,
         ];
 
         $html = view('reports/citas/reporteCitasAsistidas', $data);
