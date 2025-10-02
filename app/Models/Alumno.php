@@ -4,7 +4,7 @@ namespace App\Models;
 
 class Alumno extends BaseModel
 {
-    protected $table      = 'alumnos';
+    protected $table = 'alumnos';
     protected $primaryKey = 'id';
     protected $allowedFields = [
         'nombres',
@@ -22,19 +22,27 @@ class Alumno extends BaseModel
         'estado_civil_id',
     ];
 
-    public function obtenerAlumnos(
-        ?string $dni = null, 
-        ?int $programa_estudio_id = null, 
-        ?int $ciclo = null, 
-        ?string $turno = null
-    ): array
+    public function crear(array $data): int
     {
+        return $this->insert($data, true);
+    }
+
+    public function obtenerAlumnos(
+        ?string $dni = null,
+        ?int $programa_estudio_id = null,
+        ?int $ciclo = null,
+        ?string $turno = null
+    ): array {
         $builder = $this->db->table($this->table);
 
-        if (!empty($dni)) $builder->where('dni', $dni);
-        if (!empty($programa_estudio_id)) $builder->where('programa_estudio_id', $programa_estudio_id);
-        if (!empty($ciclo)) $builder->where('ciclo', $ciclo);
-        if (!empty($turno)) $builder->where('turno', $turno);
+        if (!empty($dni))
+            $builder->where('dni', $dni);
+        if (!empty($programa_estudio_id))
+            $builder->where('programa_estudio_id', $programa_estudio_id);
+        if (!empty($ciclo))
+            $builder->where('ciclo', $ciclo);
+        if (!empty($turno))
+            $builder->where('turno', $turno);
 
         $builder->select('
             id, 
