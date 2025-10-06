@@ -41,6 +41,24 @@
         font-size: 0.9rem;
         margin-top: 5px;
     }
+
+    .filtros-alumno {
+        border: 1px solid var(--black2);
+        border-radius: 10px;
+        padding: 15px;
+        margin-top: 5px;
+        margin-bottom: 10px;
+        position: relative;
+    }
+
+    .filtros-alumno legend {
+        font-weight: 600;
+        padding: 0 10px;
+        font-size: 1rem;
+        width: auto;
+        margin-left: 10px;
+        float: none;
+    }
 </style>
 
 <?= $this->include('messages/msg-success') ?>
@@ -85,81 +103,84 @@
                             </div>
                         </div>
 
-                        <!-- sección ALUMNO: Filtro ProgramaEstudio, ciclo, turno, DNI y alumno_nombres_completos -->
-                        <div class="row">
-                            <!-- Programa de estudio -->
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        Programa de estudio
-                                    </label>
-                                    <select id="programaEstudio" name="programa_estudio" class="form-control-custom" >
-                                        <option value="">Filtre por programa de estudio</option>
-                                        <?php foreach ($programaEstudios as $programaEstudio): ?>
-                                            <option value="<?= $programaEstudio['id'] ?>"><?= esc($programaEstudio['nombre']) ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
+                        <fieldset class="filtros-alumno">
+                            <legend>Filtros de alumno</legend>
+                            <!-- sección ALUMNO: Filtro ProgramaEstudio, ciclo, turno, DNI y alumno_nombres_completos -->
+                            <div class="row">
+                                <!-- Programa de estudio -->
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            Programa de estudio
+                                        </label>
+                                        <select id="programaEstudio" name="programa_estudio" class="form-control-custom">
+                                            <option value="">Filtre por programa de estudio</option>
+                                            <?php foreach ($programaEstudios as $programaEstudio): ?>
+                                                <option value="<?= $programaEstudio['id'] ?>"><?= esc($programaEstudio['nombre']) ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
-                            <!-- Ciclo -->
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        Ciclo
-                                    </label>
-                                    <select id="ciclo" name="ciclo" class="form-control-custom" >
-                                        <option value="">Filtre por ciclo</option>
-                                        <option value="1">1er Ciclo</option>
-                                        <option value="2">2do Ciclo</option>
-                                        <option value="3">3er Ciclo</option>
-                                        <option value="4">4to Ciclo</option>
-                                        <option value="5">5to Ciclo</option>
-                                        <option value="6">6to Ciclo</option>
-                                    </select>
+                                <!-- Ciclo -->
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            Ciclo
+                                        </label>
+                                        <select id="ciclo" name="ciclo" class="form-control-custom">
+                                            <option value="">Filtre por ciclo</option>
+                                            <option value="1">1er Ciclo</option>
+                                            <option value="2">2do Ciclo</option>
+                                            <option value="3">3er Ciclo</option>
+                                            <option value="4">4to Ciclo</option>
+                                            <option value="5">5to Ciclo</option>
+                                            <option value="6">6to Ciclo</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Turno -->
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            Turno
+                                        </label>
+                                        <select id="turno" name="turno" class="form-control-custom">
+                                            <option value="">Filtre por turno</option>
+                                            <option value="M">Mañana</option>
+                                            <option value="T">Tarde</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Turno -->
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        Turno
-                                    </label>
-                                    <select id="turno" name="turno" class="form-control-custom" >
-                                        <option value="">Filtre por turno</option>
-                                        <option value="M">Mañana</option>
-                                        <option value="T">Tarde</option>
-                                    </select>
+                            <!-- sección ALUMNO: Filtro DNI y alumno_nombres_completos-->
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            DNI
+                                        </label>
+                                        <input type="text" id="inputDNIAlumno" class="form-control-custom" placeholder="Filtrar por DNI de alumno" maxlength="8" pattern="[0-9]{8}">
+                                        <span id="msg-dni-alumno"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            Alumno <span class="required-mark">*</span>
+                                        </label>
+                                        <select id="alumnoSelect" name="alumno" required>
+                                            <option value="">Seleccione un alumno</option>
+                                            <?php foreach ($alumnos as $alumno): ?>
+                                                <option value="<?= $alumno['id'] ?>"><?= esc($alumno['alumno_nombres_completos']) ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                        <span id="msg-filtros-alumno"></span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <!-- sección ALUMNO: Filtro DNI y alumno_nombres_completos-->
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        DNI
-                                    </label>
-                                    <input type="text" id="inputDNIAlumno" class="form-control-custom" placeholder="Filtrar por DNI de alumno" maxlength="8" pattern="[0-9]{8}">
-                                    <span id="msg-dni-alumno"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        Alumno <span class="required-mark">*</span>
-                                    </label>
-                                    <select id="alumnoSelect" name="alumno" required>
-                                        <option value="">Seleccione un alumno</option>
-                                        <?php foreach ($alumnos as $alumno): ?>
-                                            <option value="<?= $alumno['id'] ?>"><?= esc($alumno['alumno_nombres_completos']) ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                    <span id="msg-filtros-alumno"></span>
-                                </div>
-                            </div>
-                        </div>
+                        </fieldset>
 
                         <!-- Motivo -->
                         <div class="textarea-wrapper">

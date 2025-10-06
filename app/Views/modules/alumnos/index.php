@@ -72,7 +72,7 @@
                         <a id="editar-${data}" href="<?= base_url('alumnos/editar/') ?>${data}" class="btn btn-sm btn-warning">
                          <ion-icon name="create-outline" class="icon-lg"></ion-icon>
                         </a>
-                        <a id="editar-${data}" href="<?= base_url('alumnos/editar/') ?>${data}" class="btn btn-sm btn-danger">
+                        <a id="editar-${data}" href="<?= base_url('api/alumnos/delete/') ?>${data}" class="btn btn-sm btn-danger">
                          <ion-icon name="trash-outline" class="icon-lg"></ion-icon>
                         </a>
                     `;

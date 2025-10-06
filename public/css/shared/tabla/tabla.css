@@ -6,6 +6,7 @@
 .tabla #datatable td {
     border-top: none;
     border-bottom: none;
+    padding: 10px 0 !important;
 }
 
 /* Contenedor de la paginación */
