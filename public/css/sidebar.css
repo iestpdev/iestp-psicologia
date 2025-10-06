@@ -111,8 +111,9 @@
     position: relative;
     margin-bottom: 40px;
     margin-left: -5px;
-    pointer-events: none;
+    pointer-events: none; 
 }
+
 
 .brand a .title {
     margin-top: 20px;
@@ -124,9 +125,9 @@
     font-size: 2rem;
 }
 
-.cerrar-sidebar {
+.navegacion.activado .cerrar-sidebar {
     position: absolute;
-    top: 50%;
+    top: 65%;
     right: 15px;
     transform: translateY(-50%);
     font-size: 1.8rem;
@@ -138,5 +139,8 @@
     color: var(--white);
     background: transparent;
     border: none;
+    display: none;
+}
+.navegacion .cerrar-sidebar{
     display: none;
 }

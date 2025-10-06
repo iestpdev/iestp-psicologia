@@ -10,11 +10,6 @@
         width: 300px;
     }
 
-    .navegacion.activado .cerrar-sidebar {
-        display: flex !important;
-        /* visible solo en móviles cuando sidebar está activo */
-    }
-
     .main {
         left: 0;
         width: 100%;
@@ -44,5 +39,33 @@
     .main.activado {
         left: 0;
         width: 100%;
+    }
+
+
+    .navegacion.activado .cerrar-sidebar {
+        display: flex;
+        pointer-events: auto;
+    }
+
+    .brand .cerrar-sidebar {
+        pointer-events: auto;
+    }
+
+    /* Evitar hover y curvas solo en .brand */
+    .navegacion ul li.brand:hover,
+    .navegacion ul li.brand.hovered {
+        background: var(--blue);  /* mismo color de fondo original */
+    }
+
+    .navegacion ul li.brand:hover a::before,
+    .navegacion ul li.brand.hovered a::before,
+    .navegacion ul li.brand:hover a::after,
+    .navegacion ul li.brand.hovered a::after {
+        box-shadow: none;/* desactiva las curvas */
+    }
+
+    .navegacion ul li.brand:hover a,
+    .navegacion ul li.brand.hovered a {
+        color: var(--white);/* mantiene el color original del texto */
     }
 }
