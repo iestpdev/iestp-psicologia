@@ -66,10 +66,15 @@
                 searchable: false,
                 render: function(data) {
                     return `
-                        <a id="editar-${data}" href="<?= base_url('alumnos/editar/') ?>${data}" class="btn btn-sm btn-warning">
-                        Editar
+                        <a id="editar-${data}" href="<?= base_url('alumnos/info/') ?>${data}" class="btn btn-sm btn-success">
+                        <ion-icon name="newspaper-outline" class="icon-lg"></ion-icon>
                         </a>
-                        <button class="btn btn-sm btn-danger">Eliminar</button>
+                        <a id="editar-${data}" href="<?= base_url('alumnos/editar/') ?>${data}" class="btn btn-sm btn-warning">
+                         <ion-icon name="create-outline" class="icon-lg"></ion-icon>
+                        </a>
+                        <a id="editar-${data}" href="<?= base_url('alumnos/editar/') ?>${data}" class="btn btn-sm btn-danger">
+                         <ion-icon name="trash-outline" class="icon-lg"></ion-icon>
+                        </a>
                     `;
                 }
             }

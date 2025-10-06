@@ -14,6 +14,11 @@ class AlumnoController extends BaseController
         return view('modules/alumnos/index');
     }
 
+    public function info($usuarioId): string
+    {
+        return view('modules/alumnos/details/info');
+    }
+
     public function crear(): string
     {
         $programaEstudioModel = new ProgramaEstudio();
