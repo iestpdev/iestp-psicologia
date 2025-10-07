@@ -2,6 +2,11 @@
 
 namespace App\Controllers;
 
+use App\Models\Alumno;
+use App\Models\Derivacion;
+use App\Models\Mantenimiento\ProgramaEstudio;
+use App\Models\Usuario;
+
 class CitaController extends BaseController
 {
     public function index(): string
@@ -11,7 +16,19 @@ class CitaController extends BaseController
 
     public function crear(): string
     {
-        return view('modules/citas/crear');
+        $usuarioModel = new Usuario();
+        $data['psicologos'] = $usuarioModel->obtenerPsicologos();
+
+        $programaEstudioModel = new ProgramaEstudio();
+        $data['programaEstudios'] = $programaEstudioModel->listar();
+
+        $alumnoModel = new Alumno();
+        $data['alumnos'] = $alumnoModel->obtenerAlumnos();
+
+        $derivacionModel = new Derivacion();
+        $data['derivaciones_pendientes'] = $derivacionModel->obtenerPendientes();
+
+        return view('modules/citas/crear', $data);
     }
 
     public function editar($usuarioId): string
@@ -21,10 +38,8 @@ class CitaController extends BaseController
 
     public function generarAsistidasPdf()
     {
-        $fechaFiltro = $this->request->getPost('fechaFiltro'); // "YYYY-MM"
-        if (empty($fechaFiltro)) {
-            return $this->response->setStatusCode(400)->setBody('Selecciona un mes y año');
-        }
+        $fechaFiltro = $this->request->getPost('fechaFiltro');
+        if (empty($fechaFiltro)) return $this->response->setStatusCode(400)->setBody('Selecciona un mes y año');
 
         [$year, $month] = explode('-', $fechaFiltro);
 

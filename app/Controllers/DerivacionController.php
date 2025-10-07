@@ -33,12 +33,29 @@ class DerivacionController extends BaseController
         return view('modules/derivaciones/editar');
     }
 
+    public function obtenerPorId($derivacionId)
+    {
+        $derivacionModel = new Derivacion();
+        return $this->response->setJSON($derivacionModel->getById((int)$derivacionId));
+    }
+
+    public function obtenerPendientes()
+    {
+        $derivacionModel = new Derivacion();
+        $pendientes = $derivacionModel->obtenerPendientes();
+
+        return $this->response->setJSON([
+            'status' => 'success',
+            'data'   => $pendientes
+        ]);
+    }
+
     public function saveDerivacion()
     {
         helper('validation');
         $errors = runValidation('derivacion_create', $this->request);
         if (!empty($errors)) return redirect()->to('/derivaciones/crear')->withInput()->with('errors', $errors);
-        
+
         try {
             $derivacionModel = new Derivacion();
             $derivacionId = $derivacionModel->crear([

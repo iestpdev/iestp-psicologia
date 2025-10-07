@@ -8,4 +8,6 @@ $routes->group('derivaciones', function ($routes) {
 
 $routes->group('api', function ($routes) {
     $routes->post('derivaciones/add', 'DerivacionController::saveDerivacion');
+    $routes->get('derivaciones/obtener-por-id/(:num)', 'DerivacionController::obtenerPorId/$1');
+    $routes->get('derivaciones/obtener-pendientes', 'DerivacionController::obtenerPendientes');
 });

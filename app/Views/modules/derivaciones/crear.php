@@ -1,5 +1,4 @@
-<?php // TODO: REFACTORIZAR ESTE CÓDIGO 
-?>
+<?php // TODO: REFACTORIZAR ESTE CÓDIGO ?>
 <?= $this->extend('layouts/master') ?>
 <?= $this->section('content') ?>
 
@@ -7,29 +6,6 @@
 <?= $this->include('messages/msg-error') ?>
 
 <style>
-    .ts-control {
-        height: 45px !important;
-        border: 1px solid var(--black2) !important;
-        color: var(--black2) !important;
-        border-radius: 6px !important;
-        transition: border-color 0.2s !important;
-        background-color: var(--white) !important;
-    }
-
-    .ts-control input {
-        font-size: 15px !important;
-    }
-
-    .ts-dropdown {
-        font-size: 15px !important;
-    }
-
-    .ts-control .item {
-        padding-top: 5px !important;
-        color: var(--black1) !important;
-        font-size: 15px !important;
-    }
-
     .msg-dni-success {
         color: green;
         font-size: 0.9rem;
@@ -40,24 +16,6 @@
         color: red;
         font-size: 0.9rem;
         margin-top: 5px;
-    }
-
-    .filtros-alumno {
-        border: 1px solid var(--black2);
-        border-radius: 10px;
-        padding: 15px;
-        margin-top: 5px;
-        margin-bottom: 10px;
-        position: relative;
-    }
-
-    .filtros-alumno legend {
-        font-weight: 600;
-        padding: 0 10px;
-        font-size: 1rem;
-        width: auto;
-        margin-left: 10px;
-        float: none;
     }
 </style>
 
@@ -103,7 +61,7 @@
                             </div>
                         </div>
 
-                        <fieldset class="filtros-alumno">
+                        <fieldset class="fieldset">
                             <legend>Filtros de alumno</legend>
                             <!-- sección ALUMNO: Filtro ProgramaEstudio, ciclo, turno, DNI y alumno_nombres_completos -->
                             <div class="row">
@@ -188,7 +146,6 @@
                                 Motivos <span class="required-mark">*</span>
                             </label>
                             <textarea
-                                id="auto-textarea"
                                 name="motivo"
                                 class="auto-expand-textarea"
                                 placeholder="Detalle el motivo de la derivación..."
@@ -225,9 +182,7 @@
 
 <script src="<?= base_url('js/shared/textarea/textarea.js') ?>"></script>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
+<?= $this->include('shared/selects/tomSelect') ?>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -281,6 +236,7 @@
             }
         });
 
+        // Capturando el valor del docente con cada cambio
         docenteSelect.on('change', function(value) {
             if (value) {
                 setTimeout(function() {
@@ -345,6 +301,7 @@
             }
         });
 
+        // Capturando el valor del alumno con cada cambio
         alumnoSelect.on('change', function(value) {
             if (value) {
                 setTimeout(function() {

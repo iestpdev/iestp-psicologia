@@ -133,7 +133,7 @@ CREATE TABLE derivaciones(
 CREATE TABLE citas(
 	id						BIGINT AUTO_INCREMENT PRIMARY KEY,
 	tipo_derivacion	ENUM('AUTONOMO','DOCENTE','FAMLIAR') NOT NULL,
-	atencion_fech		DATE NULL,
+	atencion_fech		DATE NOT NULL,
 	hora_inicio			TIME NOT NULL,
 	hora_fin				TIME NOT NULL,
 	asistencia			ENUM('PENDIENTE','ASISTIDO', 'AUSENTE') NOT NULL,

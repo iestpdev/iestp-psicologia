@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="/css/shared/buttons/submitButton.css">
     <link rel="stylesheet" href="/css/shared/forms/formHeader.css">
     <link rel="stylesheet" href="/css/shared/forms/formContainer.css">
+    <link rel="stylesheet" href="/css/shared/selects/tomSelect.css">
     
     <link rel="stylesheet" href="/css/responsive.css">
     <title>IESTP Psicología</title>

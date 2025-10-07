@@ -4,6 +4,20 @@
 <?= $this->include('messages/msg-success') ?>
 <?= $this->include('messages/msg-error') ?>
 
+<div class="d-flex align-items-center mt-3 mb-2">
+    <form action="<?= base_url('citas/generar-asistidas-pdf') ?>" method="POST" target="_blank" class="d-flex align-items-center">
+   
+            <label class="form-label me-2">
+                Gererar reporte: 
+            </label>
+            <input type="month" name="fechaFiltro" class="form-control me-2" style="max-width: 200px;" required>
+      
+        <button type="submit" class="btn btn-danger">
+            <i class="fa-solid fa-file-pdf"></i>
+        </button>
+    </form>
+</div>
+
 <div class="tabla">
     <div class="TableHeader">
         <h2>CONSULTAS</h2>
@@ -34,15 +48,6 @@
         </thead>
         <tbody></tbody>
     </table>
-</div>
-
-<div class="d-flex align-items-center mt-3">
-    <form action="<?= base_url('citas/generar-asistidas-pdf') ?>" method="POST" target="_blank" class="d-flex align-items-center">
-        <input type="month" name="fechaFiltro" class="form-control me-2" style="max-width: 200px;" required>
-        <button type="submit" class="btn btn-danger">
-            Generar Reporte
-        </button>
-    </form>
 </div>
 
 <?= $this->include('shared/table/datatable') ?>

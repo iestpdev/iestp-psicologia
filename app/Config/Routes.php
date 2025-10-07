@@ -13,5 +13,7 @@ require APPPATH . 'Routes/UsuarioRoutes.php';
 require APPPATH . 'Routes/AlumnoRoutes.php';
 require APPPATH . 'Routes/DerivacionRoutes.php';
 require APPPATH . 'Routes/CitaRoutes.php';
+require APPPATH . 'Routes/FamiliarRoutes.php';
 
 require APPPATH . 'Routes/DataTableRoutes.php';
+

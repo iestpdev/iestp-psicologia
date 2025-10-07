@@ -69,4 +69,23 @@ class Usuario extends BaseModel
 
         return $builder->get()->getResultArray();
     }
+
+    public function obtenerPsicologos(): array
+    {
+        $builder = $this->db->table($this->table . ' u')
+            ->select("
+            p.id AS persona_id,
+            CONCAT(p.nombres, ' ', p.apellidos) AS persona_nombres_completos,
+            p.dni,
+            u.id,
+            u.rol,
+            u.created_at,
+            u.updated_at,
+            u.deleted_at
+        ")
+            ->join('personas p', 'u.persona_id = p.id', 'left')
+            ->where('u.rol', 'PSICOLOGO');
+
+        return $builder->get()->getResultArray();
+    }
 }

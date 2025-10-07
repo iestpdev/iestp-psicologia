@@ -19,7 +19,6 @@
   }
 
   function cerrarSidebar() {
-    console.log('Cerrar sidebar ejecutado');
     const s = document.getElementById('sidebar');
     const m = document.getElementById('main');
 
