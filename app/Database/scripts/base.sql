@@ -80,10 +80,10 @@ CREATE TABLE parientes(
 	FOREIGN KEY (parentesco_id) REFERENCES parentescos(id)
 )ENGINE=INNODB;
 
-CREATE TABLE alumno_pariente(
+CREATE TABLE familiares(
+	id						BIGINT AUTO_INCREMENT PRIMARY KEY,
 	alumno_id			BIGINT NOT NULL,
 	pariente_id			BIGINT NOT NULL,
-	PRIMARY KEY(alumno_id, pariente_id),
 	created_at			DATETIME NULL,
 	updated_at			DATETIME NULL,
 	deleted_at			DATETIME NULL,
@@ -91,7 +91,7 @@ CREATE TABLE alumno_pariente(
 	FOREIGN KEY (pariente_id) REFERENCES parientes(id)
 )ENGINE=INNODB;
 
-CREATE TABLE docentes(
+CREATE TABLE personas(
 	id						BIGINT AUTO_INCREMENT PRIMARY KEY,
 	nombres				VARCHAR(70) NOT NULL,
 	apellidos			VARCHAR(70) NOT NULL,
@@ -100,49 +100,54 @@ CREATE TABLE docentes(
    created_at			DATETIME NULL,
 	updated_at			DATETIME NULL,
 	deleted_at			DATETIME NULL
+)ENGINE=INNODB;
+
+CREATE TABLE usuarios(
+	id							BIGINT AUTO_INCREMENT PRIMARY KEY,
+	correo_institucional VARCHAR(50) NOT NULL,
+	username 				VARCHAR(18) NOT NULL,
+   userpass 				TEXT NOT NULL,
+   persona_id   		   BIGINT NOT NULL,
+   rol             		ENUM('ADMIN', 'PSICOLOGO','DOCENTE'),
+   estado					BOOLEAN DEFAULT TRUE,
+	created_at				DATETIME NULL,
+	updated_at				DATETIME NULL,
+	deleted_at				DATETIME NULL,
+	FOREIGN KEY (persona_id) REFERENCES personas(id)			
 )ENGINE=INNODB;
 
 CREATE TABLE derivaciones(
 	id						BIGINT AUTO_INCREMENT PRIMARY KEY,
-	docente_id			BIGINT NOT NULL,
+	usuario_id			BIGINT NOT NULL,
 	alumno_id			BIGINT NOT NULL,
 	motivo				TEXT NOT NULL,
-	urgencia				ENUM('1','2','3') NOT NULL,
+	urgencia				ENUM('BAJA','MEDIA','ALTA') NOT NULL,
 	recibido				BOOLEAN DEFAULT FALSE,
 	created_at			DATETIME NULL,
 	updated_at			DATETIME NULL,
 	deleted_at			DATETIME NULL,
-	FOREIGN KEY (docente_id) REFERENCES docentes(id),
+	FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
 	FOREIGN KEY (alumno_id) REFERENCES alumnos(id)
-)ENGINE=INNODB;
-
-CREATE TABLE psicologos(
-	id						BIGINT AUTO_INCREMENT PRIMARY KEY,
-	nombres				VARCHAR(70) NOT NULL,
-	apellidos			VARCHAR(70) NOT NULL,
-	dni               CHAR(8) NOT NULL,
-   telefono          VARCHAR(9) NULL,
-   created_at			DATETIME NULL,
-	updated_at			DATETIME NULL,
-	deleted_at			DATETIME NULL
 )ENGINE=INNODB;
 
 CREATE TABLE citas(
 	id						BIGINT AUTO_INCREMENT PRIMARY KEY,
-	tipo_derivacion	ENUM('AUTONOMO','DOCENTE','PARIENTE') NOT NULL,
-	atencion_fech		DATE NULL,
+	tipo_derivacion	ENUM('AUTONOMO','DOCENTE','FAMLIAR') NOT NULL,
+	atencion_fech		DATE NOT NULL,
 	hora_inicio			TIME NOT NULL,
 	hora_fin				TIME NOT NULL,
 	asistencia			ENUM('PENDIENTE','ASISTIDO', 'AUSENTE') NOT NULL,
-	psicologo_id		BIGINT NOT NULL,
-	alumno_id			BIGINT NULL,
+	usuario_id			BIGINT NOT NULL,
+	alumno_id			BIGINT NOT NULL,
 	derivacion_id		BIGINT NULL,
+	familiar_id			BIGINT NULL,
 	created_at			DATETIME NULL,
 	updated_at			DATETIME NULL,
 	deleted_at			DATETIME NULL,
-	FOREIGN KEY (psicologo_id) REFERENCES psicologos(id),
+	FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
 	FOREIGN KEY (alumno_id) REFERENCES alumnos(id),
-	FOREIGN KEY (derivacion_id) REFERENCES derivaciones(id)
+	FOREIGN KEY (derivacion_id) REFERENCES derivaciones(id),
+	FOREIGN KEY (familiar_id) REFERENCES familiares(id)
 )ENGINE=INNODB;
 
 CREATE TABLE detalle_cita(
@@ -155,31 +160,4 @@ CREATE TABLE detalle_cita(
 	aseo_personal		VARCHAR(255) NULL,
 	conducta				VARCHAR(255) NULL,
 	FOREIGN KEY (cita_id) REFERENCES citas(id)
-)ENGINE=INNODB;
-
-CREATE TABLE diagnosticos(
-	id						BIGINT AUTO_INCREMENT PRIMARY KEY,
-	cita_id				BIGINT NOT NULL,
-	condicion_code		VARCHAR(20) NULL,
-	analisis				TEXT NOT NULL,
-	created_at			DATETIME NULL,
-	updated_at			DATETIME NULL,
-	deleted_at			DATETIME NULL,
-	FOREIGN KEY (cita_id) REFERENCES citas(id)
-)ENGINE=INNODB;
-
-CREATE TABLE usuarios(
-	id							BIGINT AUTO_INCREMENT PRIMARY KEY,
-	correo_institucional VARCHAR(50) NOT NULL,
-	username 				VARCHAR(18) NOT NULL,
-   userpass 				TEXT NOT NULL,
-   docente_id				BIGINT NULL,
-   psicologo_id			BIGINT NULL,
-   es_admin					BOOLEAN DEFAULT FALSE,
-   estado					BOOLEAN DEFAULT TRUE,
-	created_at				DATETIME NULL,
-	updated_at				DATETIME NULL,
-	deleted_at				DATETIME NULL,
-	FOREIGN KEY (docente_id) REFERENCES docentes(id),
-	FOREIGN KEY (psicologo_id) REFERENCES psicologos(id)							
 )ENGINE=INNODB;

@@ -1,0 +1,82 @@
+.textarea-wrapper {
+    width: 100%;
+    border-radius: 12px;
+    position: relative;
+}
+
+
+.auto-expand-textarea {
+    width: 100%;
+    min-height: 50px;
+    max-height: 300px;
+    padding: 12px 16px;
+    box-sizing: border-box;
+    border: 1px solid var(--black2);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 16px;
+    line-height: 1.5;
+    resize: none;
+    overflow-y: hidden;
+    transition: border-color 0.2s ease;
+}
+
+.auto-expand-textarea:focus {
+    outline: none;
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.auto-expand-textarea::placeholder {
+    color: #999;
+}
+
+.character-count {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    font-size: 12px;
+    color: #666;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+/* Fancy scrollbar styling */
+.auto-expand-textarea::-webkit-scrollbar {
+    width: 8px;
+}
+
+.auto-expand-textarea::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.auto-expand-textarea::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.auto-expand-textarea::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Animation for character count */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.character-count.warn {
+    color: #e74c3c;
+    animation: pulse 0.3s ease-in-out;
+}

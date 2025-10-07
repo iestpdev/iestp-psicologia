@@ -1,0 +1,22 @@
+    .ts-control {
+        height: 45px !important;
+        border: 1px solid var(--black2) !important;
+        color: var(--black2) !important;
+        border-radius: 6px !important;
+        transition: border-color 0.2s !important;
+        background-color: var(--white) !important;
+    }
+
+    .ts-control input {
+        font-size: 15px !important;
+    }
+
+    .ts-dropdown {
+        font-size: 15px !important;
+    }
+
+    .ts-control .item {
+        padding-top: 5px !important;
+        color: var(--black1) !important;
+        font-size: 15px !important;
+    }

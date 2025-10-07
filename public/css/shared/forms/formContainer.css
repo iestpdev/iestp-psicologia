@@ -1,0 +1,43 @@
+.form-container {
+  min-height: 100vh;
+  padding: 2rem 0;
+}
+
+.form-card {
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: -1px 3px 10px 2px rgba(178, 178, 178, 0.68),
+    1px 3px 10px 2px rgba(178, 178, 178, 0.68);
+  padding: 2.5rem;
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.required-mark {
+  color: #dc3545;
+  /* puedes definir un --red si quieres unificar */
+}
+
+.form-control-custom {
+  width: 100%;
+  padding: 0.65rem 0.9rem;
+  font-size: 0.95rem;
+  border: 1px solid var(--black2);
+  border-radius: 6px;
+  transition: border-color 0.2s;
+  background-color: var(--white);
+}
+
+.form-control-custom:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 0.15rem rgba(3, 88, 203, 0.15);
+}
+
+.form-control-custom::placeholder {
+  color: var(--black2);
+}

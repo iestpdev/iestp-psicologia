@@ -1,0 +1,71 @@
+/* ===== Responsive ===== */
+@media (max-width: 991px) {
+    .navegacion {
+        left: -300px;
+    }
+
+    /* oculto */
+    .navegacion.activado {
+        left: 0;
+        width: 300px;
+    }
+
+    .main {
+        left: 0;
+        width: 100%;
+    }
+
+    .main.activado {
+        left: 300px;
+        width: calc(100% - 300px);
+    }
+
+    .brand .title {
+        padding-right: 40px;
+    }
+}
+
+@media (max-width: 768px) {
+    .titulo-label {
+        display: none;
+    }
+
+    .form-card {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .main.activado {
+        left: 0;
+        width: 100%;
+    }
+
+
+    .navegacion.activado .cerrar-sidebar {
+        display: flex;
+        pointer-events: auto;
+    }
+
+    .brand .cerrar-sidebar {
+        pointer-events: auto;
+    }
+
+    /* Evitar hover y curvas solo en .brand */
+    .navegacion ul li.brand:hover,
+    .navegacion ul li.brand.hovered {
+        background: var(--blue);  /* mismo color de fondo original */
+    }
+
+    .navegacion ul li.brand:hover a::before,
+    .navegacion ul li.brand.hovered a::before,
+    .navegacion ul li.brand:hover a::after,
+    .navegacion ul li.brand.hovered a::after {
+        box-shadow: none;/* desactiva las curvas */
+    }
+
+    .navegacion ul li.brand:hover a,
+    .navegacion ul li.brand.hovered a {
+        color: var(--white);/* mantiene el color original del texto */
+    }
+}

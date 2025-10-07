@@ -1,0 +1,16 @@
+/* ===== main ===== */
+.main {
+    position: absolute;
+    top: 0;
+    left: 300px;
+    width: calc(100% - 300px);
+    min-height: 100vh;
+    background: var(--white);
+    transition: left .35s ease, width .35s ease;
+    padding: 20px;
+}
+
+.main.activado {
+    left: 80px;
+    width: calc(100% - 80px);
+}
