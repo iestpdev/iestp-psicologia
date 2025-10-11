@@ -4,7 +4,7 @@ namespace App\Models\Mantenimiento;
 
 use App\Models\BaseModel;
 
-class Parentesco extends BaseModel
+class Parentescos extends BaseModel
 {
     protected $table            = 'parentescos';
     protected $primaryKey       = 'id';
