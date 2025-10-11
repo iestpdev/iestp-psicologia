@@ -1,0 +1,146 @@
+/* ===== Sidebar IZQUIERDO ===== */
+.navegacion {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 100vh;
+    background: var(--blue);
+    transition: width .35s ease, left .35s ease;
+    overflow: auto;
+    z-index: 1000;
+    scrollbar-width: none;
+}
+
+.navegacion.activado {
+    width: 80px;
+    overflow-x: hidden;
+}
+
+.navegacion ul {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    list-style: none;
+}
+
+.navegacion li {
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+    margin-left: 15px;
+}
+
+.navegacion li a {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    color: var(--white);
+    text-decoration: none;
+    padding: 0 1rem;
+    height: 60px;
+    line-height: 60px;
+    white-space: nowrap;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.navegacion li:hover,
+.navegacion li.hovered {
+    background: var(--white);
+}
+
+.navegacion li:hover a,
+.navegacion li.hovered a {
+    color: var(--blue);
+}
+
+/* Pseudoelementos para la curva */
+.navegacion ul li:hover a::before,
+.navegacion ul li.hovered a::before { /* curva superior derecha*/
+    content: "";
+    position: absolute;
+    right: 0;
+    top: -50px;
+    width: 50px;
+    height: 50px;
+    background-color: transparent;
+    border-radius: 50%;
+    box-shadow: 35px 35px 0 10px var(--white);
+    pointer-events: none;
+}
+
+.navegacion ul li:hover a::after,
+.navegacion ul li.hovered a::after { /* curva inferior derecha*/
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: -50px;
+    width: 50px;
+    height: 50px;
+    background-color: transparent;
+    border-radius: 50%;
+    box-shadow: 35px -35px 0 10px var(--white);
+    pointer-events: none;
+}
+
+.navegacion .icon {
+    min-width: 45px;
+    height: 45px;
+    font-size: 1.5rem;
+    text-align: left;
+    margin-top: -5px;
+}
+
+.navegacion .icon ion-icon {
+    font-size: 1.75rem;
+    margin-right: 0.5rem;
+}
+
+.navegacion ul li a .title {
+    position: relative;
+    display: block;
+    padding: 0 10px;
+    height: 60px;
+    line-height: 60px;
+    text-align: start;
+    white-space: nowrap;
+}
+
+.brand {
+    position: relative;
+    margin-bottom: 40px;
+    margin-left: -5px;
+    pointer-events: none; 
+}
+
+
+.brand a .title {
+    margin-top: 20px;
+}
+
+.brand a .icon {
+    height: 45px;
+    margin-left: -7px;
+    font-size: 2rem;
+}
+
+.navegacion.activado .cerrar-sidebar {
+    position: absolute;
+    top: 65%;
+    right: 15px;
+    transform: translateY(-50%);
+    font-size: 1.8rem;
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    background: transparent;
+    border: none;
+    display: none;
+}
+.navegacion .cerrar-sidebar{
+    display: none;
+}

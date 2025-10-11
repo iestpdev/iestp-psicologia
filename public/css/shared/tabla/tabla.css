@@ -1,0 +1,89 @@
+/* ======Estilos de la libreria Datatable====== */
+
+/* Quitar borde superior e inferior de la tabla */
+.tabla #datatable,
+.tabla #datatable th,
+.tabla #datatable td {
+    border-top: none;
+    border-bottom: none;
+    padding: 10px 0 !important;
+}
+
+/* Contenedor de la paginación */
+.tabla .dataTables_wrapper .dataTables_paginate {
+    margin-top: 15px;
+    text-align: center;
+    float: none;
+}
+
+/* Botones */
+.tabla .dataTables_wrapper .dataTables_paginate .paginate_button {
+    display: inline-block;
+    margin: 0 3px;
+    padding: 5px 10px;
+    border-radius: 6px;
+    background: var(--gray);
+    color: #374151; 
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid var(--black2);
+}
+
+/* Hover */
+.tabla .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background: var(--blue);
+    color: var(--white);
+    border-color: var(--blue);
+}
+
+/* Botón activo (página actual) */
+.tabla .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    background: var(--blue);
+    color: var(--white) !important;
+    border-color: var(--blue);
+    font-weight: 600;
+}
+
+/* Botón deshabilitado */
+.tabla .dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
+    background: #e5e7eb;
+    color: var(--black2);
+    cursor: not-allowed;
+    border: 1px solid var(--black2);
+}
+
+/* ======Estilos personalizados del contenedor de tabla====== */
+.tabla {
+    width: 100%;
+    background: var(--white);
+    padding: 20px;
+    box-shadow: -1px 3px 10px 2px rgba(178, 178, 178, 0.68),
+                 1px 3px 10px 2px rgba(178, 178, 178, 0.68);
+    border-radius: 20px;
+    overflow-x: auto;
+}
+.tabla table {
+    width: 100% !important;
+    border-collapse: collapse;
+}
+
+.TableHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+.TableHeader h2 {
+    font-weight: 600;
+    color: var(--blue);
+}
+
+.TableHeader .btn {
+    position: relative;
+    padding: 5px 10px;
+    background: var(--blue);
+    text-decoration: none;
+    color: var(--white);
+    border-radius: 6px;
+}

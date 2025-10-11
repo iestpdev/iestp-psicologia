@@ -1,0 +1,68 @@
+/* ===== Topbar ===== */
+.topbar {
+    height: 65px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--white);
+    padding: 0 20px;
+    margin-top: -1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Botón hamburguesa */
+.palanca {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    cursor: pointer;
+    color: var(--blue);
+    background: transparent;
+    border: none;
+}
+
+/* Título centrado */
+.titulo-label {
+    flex: 1;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--blue);
+}
+
+/* Contenedor usuario */
+.user-menu-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-decoration: none;
+}
+
+/* Texto usuario */
+.user-info {
+    text-align: right;
+    margin-right: 5px;
+}
+
+.user-info .user-name {
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin: 0;
+    color: var(--black1);
+}
+
+.user-info .user-role {
+    font-size: 0.8rem;
+    color: var(--black2);
+    margin: 0;
+}
+
+/* Icono usuario */
+.user-icon-container {
+    font-size: 2rem;
+    color: var(--blue);
+    cursor: pointer;
+}
