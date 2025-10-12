@@ -1,3 +1,5 @@
+import { showToast } from '../shared/toasts/notyf.js';
+
 const BASE_URL = document.querySelector('meta[name="base-url"]').content;
 
 async function loadInfoReniec() {
@@ -8,39 +10,50 @@ async function loadInfoReniec() {
 
   const dni = inputDNI.value.trim();
 
-  if (dni.length === 8) {
-    try {
-      btnSubmit?.classList.add("disabled");
-
-      const res = await fetch(`${BASE_URL}api/decolecta/dni/${dni}`);
-      if (!res.ok) throw new Error("No se pudo obtener los datos del DNI");
-
-      const data = await res.json();
-
-      const persona = typeof data === "string" ? JSON.parse(data) : data;
-
-      if (persona && persona.first_name) {
-        nombres.value = persona.first_name;
-        apellidos.value = `${persona.first_last_name ?? ""} ${persona.second_last_name ?? ""}`.trim();
-      } else {
-        nombres.value = "";
-        apellidos.value = "";
-      }
-    } catch (error) {
-      console.error("Error al consultar RENIEC:", error);
-      nombres.value = "";
-      apellidos.value = "";
-    } finally {
-      btnSubmit?.classList.remove("disabled");
-    }
-  } else {
+  if (dni.length !== 8) {
     nombres.value = "";
     apellidos.value = "";
+    btnSubmit?.classList.remove("disabled");
+    return;
+  }
+
+  try {
+    btnSubmit?.classList.add("disabled");
+
+    const res = await fetch(`${BASE_URL}api/decolecta/dni/${dni}`);
+    const data = await res.json().catch(() => null);
+
+    if (res.status === 200 && data?.first_name) {
+      nombres.value = data.first_name;
+      apellidos.value = `${data.first_last_name ?? ""} ${data.second_last_name ?? ""}`.trim();
+      showToast('success', 'Se encontraron resultados del DNI');
+    }
+    else if (res.status === 404) {
+      nombres.value = "";
+      apellidos.value = "";
+      showToast('warning', 'DNI no encontrado en RENIEC');
+    }
+    else if (res.status === 502) {
+      nombres.value = "";
+      apellidos.value = "";
+      showToast('error', 'Error al comunicarse con Decolecta');
+    }
+    else {
+      nombres.value = "";
+      apellidos.value = "";
+      showToast('error', 'Error inesperado al consultar el DNI');
+    }
+
+  } catch (error) {
+    console.error("Error al consultar API Decolecta:", error);
+    showToast('error', 'Error interno al consultar API Decolecta');
+    nombres.value = "";
+    apellidos.value = "";
+  } finally {
     btnSubmit?.classList.remove("disabled");
   }
 }
 
-// 🔥 Escucha solo el input del DNI (no todo el documento)
 document.addEventListener("DOMContentLoaded", () => {
   const inputDNI = document.getElementById("dni");
   if (inputDNI) {
