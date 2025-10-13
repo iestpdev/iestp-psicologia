@@ -20,12 +20,18 @@ if (!function_exists('runValidation')) {
             case 'usuario_update':
                 $validationClass = new \App\Validations\Usuarios\UsuarioUpdate();
                 break;
+
             //personas
             case 'persona_create':
                 $validationClass = new \App\Validations\Personas\PersonaCreate();
                 break;
             case 'persona_update':
                 $validationClass = new \App\Validations\Personas\PersonaUpdate();
+                break;
+
+            //parientes
+            case 'pariente_create':
+                $validationClass = new \App\Validations\Parientes\ParienteCreate();
                 break;
             //alumnos
             case 'alumno_create':
@@ -40,7 +46,8 @@ if (!function_exists('runValidation')) {
         }
 
         $validation->setRules($validationClass->rules, $validationClass->errors);
-        if (!$validation->withRequest($request)->run()) return $validation->getErrors();
+        if (!$validation->withRequest($request)->run())
+            return $validation->getErrors();
 
         return [];
     }

@@ -8,7 +8,6 @@ class DetalleCita extends BaseModel
     protected $primaryKey = 'id';
     protected $allowedFields = [
         'cita_id',
-        'motivo',
         'problema',
         'recomendacion',
         'aspecto_fisico',

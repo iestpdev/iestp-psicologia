@@ -3,7 +3,9 @@
 namespace App\Controllers;
 
 use App\Models\Alumno;
+use App\Models\Familiar;
 use App\Models\Mantenimiento\EstadoCivil;
+use App\Models\Mantenimiento\Parentesco;
 use App\Models\Mantenimiento\ProgramaEstudio;
 use App\Models\Mantenimiento\Religion;
 
@@ -14,9 +16,27 @@ class AlumnoController extends BaseController
         return view('modules/alumnos/index');
     }
 
-    public function info($usuarioId): string
+    public function info($alumnoId): string
     {
-        return view('modules/alumnos/details/info');
+        $alumnoModel = new Alumno();
+        $alumno = $alumnoModel->obtenerPorId($alumnoId);
+        if (!$alumno) {
+            return view('errors/html/error_404', [
+                'message' => 'Alumno no encontrado'
+            ]);
+        }
+
+        $familiarModel = new Familiar();
+        $familiares = $familiarModel->listarPorAlumnoId($alumnoId);
+
+        $parentescoModel = new Parentesco();
+        $parentescos = $parentescoModel->listar();
+
+        return view('modules/alumnos/details/index', [
+            'alumno' => $alumno,
+            'familiares' => $familiares,
+            'parentescos' => $parentescos
+        ]);
     }
 
     public function crear(): string
@@ -51,26 +71,28 @@ class AlumnoController extends BaseController
     {
         helper('validation');
         $errors = runValidation('alumno_create', $this->request);
-        if (!empty($errors)) return redirect()->to('/alumnos/crear')->withInput()->with('errors', $errors);
+        if (!empty($errors))
+            return redirect()->to('/alumnos/crear')->withInput()->with('errors', $errors);
 
         try {
             $alumnoModel = new Alumno();
             $alumnoId = $alumnoModel->crear([
-                'dni'                   => $this->request->getPost('dni'),
-                'nombres'               => $this->request->getPost('nombres'),
-                'apellidos'             => $this->request->getPost('apellidos'),
-                'programa_estudio_id'   => $this->request->getPost('programa_estudio'),
-                'ciclo'                 => $this->request->getPost('ciclo'),
-                'turno'                 => $this->request->getPost('turno'),
-                'telefono'              => $this->request->getPost('telefono'),
-                'domicilio'             => $this->request->getPost('domicilio'),
-                'sexo'                  => $this->request->getPost('sexo'),
-                'direccion_nac'         => $this->request->getPost('direccion_nac'),
-                'fecha_nac'             => $this->request->getPost('fecha_nac'),
-                'religion_id'           => $this->request->getPost('religion'),
-                'estado_civil_id'       => $this->request->getPost('estado_civil'),
+                'dni' => $this->request->getPost('dni'),
+                'nombres' => $this->request->getPost('nombres'),
+                'apellidos' => $this->request->getPost('apellidos'),
+                'programa_estudio_id' => $this->request->getPost('programa_estudio'),
+                'ciclo' => $this->request->getPost('ciclo'),
+                'turno' => $this->request->getPost('turno'),
+                'telefono' => $this->request->getPost('telefono'),
+                'domicilio' => $this->request->getPost('domicilio'),
+                'sexo' => $this->request->getPost('sexo'),
+                'direccion_nac' => $this->request->getPost('direccion_nac'),
+                'fecha_nac' => $this->request->getPost('fecha_nac'),
+                'religion_id' => $this->request->getPost('religion'),
+                'estado_civil_id' => $this->request->getPost('estado_civil'),
             ]);
-            if (!$alumnoId) throw new \Exception("Error al crear Alumno");
+            if (!$alumnoId)
+                throw new \Exception("Error al crear Alumno");
             return redirect()->to('/alumnos')->with('success', 'Alumno registrado con éxito');
         } catch (\Throwable $e) {
             return redirect()->back()->withInput()->with('error', 'Hubo un error: ' . $e->getMessage());
@@ -89,7 +111,7 @@ class AlumnoController extends BaseController
 
         return $this->response->setJSON([
             'status' => 'success',
-            'data'   => $alumnos
+            'data' => $alumnos
         ]);
     }
 }

@@ -141,6 +141,7 @@ CREATE TABLE citas(
 	alumno_id			BIGINT NOT NULL,
 	derivacion_id		BIGINT NULL,
 	familiar_id			BIGINT NULL,
+	motivo				VARCHAR(255) NOT NULL,
 	created_at			DATETIME NULL,
 	updated_at			DATETIME NULL,
 	deleted_at			DATETIME NULL,
@@ -153,7 +154,6 @@ CREATE TABLE citas(
 CREATE TABLE detalle_cita(
 	id						BIGINT AUTO_INCREMENT PRIMARY KEY,
 	cita_id				BIGINT NOT NULL,
-	motivo				VARCHAR(255) NOT NULL,
 	problema				VARCHAR(255) NULL,
 	recomendacion		VARCHAR(255) NULL,
 	aspecto_fisico		VARCHAR(255) NULL,

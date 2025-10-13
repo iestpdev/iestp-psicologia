@@ -6,6 +6,8 @@ SELECT
     c.hora_inicio,
     c.hora_fin,
     c.asistencia,
+    c.motivo,
+
     c.usuario_id,
     CONCAT(p.nombres, ' ', p.apellidos) AS usuario_nombres_completos,
     p.dni AS usuario_dni,
@@ -16,7 +18,6 @@ SELECT
     a.dni AS alumno_dni,
 
     d.id AS detalle_id,
-    d.motivo,
     d.problema,
     d.recomendacion,
     d.aspecto_fisico,

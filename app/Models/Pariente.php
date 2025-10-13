@@ -4,7 +4,7 @@ namespace App\Models;
 
 class Pariente extends BaseModel
 {
-    protected $table      = 'parientes';
+    protected $table = 'parientes';
     protected $primaryKey = 'id';
     protected $allowedFields = [
         'nombres',
@@ -13,4 +13,9 @@ class Pariente extends BaseModel
         'telefono',
         'parentesco_id',
     ];
+
+    public function crear(array $data): int
+    {
+        return $this->insert($data, true);
+    }
 }

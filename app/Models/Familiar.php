@@ -4,7 +4,7 @@ namespace App\Models;
 
 class Familiar extends BaseModel
 {
-    protected $table      = 'familiares';
+    protected $table = 'familiares';
     protected $primaryKey = 'id';
     protected $allowedFields = [
         'alumno_id',
@@ -29,5 +29,10 @@ class Familiar extends BaseModel
             ->orderBy('p.nombres', 'ASC');
 
         return $builder->get()->getResultArray();
+    }
+    
+    public function crear(array $data): int
+    {
+        return $this->insert($data, true);
     }
 }

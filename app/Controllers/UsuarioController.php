@@ -23,6 +23,12 @@ class UsuarioController extends BaseController
         $usuarioModel = new Usuario();
         $usuarioEncontrado = $usuarioModel->obtenerPorId($usuarioId);
 
+        if (!$usuarioEncontrado) {
+            return view('errors/html/error_404', [
+                'message' => 'Usuario no encontrado'
+            ]);
+        }
+
         $data['usuario'] = $usuarioEncontrado;
         return view('modules/usuarios/editar', $data);
     }
