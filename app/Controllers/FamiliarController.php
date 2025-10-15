@@ -13,6 +13,42 @@ class FamiliarController extends BaseController
         return $this->response->setJSON($familiarModel->listarPorAlumnoId((int) $alumnoId));
     }
 
+    public function deleteFamiliar($parienteId)
+    {
+        $db = \Config\Database::connect();
+        $db->transBegin();
+
+        try {
+            $familiarModel = new Familiar();
+            $parienteModel = new Pariente();
+
+            $familiar = $familiarModel->where('pariente_id', $parienteId)->first();
+            if (!$familiar)
+                throw new \Exception("No se encontró el familiar asociado");
+
+            if (!$familiarModel->eliminar($familiar['id']))
+                throw new \Exception("Error al eliminar el registro de familiar");
+
+            if (!$parienteModel->eliminar($parienteId))
+                throw new \Exception("Error al eliminar el pariente asociado");
+
+            $db->transCommit();
+
+            return $this->response->setJSON([
+                'status' => 'success',
+                'message' => 'Familiar eliminado correctamente',
+                'id' => $parienteId
+            ]);
+
+        } catch (\Throwable $e) {
+            $db->transRollback();
+            return $this->response->setStatusCode(500)->setJSON([
+                'status' => 'error',
+                'message' => 'Error al eliminar familiar: ' . $e->getMessage(),
+            ]);
+        }
+    }
+
     public function saveFamiliar($alumnoId)
     {
         helper(['validation', 'input']);
@@ -52,7 +88,7 @@ class FamiliarController extends BaseController
             $db->transCommit();
 
             // obtenemos el nuevo registro para devolverlo
-            $nuevo = $familiarModel->listarPorFamiliarId($familiarId);
+            $nuevo = $familiarModel->obtenerPorId($familiarId);
 
             return $this->response->setJSON([
                 'status' => 'success',

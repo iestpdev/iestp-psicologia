@@ -10,6 +10,10 @@ class Familiar extends BaseModel
         'alumno_id',
         'pariente_id',
     ];
+    public function eliminar(int $id): bool
+    {
+        return $this->delete($id);
+    }
 
     public function listarPorAlumnoId(int $alumnoId): array
     {
@@ -26,12 +30,14 @@ class Familiar extends BaseModel
             ->join('parientes p', 'p.id = f.pariente_id', 'left')
             ->join('parentescos pa', 'pa.id = p.parentesco_id', 'left')
             ->where('f.alumno_id', $alumnoId)
+            ->where('f.deleted_at', null)
+            ->where('p.deleted_at', null)
             ->orderBy('p.nombres', 'ASC');
 
         return $builder->get()->getResultArray();
     }
 
-    public function listarPorFamiliarId(int $familiarId): ?array
+    public function obtenerPorId(int $familiarId): ?array
     {
         $builder = $this->db->table($this->table . ' f')
             ->select("
@@ -44,7 +50,9 @@ class Familiar extends BaseModel
         ")
             ->join('parientes p', 'p.id = f.pariente_id', 'left')
             ->join('parentescos pa', 'pa.id = p.parentesco_id', 'left')
-            ->where('f.id', $familiarId);
+            ->where('f.id', $familiarId)
+            ->where('f.deleted_at', null)
+            ->where('p.deleted_at', null);
 
         return $builder->get()->getRowArray();
     }

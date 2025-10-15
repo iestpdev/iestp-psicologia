@@ -44,8 +44,6 @@
 
     </div>
 
-    <div class="profile-divider"></div>
-
     <div class="profile-section">
         <div class="info-item">
             <div class="info-icon">
@@ -68,8 +66,6 @@
             </span>
         </div>
     </div>
-
-    <div class="profile-divider"></div>
 
     <div class="profile-section">
         <h3 class="section-title">

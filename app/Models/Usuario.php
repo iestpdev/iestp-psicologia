@@ -103,7 +103,9 @@ class Usuario extends BaseModel
             u.deleted_at
         ")
             ->join('personas p', 'u.persona_id = p.id', 'left')
-            ->where('u.rol', 'PSICOLOGO');
+            ->where('u.rol', 'PSICOLOGO')
+            ->where('u.deleted_at', null)
+            ->where('u.deleted_at', null);
 
         return $builder->get()->getResultArray();
     }

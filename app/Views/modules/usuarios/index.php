@@ -126,7 +126,7 @@
     });
 </script>
 
-<?= $this->include('modules/usuarios/modal/modalChangePass/modalChangePass-script') ?>
 <?= $this->include('shared/alerts/sweetAlert2') ?>
+<?= $this->include('modules/usuarios/modal/modalChangePass/modalChangePass-script') ?>
 
 <?= $this->endSection() ?>

@@ -14,6 +14,11 @@ class Pariente extends BaseModel
         'parentesco_id',
     ];
 
+    public function eliminar(int $id): bool
+    {
+        return $this->delete($id);
+    }
+
     public function obtenerPorId($id){
         return $this->where('id', $id)->first();
     }

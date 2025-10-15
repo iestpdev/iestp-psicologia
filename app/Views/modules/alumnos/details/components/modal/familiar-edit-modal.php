@@ -64,7 +64,7 @@
         const form = document.getElementById('formEditarFamiliar');
 
         // Abrir modal al hacer click en una card
-        document.querySelectorAll('.familiar-card').forEach(card => {
+        document.querySelectorAll('.familiar-name').forEach(card => {
             card.addEventListener('click', async () => {
                 const id = card.dataset.parienteId;
                 try {
