@@ -43,8 +43,10 @@
                             <?php endforeach; ?>
                         </select>
                     </div>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" form="formRegistrarFamiliar" class="btn btn-primary">Registrar</button>
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" form="formRegistrarFamiliar" class="btn btn-primary">Registrar</button>
+                    </div>
                 </form>
             </div>
 
@@ -77,7 +79,16 @@
                 });
 
                 const data = await res.json();
-                if (!res.ok) throw data;
+                if (!res.ok) {
+                    if (Array.isArray(data.errors)) {
+                        data.errors.forEach(error => showToast('error', error));
+                    } else if (typeof data.errors === 'object') {
+                        Object.values(data.errors).forEach(error => showToast('error', error));
+                    } else if (data.message) {
+                        showToast('error', data.message);
+                    }
+                    throw data;
+                }
 
                 // notificación
                 showToast('success', data.message || 'Familiar registrado correctamente');
@@ -107,8 +118,6 @@
 
             } catch (err) {
                 console.error(err);
-                const msg = err?.message || 'Ocurrió un error al registrar el familiar';
-                showToast('error', msg);
                 btn.disabled = false;
             }
         });

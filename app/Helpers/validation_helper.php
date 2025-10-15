@@ -33,6 +33,10 @@ if (!function_exists('runValidation')) {
             case 'pariente_create':
                 $validationClass = new \App\Validations\Parientes\ParienteCreate();
                 break;
+            case 'pariente_update':
+                $validationClass = new \App\Validations\Parientes\ParienteUpdate();
+                break;
+
             //alumnos
             case 'alumno_create':
                 $validationClass = new \App\Validations\Alumnos\AlumnoCreate();

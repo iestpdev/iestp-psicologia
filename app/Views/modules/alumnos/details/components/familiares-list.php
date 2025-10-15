@@ -12,7 +12,7 @@
 <?php else: ?>
     <div class="familiares-grid mx-3">
         <?php foreach ($familiares as $f): ?>
-            <div class="familiar-card">
+            <div class="familiar-card" data-pariente-id="<?= $f['pariente_id'] ?>">
                 <div class="familiar-card-body">
                     <h6 class="familiar-name mb-1">
                         <?= esc($f['pariente_nombres'] . ' ' . $f['pariente_apellidos']) ?>
@@ -28,6 +28,9 @@
     </div>
 <?php endif; ?>
 <?= view('modules/alumnos/details/components/modal/familiar-register-modal', [
+    'parentescos' => $parentescos,
+]) ?>
+<?= view('modules/alumnos/details/components/modal/familiar-edit-modal', [
     'parentescos' => $parentescos,
 ]) ?>
 
