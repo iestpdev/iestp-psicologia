@@ -80,6 +80,9 @@
                     form.telefono.value = data.telefono ?? '';
                     form.parentesco.value = data.parentesco_id;
 
+                    // Guardamos la card actual que se esta editando
+                    form.dataset.targetCard = id;
+
                     editModal.show();
                 } catch (err) {
                     console.error(err);
@@ -114,6 +117,18 @@
 
                 showToast('success', data.message || 'Familiar actualizado correctamente');
                 editModal.hide();
+
+                // Actualizar dinamicamente la card
+                const card = document.querySelector(`.familiar-card[data-pariente-id="${form.dataset.targetCard}"]`);
+                if (card) {
+                    card.querySelector('.familiar-name').textContent = `${form.nombres.value} ${form.apellidos.value}`;
+                    card.querySelector('.familiar-detail:nth-of-type(1)').innerHTML = `<i class="fa fa-id-card"></i> ${form.dni.value}`;
+                    card.querySelector('.familiar-detail:nth-of-type(2)').innerHTML = `<i class="fa fa-phone"></i> ${form.telefono.value || 'Sin teléfono'}`;
+
+                    // Obtener el texto visible del parentesco
+                    const parentescoText = form.parentesco.options[form.parentesco.selectedIndex].text;
+                    card.querySelector('.familiar-detail:nth-of-type(3)').innerHTML = `<i class="fa fa-link"></i> ${parentescoText}`;
+                }
             } catch (err) {
                 console.error(err);
             }
