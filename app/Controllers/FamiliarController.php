@@ -52,8 +52,7 @@ class FamiliarController extends BaseController
             $db->transCommit();
 
             // obtenemos el nuevo registro para devolverlo
-            $nuevo = $familiarModel->listarPorAlumnoId($alumnoId);
-            $nuevo = end($nuevo);
+            $nuevo = $familiarModel->listarPorFamiliarId($familiarId);
 
             return $this->response->setJSON([
                 'status' => 'success',

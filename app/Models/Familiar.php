@@ -30,7 +30,26 @@ class Familiar extends BaseModel
 
         return $builder->get()->getResultArray();
     }
-    
+
+    public function listarPorFamiliarId(int $familiarId): ?array
+    {
+        $builder = $this->db->table($this->table . ' f')
+            ->select("
+            f.*,
+            p.nombres AS pariente_nombres,
+            p.apellidos AS pariente_apellidos,
+            p.dni AS pariente_dni,
+            p.telefono AS pariente_telefono,
+            pa.nombre AS pariente_parentesco
+        ")
+            ->join('parientes p', 'p.id = f.pariente_id', 'left')
+            ->join('parentescos pa', 'pa.id = p.parentesco_id', 'left')
+            ->where('f.id', $familiarId);
+
+        return $builder->get()->getRowArray();
+    }
+
+
     public function crear(array $data): int
     {
         return $this->insert($data, true);
