@@ -62,7 +62,7 @@ class Alumno extends BaseModel
         $builder->join('programas_estudios AS pe', 'pe.id = a.programa_estudio_id', 'left');
         $builder->join('religiones AS r', 'r.id = a.religion_id', 'left');
         $builder->join('estados_civiles AS ec', 'ec.id = a.estado_civil_id', 'left');
-
+        $builder->where('a.deleted_at', null);
         $builder->where('a.id', $id);
 
         $query = $builder->get();
@@ -96,6 +96,7 @@ class Alumno extends BaseModel
             ciclo, 
             turno'
         );
+        $builder->where('deleted_at', null);
 
         return $builder->get()->getResultArray();
     }

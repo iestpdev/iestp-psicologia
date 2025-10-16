@@ -37,6 +37,7 @@ class Derivacion extends BaseModel
             ->join('usuarios u', 'u.id = d.usuario_id', 'left')
             ->join('personas p', 'p.id = u.persona_id', 'left')
             ->where('d.recibido', 0)
+            ->where('d.deleted_at', null)
             ->orderBy('d.created_at', 'DESC');
 
         return $builder->get()->getResultArray();

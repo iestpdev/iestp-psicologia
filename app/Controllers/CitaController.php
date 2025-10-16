@@ -46,7 +46,7 @@ class CitaController extends BaseController
         $db = \Config\Database::connect();
         $builder = $db->table('view_citas_full_info');
         $builder->where("asistencia = 'ASISTIDO' AND MONTH(atencion_fech) = $month AND YEAR(atencion_fech) = $year", null, false);
-
+        $builder->where('deleted_at', null);
         $rows = $builder->get()->getResultArray();
 
         $data = [

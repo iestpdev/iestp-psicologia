@@ -39,6 +39,7 @@ class Usuario extends BaseModel
             u.deleted_at
         ")
             ->join('personas p', 'u.persona_id = p.id', 'left')
+            ->where('u.deleted_at', null)
             ->where('u.id', $id);
 
         return $builder->get()->getRowArray();
@@ -80,7 +81,8 @@ class Usuario extends BaseModel
             u.deleted_at
         ")
             ->join('personas p', 'u.persona_id = p.id', 'left')
-            ->where('u.rol', 'DOCENTE');
+            ->where('u.rol', 'DOCENTE')
+            ->where('u.deleted_at', null);
 
         if (!empty($dni)) {
             $builder->where('p.dni', $dni);
