@@ -4,7 +4,7 @@ namespace App\Models;
 
 class Derivacion extends BaseModel
 {
-    protected $table      = 'derivaciones';
+    protected $table = 'derivaciones';
     protected $primaryKey = 'id';
     protected $allowedFields = [
         'usuario_id',
@@ -14,14 +14,51 @@ class Derivacion extends BaseModel
         'recibido',
     ];
 
+    public function eliminar(int $id): bool
+    {
+        return $this->delete($id);
+    }
+
     public function crear(array $data): int
     {
         return $this->insert($data, true);
     }
 
-    public function getById(int $id)
+    public function actualizar(int $id, array $data): bool
     {
-        return $this->find($id);
+        return $this->update($id, $data);
+    }
+
+    public function obtenerPorId(int $id)
+    {
+        $builder = $this->db->table($this->table . ' d')
+            ->select("
+                d.id,
+                d.motivo,
+                d.urgencia,
+                d.recibido AS estado,
+                d.created_at,
+                d.updated_at,
+                d.deleted_at,
+
+                a.id AS alumno_id,
+                CONCAT(a.nombres, ' ', a.apellidos) AS alumno_nombres_completos,
+                a.dni AS alumno_dni,
+
+                u.id AS docente_usuario_id,
+                u.correo_institucional AS usuario_correo,
+
+                p.id AS docente_persona_id,
+                CONCAT(p.nombres, ' ', p.apellidos) AS docente_nombres_completos,
+                p.dni AS docente_dni
+            ")
+            ->join('alumnos a', 'a.id = d.alumno_id', 'left')
+            ->join('usuarios u', 'u.id = d.usuario_id', 'left')
+            ->join('personas p', 'p.id = u.persona_id', 'left')
+            ->where('d.id', $id)
+            ->where('d.deleted_at', null);
+
+        return $builder->get()->getRowArray();
     }
 
     public function obtenerPendientes(): array

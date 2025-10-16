@@ -33,21 +33,22 @@
         <tbody>
         </tbody>
     </table>
+    <?= $this->include('modules/derivaciones/modal/modalInfo/modalInfo') ?>
 </div>
 
 <?= $this->include('shared/table/datatable') ?>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         const table = initDataTable("<?= base_url('api/datatable/DerivacionFullInfo') ?>", [
             {
                 data: null,
-                render: function(data, type, row) {
+                render: function (data, type, row) {
                     return row.docente_nombres_completos + ' ' + ' (' + row.docente_dni + ')';
                 }
             },
             {
                 data: null,
-                render: function(data, type, row) {
+                render: function (data, type, row) {
                     return row.alumno_nombres_completos + ' ' + ' (' + row.alumno_dni + ')';
                 }
             },
@@ -56,26 +57,36 @@
             },
             {
                 data: "estado",
-                render: function(data) {
+                render: function (data) {
                     return data == 1 ?
                         '<span class="badge bg-success">Recibido</span>' :
                         '<span class="badge bg-warning">En espera</span>';
                 }
             },
             {
-                data: "id",
+                data: null,
                 orderable: false,
                 searchable: false,
-                render: function(data) {
+                render: function (data, type, row) {
                     return `
-                        <a id="editar-${data}" href="<?= base_url('derivaciones/info/') ?>${data}" class="btn btn-sm btn-success">
+                        <button id="key-${data}" class="btn btn-sm btn-success">
                         <ion-icon name="newspaper-outline" class="icon-lg"></ion-icon>
+                        </button>
+
+                        <a id="editar-${row.id}" 
+                        href="<?= base_url('derivaciones/editar/') ?>${row.id}" 
+                        class="btn btn-sm btn-${row.estado == 0 ? "warning" : "secondary disabled"}">
+                        <ion-icon name="create-outline" class="icon-lg"></ion-icon>
                         </a>
-                        <a id="editar-${data}" href="<?= base_url('derivaciones/editar/') ?>${data}" class="btn btn-sm btn-warning">
-                         <ion-icon name="create-outline" class="icon-lg"></ion-icon>
-                        </a>
-                        <a id="editar-${data}" href="<?= base_url('api/derivaciones/delete/') ?>${data}" class="btn btn-sm btn-danger">
-                         <ion-icon name="trash-outline" class="icon-lg"></ion-icon>
+
+                        <a id="eliminar-${row.id}"
+                        href="<?= base_url('api/derivaciones/delete/') ?>${row.id}"
+                        class="btn btn-sm btn-${row.estado == 0 ? "danger" : "secondary disabled"}"
+                        data-confirm
+                        data-title="Eliminar Derivación"
+                        data-text="¿Desea eliminar esta derivación?"
+                        data-icon="warning">
+                        <ion-icon name="trash-outline" class="icon-lg"></ion-icon>
                         </a>
                     `;
                 }
@@ -90,5 +101,7 @@
         attachSearchInput(table, 'searchDerivaciones');
     });
 </script>
+<?= $this->include('shared/alerts/sweetAlert2') ?>
+<?= $this->include('modules/derivaciones/modal/modalInfo/modalInfo-script') ?>
 
 <?= $this->endSection() ?>

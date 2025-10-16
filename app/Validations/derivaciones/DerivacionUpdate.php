@@ -2,16 +2,20 @@
 
 namespace App\Validations\Derivaciones;
 
-class DerivacionCreate
+class DerivacionUpdate
 {
     public array $rules = [
-        'docente' => 'required|is_natural_no_zero',
-        'alumno'  => 'required|is_natural_no_zero',
-        'motivo'  => 'trim|required|min_length[10]|max_length[500]',
+        'id'       => 'permit_empty|is_natural_no_zero',
+        'docente'  => 'required|is_natural_no_zero',
+        'alumno'   => 'required|is_natural_no_zero',
+        'motivo'   => 'trim|required|min_length[10]|max_length[500]',
         'urgencia' => 'required|in_list[BAJA,MEDIA,ALTA]',
     ];
 
     public array $errors = [
+        'id' => [
+            'is_natural_no_zero' => 'El ID de la derivación no es válido.',
+        ],
         'docente' => [
             'required' => 'Debe seleccionar un docente',
             'is_natural_no_zero' => 'El docente seleccionado no es válido',
@@ -21,13 +25,13 @@ class DerivacionCreate
             'is_natural_no_zero' => 'El alumno seleccionado no es válido',
         ],
         'motivo' => [
-            'required' => 'Debe ingresar el motivo de la derivación',
+            'required'   => 'Debe ingresar el motivo de la derivación',
             'min_length' => 'El motivo debe tener al menos 10 caracteres',
             'max_length' => 'El motivo no puede superar los 500 caracteres',
         ],
         'urgencia' => [
             'required' => 'Debe seleccionar un nivel de urgencia',
-            'in_list' => 'La urgencia seleccionada no es válida',
+            'in_list'  => 'La urgencia seleccionada no es válida',
         ],
     ];
 }

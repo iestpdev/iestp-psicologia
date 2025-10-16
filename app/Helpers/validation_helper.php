@@ -49,6 +49,10 @@ if (!function_exists('runValidation')) {
             case 'derivacion_create':
                 $validationClass = new \App\Validations\Derivaciones\DerivacionCreate();
                 break;
+            case 'derivacion_update':
+                $validationClass = new \App\Validations\Derivaciones\DerivacionUpdate();
+                break;
+                
             default:
                 throw new \Exception("No hay validación definida para la entidad: {$entity}");
         }

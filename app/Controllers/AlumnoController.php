@@ -86,7 +86,7 @@ class AlumnoController extends BaseController
             if (!$alumno)
                 throw new \Exception("Alumno no encontrado");
             if (!$alumnoModel->eliminar($id))
-                throw new \Exception("Error al eliminar usuario");
+                throw new \Exception("Error al eliminar alumno");
 
             clear_datatable_cache('AlumnoFullInfo');
             return redirect()->to('/alumnos')->with('success', 'Alumno eliminado correctamente');
