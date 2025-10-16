@@ -69,7 +69,7 @@
                 searchable: false,
                 render: function (data, type, row) {
                     return `
-                        <button id="key-${data}" class="btn btn-sm btn-success">
+                        <button id="key-${row.id}" class="btn btn-sm btn-success">
                         <ion-icon name="newspaper-outline" class="icon-lg"></ion-icon>
                         </button>
 

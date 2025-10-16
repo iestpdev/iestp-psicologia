@@ -44,6 +44,7 @@ class Derivacion extends BaseModel
                 a.id AS alumno_id,
                 CONCAT(a.nombres, ' ', a.apellidos) AS alumno_nombres_completos,
                 a.dni AS alumno_dni,
+                pe.nombre as alumno_programa_estudio,
 
                 u.id AS docente_usuario_id,
                 u.correo_institucional AS usuario_correo,
@@ -53,6 +54,7 @@ class Derivacion extends BaseModel
                 p.dni AS docente_dni
             ")
             ->join('alumnos a', 'a.id = d.alumno_id', 'left')
+            ->join('programas_estudios pe','pe.id = a.programa_estudio_id','left')
             ->join('usuarios u', 'u.id = d.usuario_id', 'left')
             ->join('personas p', 'p.id = u.persona_id', 'left')
             ->where('d.id', $id)
