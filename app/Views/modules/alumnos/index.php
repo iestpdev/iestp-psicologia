@@ -38,46 +38,54 @@
 
 <?= $this->include('shared/table/datatable') ?>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         const table = initDataTable("<?= base_url('api/datatable/AlumnoFullInfo') ?>", [{
-                data: "dni"
-            },
-            {
-                data: "alumno_nombres_completos",
-            },
-            {
-                data: "programa_estudio"
-            },
-            {
-                data: "ciclo",
-                render: function(data) {
-                    return getCicloText(data);
-                }
-            },
-            {
-                data: "turno",
-                render: function(data) {
-                    return getTurnoText(data);
-                }
-            },
-            {
-                data: "id",
-                orderable: false,
-                searchable: false,
-                render: function(data) {
-                    return `
+            data: "dni"
+        },
+        {
+            data: "alumno_nombres_completos",
+        },
+        {
+            data: "programa_estudio"
+        },
+        {
+            data: "ciclo",
+            render: function (data) {
+                return getCicloText(data);
+            }
+        },
+        {
+            data: "turno",
+            render: function (data) {
+                return getTurnoText(data);
+            }
+        },
+        {
+            data: "id",
+            orderable: false,
+            searchable: false,
+            render: function (data) {
+                return `
                         <a id="editar-${data}" href="<?= base_url('alumnos/info/') ?>${data}" class="btn btn-sm btn-success">
                         <ion-icon name="newspaper-outline" class="icon-lg"></ion-icon>
                         </a>
+
                         <a id="editar-${data}" href="<?= base_url('alumnos/editar/') ?>${data}" class="btn btn-sm btn-warning">
                          <ion-icon name="create-outline" class="icon-lg"></ion-icon>
                         </a>
-                        <a id="editar-${data}" href="<?= base_url('api/alumnos/delete/') ?>${data}" class="btn btn-sm btn-danger">
-                         <ion-icon name="trash-outline" class="icon-lg"></ion-icon>
+
+                        <a id="eliminar-${data}"
+                        href="<?= base_url('api/alumnos/delete/') ?>${data}"
+                        class="btn btn-sm btn-danger"
+                        data-confirm
+                        data-title="Eliminar Alumno"
+                        data-text="¿Desea eliminar este alumno?"
+                        data-icon="warning">
+                        <ion-icon name="trash-outline" class="icon-lg"></ion-icon>
                         </a>
                     `;
-                }
             }
+        }
         ], {
             // extraOptions
             dom: 'lrtip', // quitando el buscador default de DataTables
@@ -88,5 +96,6 @@
         attachSearchInput(table, 'searchAlumnos');
     });
 </script>
+<?= $this->include('shared/alerts/sweetAlert2') ?>
 
 <?= $this->endSection() ?>

@@ -7,8 +7,10 @@ $routes->group('alumnos', function ($routes) {
     $routes->get('info/(:num)', 'AlumnoController::info/$1');
 });
 
-
 $routes->group('api', function ($routes) {
     $routes->post('alumnos/add', 'AlumnoController::saveAlumno');
+    $routes->post('alumnos/update/(:num)', 'AlumnoController::updateAlumno/$1');
+    $routes->get('alumnos/delete/(:num)', 'AlumnoController::deleteAlumno/$1');
+
     $routes->get('alumnos/obtener-alumnos', 'AlumnoController::obtenerAlumnos');
 });

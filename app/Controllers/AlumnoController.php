@@ -53,30 +53,59 @@ class AlumnoController extends BaseController
         return view('modules/alumnos/crear', $data);
     }
 
-    public function editar($usuarioId): string
+    public function editar($alumnoId): string
     {
+        $alumnoModel = new Alumno();
+        $alumno = $alumnoModel->find($alumnoId);
+
+        if (!$alumno) {
+            return view('errors/html/error_404', [
+                'message' => 'Alumno no encontrado'
+            ]);
+        }
+
         $programaEstudioModel = new ProgramaEstudio();
-        $data['programas_estudios'] = $programaEstudioModel->listar();
-
         $religionModel = new Religion();
-        $data['religiones'] = $religionModel->listar();
-
         $estadoCivilModel = new EstadoCivil();
-        $data['estados_civiles'] = $estadoCivilModel->listar();
 
-        return view('modules/alumnos/editar', $data);
+        return view('modules/alumnos/editar', [
+            'alumno' => $alumno,
+            'programas_estudios' => $programaEstudioModel->listar(),
+            'religiones' => $religionModel->listar(),
+            'estados_civiles' => $estadoCivilModel->listar(),
+        ]);
+    }
+
+    public function deleteAlumno($id)
+    {
+        helper('cache');
+
+        $alumnoModel = new Alumno();
+        try {
+            $alumno = $alumnoModel->obtenerPorId($id);
+            if (!$alumno)
+                throw new \Exception("Alumno no encontrado");
+            if (!$alumnoModel->eliminar($id))
+                throw new \Exception("Error al eliminar usuario");
+
+            clear_datatable_cache('AlumnoFullInfo');
+            return redirect()->to('/alumnos')->with('success', 'Alumno eliminado correctamente');
+        } catch (\Throwable $e) {
+            return redirect()->to('/alumnos')->with('error', 'Hubo un error: ' . $e->getMessage());
+        }
     }
 
     public function saveAlumno()
     {
-        helper('validation');
+        helper(['validation', 'input', 'cache']);
         $errors = runValidation('alumno_create', $this->request);
         if (!empty($errors))
             return redirect()->to('/alumnos/crear')->withInput()->with('errors', $errors);
 
+        $db = \Config\Database::connect();
+        $db->transBegin();
         try {
-            $alumnoModel = new Alumno();
-            $alumnoId = $alumnoModel->crear([
+            $alumnoData = normalize_input([
                 'dni' => $this->request->getPost('dni'),
                 'nombres' => $this->request->getPost('nombres'),
                 'apellidos' => $this->request->getPost('apellidos'),
@@ -91,13 +120,65 @@ class AlumnoController extends BaseController
                 'religion_id' => $this->request->getPost('religion'),
                 'estado_civil_id' => $this->request->getPost('estado_civil'),
             ]);
+            $alumnoModel = new Alumno();
+            $alumnoId = $alumnoModel->crear($alumnoData);
             if (!$alumnoId)
                 throw new \Exception("Error al crear Alumno");
+
+            $db->transCommit();
+            clear_datatable_cache('AlumnoFullInfo');
             return redirect()->to('/alumnos')->with('success', 'Alumno registrado con éxito');
         } catch (\Throwable $e) {
+            $db->transRollback();
             return redirect()->back()->withInput()->with('error', 'Hubo un error: ' . $e->getMessage());
         }
     }
+
+    public function updateAlumno($id)
+    {
+        helper(['validation', 'input', 'cache']);
+        $errors = runValidation('alumno_update', $this->request);
+
+        if (!empty($errors))
+            return redirect()->back()->withInput()->with('errors', $errors);
+
+        $db = \Config\Database::connect();
+        $db->transBegin();
+
+        try {
+            $alumnoModel = new Alumno();
+            $alumnoActual = $alumnoModel->obtenerPorId($id);
+
+            if (!$alumnoActual)
+                throw new \Exception("Alumno no encontrado");
+
+            $alumnoData = normalize_input([
+                'dni' => $this->request->getPost('dni'),
+                'nombres' => $this->request->getPost('nombres'),
+                'apellidos' => $this->request->getPost('apellidos'),
+                'programa_estudio_id' => $this->request->getPost('programa_estudio'),
+                'ciclo' => $this->request->getPost('ciclo'),
+                'turno' => $this->request->getPost('turno'),
+                'telefono' => $this->request->getPost('telefono'),
+                'domicilio' => $this->request->getPost('domicilio'),
+                'sexo' => $this->request->getPost('sexo'),
+                'direccion_nac' => $this->request->getPost('direccion_nac'),
+                'fecha_nac' => $this->request->getPost('fecha_nac'),
+                'religion_id' => $this->request->getPost('religion'),
+                'estado_civil_id' => $this->request->getPost('estado_civil'),
+            ]);
+
+            $alumnoModel->actualizar($id, $alumnoData);
+
+            $db->transCommit();
+            clear_datatable_cache('AlumnoFullInfo');
+            return redirect()->to('/alumnos')->with('success', 'Alumno actualizado correctamente');
+        } catch (\Throwable $e) {
+            $db->transRollback();
+            return redirect()->back()->withInput()->with('error', 'Error al actualizar: ' . $e->getMessage());
+        }
+    }
+
 
     public function obtenerAlumnos()
     {

@@ -41,6 +41,10 @@ if (!function_exists('runValidation')) {
             case 'alumno_create':
                 $validationClass = new \App\Validations\Alumnos\AlumnoCreate();
                 break;
+            case 'alumno_update':
+                $validationClass = new \App\Validations\Alumnos\AlumnoUpdate();
+                break;
+                
             //derivaciones
             case 'derivacion_create':
                 $validationClass = new \App\Validations\Derivaciones\DerivacionCreate();

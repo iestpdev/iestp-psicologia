@@ -22,9 +22,19 @@ class Alumno extends BaseModel
         'estado_civil_id',
     ];
 
+    public function eliminar(int $id): bool
+    {
+        return $this->delete($id);
+    }
+
     public function crear(array $data): int
     {
         return $this->insert($data, true);
+    }
+
+    public function actualizar(int $id, array $data): bool
+    {
+        return $this->update($id, $data);
     }
 
     public function obtenerPorId(int $id): ?array

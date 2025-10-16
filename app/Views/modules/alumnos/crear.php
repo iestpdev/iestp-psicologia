@@ -15,7 +15,8 @@
             'backUrl' => base_url('alumnos')
           ]) ?>
 
-          <form action="<?= base_url('api/alumnos/add') ?>" method="POST">
+          <form action="<?= base_url('api/alumnos/add') ?>" method="POST" data-confirm data-title="Registrar Alumno"
+            data-text="¿Desea registrar este nuevo alumno?" data-icon="question">
             <?= csrf_field() ?>
             <div class="row">
               <!-- DNI, Nombres y Apellidos-->
@@ -115,8 +116,7 @@
                   <label class="form-label">
                     Domicilio
                   </label>
-                  <input type="text" name="domicilio" class="form-control-custom"
-                    placeholder="Ingrese el domicilio">
+                  <input type="text" name="domicilio" class="form-control-custom" placeholder="Ingrese el domicilio">
                 </div>
               </div>
               <div class="col-md-4">
@@ -199,5 +199,7 @@
     </div>
   </div>
 </div>
-
+<?= $this->include('shared/toasts/notyf') ?>
+<script type="module" src="<?= base_url('js/services/decolecta.js') ?>"></script>
+<?= $this->include('shared/alerts/sweetAlert2') ?>
 <?= $this->endSection() ?>
