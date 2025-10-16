@@ -14,18 +14,18 @@
                     <input type="hidden" name="id">
 
                     <div class="mb-3">
+                        <label class="form-label">DNI</label>
+                        <input type="text" name="dni" id="dni-edit" class="form-control" maxlength="8" pattern="[0-9]{8}" required>
+                    </div>
+
+                    <div class="mb-3">
                         <label class="form-label">Nombres</label>
-                        <input type="text" name="nombres" class="form-control" required>
+                        <input type="text" name="nombres" id="nombres-edit" class="form-control" required>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Apellidos</label>
-                        <input type="text" name="apellidos" class="form-control" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">DNI</label>
-                        <input type="text" name="dni" class="form-control" maxlength="8" required>
+                        <input type="text" name="apellidos" id="apellidos-edit" class="form-control" required>
                     </div>
 
                     <div class="mb-3">

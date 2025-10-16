@@ -96,6 +96,7 @@
         }
     });
 </script>
+<script type="module" src="<?= base_url('js/services/decolecta.js') ?>"></script>
 
 <style>
     .familiares-header {

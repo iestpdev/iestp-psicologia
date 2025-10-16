@@ -49,7 +49,7 @@ class FamiliarController extends BaseController
         }
     }
 
-    public function saveFamiliar($alumnoId)
+    public function saveNewFamiliar($alumnoId)
     {
         helper(['validation', 'input']);
         $errors = runValidation('pariente_create', $this->request);

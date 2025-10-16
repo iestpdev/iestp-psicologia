@@ -23,6 +23,10 @@ class Pariente extends BaseModel
         return $this->where('id', $id)->first();
     }
 
+    public function obtenerPorDni($dni){
+        return $this->where('dni', $dni)->first();
+    }
+
     public function crear(array $data): int
     {
         return $this->insert($data, true);
