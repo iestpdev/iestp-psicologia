@@ -4,7 +4,7 @@ namespace App\Models;
 
 class Cita extends BaseModel
 {
-    protected $table      = 'citas';
+    protected $table = 'citas';
     protected $primaryKey = 'id';
     protected $allowedFields = [
         'tipo_derivacion',
@@ -12,10 +12,15 @@ class Cita extends BaseModel
         'hora_inicio',
         'hora_fin',
         'asistencia',
-        'psicologo_id',
+        'usuario_id',
         'alumno_id',
         'derivacion_id',
         'familiar_id',
         'motivo'
     ];
+
+    public function crear(array $data): int
+    {
+        return $this->insert($data, true);
+    }
 }

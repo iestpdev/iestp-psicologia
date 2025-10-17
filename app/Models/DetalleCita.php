@@ -4,7 +4,7 @@ namespace App\Models;
 
 class DetalleCita extends BaseModel
 {
-    protected $table      = 'detalle_cita';
+    protected $table = 'detalle_cita';
     protected $primaryKey = 'id';
     protected $allowedFields = [
         'cita_id',
@@ -14,4 +14,9 @@ class DetalleCita extends BaseModel
         'aseo_personal',
         'conducta',
     ];
+
+    public function crear(array $data): int
+    {
+        return $this->insert($data, true);
+    }
 }

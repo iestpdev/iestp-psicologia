@@ -5,7 +5,7 @@
 <?= $this->include('messages/msg-error') ?>
 
 <div class="d-flex align-items-center mt-3 mb-2">
-    <form action="<?= base_url('citas/generar-asistidas-pdf') ?>" method="POST" target="_blank" class="d-flex align-items-center">
+    <form action="<?= base_url('api/citas/generar-asistidas-pdf') ?>" method="POST" target="_blank" class="d-flex align-items-center">
    
             <label class="form-label me-2">
                 Gererar reporte: 

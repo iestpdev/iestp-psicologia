@@ -3,7 +3,9 @@
 namespace App\Controllers;
 
 use App\Models\Alumno;
+use App\Models\Cita;
 use App\Models\Derivacion;
+use App\Models\DetalleCita;
 use App\Models\Mantenimiento\ProgramaEstudio;
 use App\Models\Usuario;
 
@@ -31,7 +33,7 @@ class CitaController extends BaseController
         return view('modules/citas/crear', $data);
     }
 
-    public function editar($usuarioId): string
+    public function editar($citaId): string
     {
         return view('modules/citas/editar');
     }
@@ -39,7 +41,8 @@ class CitaController extends BaseController
     public function generarAsistidasPdf()
     {
         $fechaFiltro = $this->request->getPost('fechaFiltro');
-        if (empty($fechaFiltro)) return $this->response->setStatusCode(400)->setBody('Selecciona un mes y año');
+        if (empty($fechaFiltro))
+            return $this->response->setStatusCode(400)->setBody('Selecciona un mes y año');
 
         [$year, $month] = explode('-', $fechaFiltro);
 
@@ -70,6 +73,67 @@ class CitaController extends BaseController
             }
             $formatter = new \Spipu\Html2Pdf\Exception\ExceptionFormatter($e);
             return $this->response->setStatusCode(500)->setBody($formatter->getMessage());
+        }
+    }
+
+    public function saveCita()
+    {
+        helper(['validation', 'input', 'cache']);
+        $errors = runValidation('cita_create', $this->request);
+        if (!empty($errors))
+            return redirect()->to('/citas/crear')->withInput()->with('errors', $errors);
+
+        $asistencia = $this->request->getPost('asistencia');
+        $tipoDerivacion = $this->request->getPost('tipo_derivacion');
+        $derivacionId = $this->request->getPost('derivacion');
+        $derivacionEncontrada = null;
+
+        if ($derivacionId) {
+            $derivacionModel = new Derivacion();
+            $derivacionEncontrada = $derivacionModel->obtenerPorId($derivacionId);
+        }
+
+        $db = \Config\Database::connect();
+        $db->transBegin();
+        try {
+            $citaData = normalize_input([
+                'tipo_derivacion' => $tipoDerivacion,
+                'usuario_id' => $this->request->getPost('usuario_id'), //psicologo(a)
+                'atencion_fech' => $this->request->getPost('fecha_atencion'),
+                'hora_inicio' => $this->request->getPost('hora_inicio'),
+                'hora_fin' => $this->request->getPost('hora_fin'),
+                'motivo' => $this->request->getPost('motivo'),
+                'familiar_id' => $this->request->getPost('familiar'),
+                'derivacion_id' => $derivacionId,
+                'alumno_id' => $derivacionEncontrada ? $derivacionEncontrada['alumno_id'] : $this->request->getPost('alumno'),
+                'asistencia' => $asistencia,
+            ]);
+            $citaModel = new Cita();
+            $citaId = $citaModel->crear($citaData);
+            if ($citaId)
+                throw new \Exception("Error al crear Consulta");
+
+            if ($asistencia == 'ASISTIDO') {
+                $detalleCitaData = normalize_input([
+                    'cita_id' => $citaId,
+                    'problema' => $this->request->getPost('problema'),
+                    'recomendacion' => $this->request->getPost('recomendacion'),
+                    'aspecto_fisico' => $this->request->getPost('aspecto_fisico'),
+                    'aseo_personal' => $this->request->getPost('aseo_personal'),
+                    'conducta' => $this->request->getPost('conducta'),
+                ]);
+                $detalleCitaModel = new DetalleCita();
+                $detalleCitaId = $detalleCitaModel->crear($detalleCitaData);
+                if ($detalleCitaId)
+                    throw new \Exception("Error al crear los detalles de la cita");
+            }
+
+            $db->transCommit();
+            clear_datatable_cache('CitaFullInfo');
+            return redirect()->to(uri: '/citas')->with('success', 'Consulta registrada con éxito');
+        } catch (\Throwable $e) {
+            $db->transRollback();
+            return redirect()->back()->withInput()->with('error', 'Hubo un error: ' . $e->getMessage());
         }
     }
 }
