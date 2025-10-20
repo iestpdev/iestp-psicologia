@@ -132,7 +132,7 @@
                                 <div class="col-md-8">
                                     <div class="form-group">
                                         <label class="form-label">Alumno <span class="required-mark">*</span></label>
-                                        <select id="alumnoSelect" name="alumno" required>
+                                        <select id="alumnoSelect" name="alumno">
                                             <option value="">-- Seleccione un alumno --</option>
                                             <?php foreach ($alumnos as $alumno): ?>
                                                 <option value="<?= $alumno['id'] ?>" <?= set_select('alumno', $alumno['id']) ?>>

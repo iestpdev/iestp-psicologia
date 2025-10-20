@@ -35,7 +35,33 @@ class CitaController extends BaseController
 
     public function editar($citaId): string
     {
-        return view('modules/citas/editar');
+        $citaModel = new Cita();
+        $citaEncontrada = $citaModel->obtenerPorId($citaId);
+        if (!$citaEncontrada) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Cita no encontrada');
+        }
+
+        $data['cita'] = $citaEncontrada;
+
+        if ($citaEncontrada['asistencia'] === 'ASISTIDO') {
+            $detalleCitaModel = new DetalleCita();
+            $detalleCitaEncontrado = $detalleCitaModel->obtenerPorCitaId($citaEncontrada['id']);
+            $data['detalleCita'] = $detalleCitaEncontrado;
+        }
+
+        $usuarioModel = new Usuario();
+        $data['psicologos'] = $usuarioModel->obtenerPsicologos();
+
+        $programaEstudioModel = new ProgramaEstudio();
+        $data['programaEstudios'] = $programaEstudioModel->listar();
+
+        $alumnoModel = new Alumno();
+        $data['alumnos'] = $alumnoModel->obtenerAlumnos();
+
+        $derivacionModel = new Derivacion();
+        $data['derivaciones_pendientes'] = $derivacionModel->obtenerPendientes();
+
+        return view('modules/citas/editar', $data);
     }
 
     public function generarAsistidasPdf()
@@ -86,12 +112,11 @@ class CitaController extends BaseController
         $asistencia = $this->request->getPost('asistencia');
         $tipoDerivacion = $this->request->getPost('tipo_derivacion');
         $derivacionId = $this->request->getPost('derivacion');
+        $derivacionModel = new Derivacion();
         $derivacionEncontrada = null;
 
-        if ($derivacionId) {
-            $derivacionModel = new Derivacion();
+        if ($derivacionId)
             $derivacionEncontrada = $derivacionModel->obtenerPorId($derivacionId);
-        }
 
         $db = \Config\Database::connect();
         $db->transBegin();
@@ -110,8 +135,12 @@ class CitaController extends BaseController
             ]);
             $citaModel = new Cita();
             $citaId = $citaModel->crear($citaData);
-            if ($citaId)
+            if (!$citaId)
                 throw new \Exception("Error al crear Consulta");
+
+            if ($derivacionEncontrada && isset($derivacionEncontrada['id'])) {
+                $derivacionModel->marcarComoRecibido($derivacionEncontrada['id']);
+            }
 
             if ($asistencia == 'ASISTIDO') {
                 $detalleCitaData = normalize_input([
@@ -124,7 +153,7 @@ class CitaController extends BaseController
                 ]);
                 $detalleCitaModel = new DetalleCita();
                 $detalleCitaId = $detalleCitaModel->crear($detalleCitaData);
-                if ($detalleCitaId)
+                if (!$detalleCitaId)
                     throw new \Exception("Error al crear los detalles de la cita");
             }
 
@@ -136,4 +165,58 @@ class CitaController extends BaseController
             return redirect()->back()->withInput()->with('error', 'Hubo un error: ' . $e->getMessage());
         }
     }
+
+    public function update($id)
+    {
+        helper(['validation', 'input', 'cache']);
+        $errors = runValidation('cita_create', $this->request);
+        if (!empty($errors))
+            return redirect()->back()->withInput()->with('errors', $errors);
+
+        $asistencia = $this->request->getPost('asistencia');
+
+        $db = \Config\Database::connect();
+        $db->transBegin();
+
+        try {
+            $citaModel = new Cita();
+            $citaModel->update($id, normalize_input([
+                'tipo_derivacion' => $this->request->getPost('tipo_derivacion'),
+                'usuario_id' => $this->request->getPost('usuario_id'),
+                'atencion_fech' => $this->request->getPost('fecha_atencion'),
+                'hora_inicio' => $this->request->getPost('hora_inicio'),
+                'hora_fin' => $this->request->getPost('hora_fin'),
+                'motivo' => $this->request->getPost('motivo'),
+                'asistencia' => $asistencia,
+            ]));
+
+            if ($asistencia === 'ASISTIDO') {
+                $detalleCitaModel = new DetalleCita();
+                $detalleExistente = $detalleCitaModel->where('cita_id', $id)->first();
+
+                $detalleData = normalize_input([
+                    'problema' => $this->request->getPost('problema'),
+                    'recomendacion' => $this->request->getPost('recomendacion'),
+                    'aspecto_fisico' => $this->request->getPost('aspecto_fisico'),
+                    'aseo_personal' => $this->request->getPost('aseo_personal'),
+                    'conducta' => $this->request->getPost('conducta'),
+                ]);
+
+                if ($detalleExistente)
+                    $detalleCitaModel->update($detalleExistente['id'], $detalleData);
+                else {
+                    $detalleData['cita_id'] = $id;
+                    $detalleCitaModel->insert($detalleData);
+                }
+            }
+
+            $db->transCommit();
+            clear_datatable_cache('CitaFullInfo');
+            return redirect()->to('/citas')->with('success', 'Consulta actualizada con éxito');
+        } catch (\Throwable $e) {
+            $db->transRollback();
+            return redirect()->back()->withInput()->with('error', 'Error al actualizar: ' . $e->getMessage());
+        }
+    }
+
 }

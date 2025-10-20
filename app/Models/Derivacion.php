@@ -29,6 +29,11 @@ class Derivacion extends BaseModel
         return $this->update($id, $data);
     }
 
+    public function marcarComoRecibido(int $id): bool
+    {
+        return $this->update($id, ['recibido' => 1]);
+    }
+
     public function obtenerPorId(int $id)
     {
         $builder = $this->db->table($this->table . ' d')
@@ -54,7 +59,7 @@ class Derivacion extends BaseModel
                 p.dni AS docente_dni
             ")
             ->join('alumnos a', 'a.id = d.alumno_id', 'left')
-            ->join('programas_estudios pe','pe.id = a.programa_estudio_id','left')
+            ->join('programas_estudios pe', 'pe.id = a.programa_estudio_id', 'left')
             ->join('usuarios u', 'u.id = d.usuario_id', 'left')
             ->join('personas p', 'p.id = u.persona_id', 'left')
             ->where('d.id', $id)

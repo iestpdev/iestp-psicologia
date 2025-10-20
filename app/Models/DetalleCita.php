@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
-class DetalleCita extends BaseModel
+use CodeIgniter\Model;
+
+class DetalleCita extends Model
 {
     protected $table = 'detalle_cita';
     protected $primaryKey = 'id';
@@ -18,5 +20,9 @@ class DetalleCita extends BaseModel
     public function crear(array $data): int
     {
         return $this->insert($data, true);
+    }
+
+    public function obtenerPorCitaId($citaId){
+         return $this->where('cita_id', $citaId)->first();
     }
 }
