@@ -1,0 +1,164 @@
+<style>
+    .wave {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        height: 100%;
+        z-index: -1;
+    }
+
+    .container {
+        width: 100vw;
+        height: 100vh;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 7rem;
+        padding: 0 2rem;
+    }
+
+    .img-welcome {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+    }
+
+    .img-welcome img {
+        width: 500px;
+    }
+
+    .login-content {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        text-align: center;
+    }
+
+    .form-login {
+        width: 360px;
+    }
+
+    .login-content img {
+        height: 170px;
+    }
+
+    .title-welcome {
+        margin: 15px 0;
+        color: #333;
+        text-transform: uppercase;
+        font-size: 2.9rem;
+    }
+
+    .input-div {
+        position: relative;
+        display: grid;
+        grid-template-columns: 7% 93%;
+        margin: 25px 0;
+        padding: 5px 0;
+        border-bottom: 2px solid #d9d9d9;
+    }
+
+    .input-div.one {
+        margin-top: 0;
+    }
+
+    .input-div.pass {
+        margin-bottom: 4px;
+    }
+
+    .icon-login {
+        color: #333333;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.5rem;
+    }
+
+    .input-div > div {
+        position: relative;
+        height: 45px;
+    }
+
+    .input-div > div > input {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+        outline: none;
+        background: none;
+        padding: 0.5rem 0.7rem;
+        font-size: 1.2rem;
+        color: #555;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .button-login {
+        display: block;
+        width: 100%;
+        height: 50px;
+        border-radius: 25px;
+        outline: none;
+        border: none;
+        background-image: linear-gradient(to right, #0358CB, #0358CB, #0094f7);
+        background-size: 200%;
+        font-size: 1.2rem;
+        color: #fff;
+        font-family: 'Poppins', sans-serif;
+        text-transform: uppercase;
+        margin: 1rem 0;
+        cursor: pointer;
+        transition: .5s;
+    }
+
+    .button-login:hover {
+        background-position: right;
+    }
+
+    #togglePassword{
+        position:absolute;
+        right:-5px;
+        top:8px;
+        background:none;
+        border:none;
+    }
+    #togglePassword:hover{
+        color: black;
+    }
+
+    @media screen and (max-width: 1050px) {
+        .container {
+            grid-gap: 5rem;
+        }
+    }
+
+    @media screen and (max-width: 1000px) {
+        .form-login {
+            width: 290px;
+        }
+
+        .title-welcome {
+            font-size: 2.4rem;
+            margin: 8px 0;
+        }
+
+        .img-welcome img {
+            width: 400px;
+        }
+    }
+
+    @media screen and (max-width: 900px) {
+        .container {
+            grid-template-columns: 1fr;
+        }
+
+        .img-welcome,
+        .wave {
+            display: none;
+        }
+
+        .login-content {
+            justify-content: center;
+        }
+    }
+</style>

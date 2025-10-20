@@ -15,6 +15,7 @@ class CreateFamiliaresTable extends Migration
             ],
             'alumno_id' => [
                 'type' => 'BIGINT',
+                'unsigned' => true,
                 'null' => false,
             ],
             'pariente_id' => [

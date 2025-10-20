@@ -46,7 +46,7 @@
     </li>
 
     <li>
-      <a href="<?= base_url('/logout') ?>">
+      <a href="<?= base_url('/api/auth/logout') ?>">
         <span class="icon"><ion-icon name="log-out-outline"></ion-icon></span>
         <span class="title">Cerrar sesión</span>
       </a>

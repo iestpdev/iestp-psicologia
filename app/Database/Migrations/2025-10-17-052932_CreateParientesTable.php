@@ -35,6 +35,7 @@ class CreateParientesTable extends Migration
             ],
             'parentesco_id' => [
                 'type'       => 'INT',
+                'unsigned' => true,
                 'null'       => false,
             ],
             'created_at' => [
