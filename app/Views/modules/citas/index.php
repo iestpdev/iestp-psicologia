@@ -100,11 +100,13 @@
                         <a href="<?= base_url('citas/info/') ?>${row.id}" class="btn btn-sm btn-success">
                         <ion-icon name="newspaper-outline" class="icon-lg"></ion-icon>
                         </a>
+                        
                         <a id="editar-${row.id}" 
                         href="<?= base_url('citas/editar/') ?>${row.id}" 
                         class="btn btn-sm btn-${row.asistencia === 'PENDIENTE' ? "warning" : "secondary disabled"}">
                          <ion-icon name="create-outline" class="icon-lg"></ion-icon>
                         </a>
+
                         <a id="eliminar-${row.id}" 
                         href="<?= base_url('api/citas/delete/') ?>${row.id}" 
                         class="btn btn-sm btn-danger"
@@ -122,7 +124,6 @@
             responsive: true
         });
 
-        // conectar buscador personalizado
         attachSearchInput(table, 'searchCitas');
     });
 </script>

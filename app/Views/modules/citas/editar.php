@@ -235,8 +235,7 @@
         const programa = infoEl.dataset.programa;
         const turno = infoEl.dataset.turno;
         const ciclo = infoEl.dataset.ciclo;
-
-        // Usamos tus funciones utilitarias ya cargadas en utils.js
+        
         const turnoText = getTurnoText(turno);
         const cicloText = getCicloText(ciclo);
 

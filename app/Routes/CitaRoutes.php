@@ -4,6 +4,7 @@ $routes->group('citas',['filter' => 'auth'], function ($routes) {
     $routes->get('/', 'CitaController::index');
     $routes->get('crear', 'CitaController::crear');
     $routes->get('editar/(:num)', 'CitaController::editar/$1');
+    $routes->get('info/(:num)', 'CitaController::infoCita/$1');
 });
 
 $routes->group('api',['filter' => 'auth'], function ($routes) {

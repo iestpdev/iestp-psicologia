@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Alumno;
+use App\Models\Cita;
 use App\Models\Derivacion;
 use App\Models\Mantenimiento\ProgramaEstudio;
 use App\Models\Usuario;
@@ -48,7 +49,20 @@ class DerivacionController extends BaseController
     public function obtenerPorId($derivacionId)
     {
         $derivacionModel = new Derivacion();
-        return $this->response->setJSON($derivacionModel->obtenerPorId((int) $derivacionId));
+        $derivacionEncontrada = $derivacionModel->obtenerPorId((int) $derivacionId);
+
+        if($derivacionEncontrada['estado']){
+            $citaModel = new Cita();
+            $citaEncontrada = $citaModel->obtenerPorDerivacionId((int) $derivacionId);
+            return $this->response->setJSON([
+                'derivacion' => $derivacionEncontrada,
+                'cita' => $citaEncontrada
+            ]);
+        }
+
+        return $this->response->setJSON([
+            'derivacion' => $derivacionEncontrada
+        ]);
     }
 
     public function obtenerPendientes()

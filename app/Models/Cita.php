@@ -29,8 +29,18 @@ class Cita extends BaseModel
         return $this->update($id, $data);
     }
 
+    public function eliminar(int $id): bool
+    {
+        return $this->delete($id);
+    }
+
     public function obtenerPorId($id)
     {
         return $this->where('id', $id)->first();
+    }
+
+    public function obtenerPorDerivacionId(int $derivacionId): ?array
+    {
+        return $this->where('derivacion_id', $derivacionId)->first();
     }
 }

@@ -17,7 +17,7 @@ class CitaController extends BaseController
         return view('modules/citas/index');
     }
 
-    public function details($citaId): string
+    public function infoCita($citaId): string
     {
         $citaModel = new Cita();
         $citaEncontrada = $citaModel->obtenerPorId($citaId);
@@ -29,12 +29,14 @@ class CitaController extends BaseController
         $data['cita'] = $citaEncontrada;
 
         $alumnoModel = new Alumno();
-        $alumnoEncontrado = $alumnoModel->obtenerPorId($citaEncontrada['alumno_id']);
-        $data['alumno'] = $alumnoEncontrado;
+        $data['alumno'] = $alumnoModel->obtenerPorId($citaEncontrada['alumno_id']);
+
+        $usuarioModel = new Usuario();
+        $data['usuario'] = $usuarioModel->obtenerPorId($citaEncontrada['usuario_id']);
 
         if ($citaEncontrada['familiar_id']) {
             $familiarModel = new Familiar();
-            $data['familiares'] = $familiarModel->listarPorAlumnoId($alumnoEncontrado['id']);
+            $data['familiar'] = $familiarModel->obtenerPorId($citaEncontrada['familiar_id']);
         }
 
         if ($citaEncontrada['derivacion_id']) {
@@ -42,7 +44,12 @@ class CitaController extends BaseController
             $data['derivacion'] = $derivacionModel->obtenerPorId($citaEncontrada['derivacion_id']);
         }
 
-        return view('modules/citas/details',$data);
+        if($citaEncontrada['asistencia']==='ASISTIDO') {
+            $detalleCitaModel = new DetalleCita();
+            $data['detalleCita'] = $detalleCitaModel->obtenerPorCitaId($citaEncontrada['id']);
+        }
+
+        return view('modules/citas/details', $data);
     }
 
     public function crear(): string
@@ -249,4 +256,27 @@ class CitaController extends BaseController
         }
     }
 
+    public function deleteCita($id)
+    {
+        helper('cache');
+
+        $db = \Config\Database::connect();
+        $db->transBegin();
+        try {
+            $citaModel = new Cita();
+            $cita = $citaModel->obtenerPorId($id);
+            if (!$cita)
+                throw new \Exception("Consulta no encontrada");
+
+            if (!$citaModel->eliminar($id))
+                throw new \Exception("Error al eliminar Consulta");
+
+            $db->transCommit();
+            clear_datatable_cache('CitaFullInfo');
+            return redirect()->to('/citas')->with('success', 'Consulta eliminada correctamente');
+        } catch (\Throwable $e) {
+            $db->transRollback();
+            return redirect()->to('/citas')->with('error', 'Hubo un error: ' . $e->getMessage());
+        }
+    }
 }
