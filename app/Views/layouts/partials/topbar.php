@@ -27,7 +27,9 @@ $rol = ($userLogged['rol'] === 'ADMIN')
             <p class="user-role"><?= esc($rol) ?></p>
         </div>
         <div class="user-icon-container">
-            <ion-icon name="person-circle-outline"></ion-icon>
+            <a href="<?= base_url('profile') ?>">
+                <ion-icon name="person-circle-outline"></ion-icon>
+            </a>
         </div>
     </div>
 </div>
