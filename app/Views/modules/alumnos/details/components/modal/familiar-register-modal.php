@@ -21,7 +21,6 @@
                         <label class="form-label">DNI</label>
                         <input type="text" name="dni" id="dni" class="form-control" maxlength="8" pattern="[0-9]{8}"
                             inputmode="numeric" placeholder="Ingrese DNI" required>
-                        <span>hola</span>
                     </div>
 
                     <div class="mb-3">

@@ -8,7 +8,7 @@
     <form action="<?= base_url('api/citas/generar-asistidas-pdf') ?>" method="POST" target="_blank" class="d-flex align-items-center">
    
             <label class="form-label me-2">
-                Gererar reporte: 
+                Generar reporte: 
             </label>
             <input type="month" name="fechaFiltro" class="form-control me-2" style="max-width: 200px;" required>
       
@@ -92,18 +92,26 @@
                 }
             },
             {
-                data: "id",
+                data: null,
                 orderable: false,
                 searchable: false,
-                render: function(data) {
+                render: function(data, type, row) {
                     return `
-                        <a id="editar-${data}" href="<?= base_url('citas/info/') ?>${data}" class="btn btn-sm btn-success">
+                        <a href="<?= base_url('citas/info/') ?>${row.id}" class="btn btn-sm btn-success">
                         <ion-icon name="newspaper-outline" class="icon-lg"></ion-icon>
                         </a>
-                        <a id="editar-${data}" href="<?= base_url('citas/editar/') ?>${data}" class="btn btn-sm btn-warning">
+                        <a id="editar-${row.id}" 
+                        href="<?= base_url('citas/editar/') ?>${row.id}" 
+                        class="btn btn-sm btn-${row.asistencia === 'PENDIENTE' ? "warning" : "secondary disabled"}">
                          <ion-icon name="create-outline" class="icon-lg"></ion-icon>
                         </a>
-                        <a id="editar-${data}" href="<?= base_url('api/citas/delete/') ?>${data}" class="btn btn-sm btn-danger">
+                        <a id="eliminar-${row.id}" 
+                        href="<?= base_url('api/citas/delete/') ?>${row.id}" 
+                        class="btn btn-sm btn-danger"
+                        data-confirm
+                        data-title="Eliminar Consulta"
+                        data-text="¿Desea eliminar esta consulta?"
+                        data-icon="warning">
                          <ion-icon name="trash-outline" class="icon-lg"></ion-icon>
                         </a>
                     `;
@@ -118,5 +126,6 @@
         attachSearchInput(table, 'searchCitas');
     });
 </script>
+<?= $this->include('shared/alerts/sweetAlert2') ?>
 
 <?= $this->endSection() ?>

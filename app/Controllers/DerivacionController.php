@@ -130,9 +130,6 @@ class DerivacionController extends BaseController
             if (!$derivacion)
                 throw new \Exception("Derivación no encontrada");
 
-            if ($derivacion['estado'])
-                throw new \Exception("No se puede eliminar una derivación que ya fue recibida");
-
             if (!$derivacionModel->eliminar($id))
                 throw new \Exception("Error al eliminar Derivación");
 

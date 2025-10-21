@@ -6,6 +6,7 @@ use App\Models\Alumno;
 use App\Models\Cita;
 use App\Models\Derivacion;
 use App\Models\DetalleCita;
+use App\Models\Familiar;
 use App\Models\Mantenimiento\ProgramaEstudio;
 use App\Models\Usuario;
 
@@ -14,6 +15,34 @@ class CitaController extends BaseController
     public function index(): string
     {
         return view('modules/citas/index');
+    }
+
+    public function details($citaId): string
+    {
+        $citaModel = new Cita();
+        $citaEncontrada = $citaModel->obtenerPorId($citaId);
+        if (!$citaEncontrada) {
+            return view('errors/html/error_404', [
+                'message' => 'Cita no encontrada'
+            ]);
+        }
+        $data['cita'] = $citaEncontrada;
+
+        $alumnoModel = new Alumno();
+        $alumnoEncontrado = $alumnoModel->obtenerPorId($citaEncontrada['alumno_id']);
+        $data['alumno'] = $alumnoEncontrado;
+
+        if ($citaEncontrada['familiar_id']) {
+            $familiarModel = new Familiar();
+            $data['familiares'] = $familiarModel->listarPorAlumnoId($alumnoEncontrado['id']);
+        }
+
+        if ($citaEncontrada['derivacion_id']) {
+            $derivacionModel = new Derivacion();
+            $data['derivacion'] = $derivacionModel->obtenerPorId($citaEncontrada['derivacion_id']);
+        }
+
+        return view('modules/citas/details',$data);
     }
 
     public function crear(): string
@@ -38,28 +67,28 @@ class CitaController extends BaseController
         $citaModel = new Cita();
         $citaEncontrada = $citaModel->obtenerPorId($citaId);
         if (!$citaEncontrada) {
-            throw new \CodeIgniter\Exceptions\PageNotFoundException('Cita no encontrada');
+            return view('errors/html/error_404', [
+                'message' => 'Cita no encontrada'
+            ]);
         }
-
         $data['cita'] = $citaEncontrada;
 
-        if ($citaEncontrada['asistencia'] === 'ASISTIDO') {
-            $detalleCitaModel = new DetalleCita();
-            $detalleCitaEncontrado = $detalleCitaModel->obtenerPorCitaId($citaEncontrada['id']);
-            $data['detalleCita'] = $detalleCitaEncontrado;
+        $alumnoModel = new Alumno();
+        $alumnoEncontrado = $alumnoModel->obtenerPorId($citaEncontrada['alumno_id']);
+        $data['alumno'] = $alumnoEncontrado;
+
+        if ($citaEncontrada['familiar_id']) {
+            $familiarModel = new Familiar();
+            $data['familiares'] = $familiarModel->listarPorAlumnoId($alumnoEncontrado['id']);
+        }
+
+        if ($citaEncontrada['derivacion_id']) {
+            $derivacionModel = new Derivacion();
+            $data['derivacion'] = $derivacionModel->obtenerPorId($citaEncontrada['derivacion_id']);
         }
 
         $usuarioModel = new Usuario();
         $data['psicologos'] = $usuarioModel->obtenerPsicologos();
-
-        $programaEstudioModel = new ProgramaEstudio();
-        $data['programaEstudios'] = $programaEstudioModel->listar();
-
-        $alumnoModel = new Alumno();
-        $data['alumnos'] = $alumnoModel->obtenerAlumnos();
-
-        $derivacionModel = new Derivacion();
-        $data['derivaciones_pendientes'] = $derivacionModel->obtenerPendientes();
 
         return view('modules/citas/editar', $data);
     }
@@ -166,10 +195,10 @@ class CitaController extends BaseController
         }
     }
 
-    public function update($id)
+    public function updateCita($id)
     {
         helper(['validation', 'input', 'cache']);
-        $errors = runValidation('cita_create', $this->request);
+        $errors = runValidation('cita_update', $this->request);
         if (!empty($errors))
             return redirect()->back()->withInput()->with('errors', $errors);
 
@@ -180,19 +209,25 @@ class CitaController extends BaseController
 
         try {
             $citaModel = new Cita();
-            $citaModel->update($id, normalize_input([
-                'tipo_derivacion' => $this->request->getPost('tipo_derivacion'),
+            $citaActual = $citaModel->obtenerPorId($id);
+
+            if (!$citaActual)
+                throw new \Exception("Cita no encontrada");
+            if ($citaActual['asistencia'] === 'ASISTIDO')
+                throw new \Exception("No puedes editar una Consulta ya asistida");
+
+            $data = normalize_input([
                 'usuario_id' => $this->request->getPost('usuario_id'),
                 'atencion_fech' => $this->request->getPost('fecha_atencion'),
                 'hora_inicio' => $this->request->getPost('hora_inicio'),
                 'hora_fin' => $this->request->getPost('hora_fin'),
                 'motivo' => $this->request->getPost('motivo'),
                 'asistencia' => $asistencia,
-            ]));
+            ]);
+            $citaModel->actualizar($id, $data);
 
             if ($asistencia === 'ASISTIDO') {
                 $detalleCitaModel = new DetalleCita();
-                $detalleExistente = $detalleCitaModel->where('cita_id', $id)->first();
 
                 $detalleData = normalize_input([
                     'problema' => $this->request->getPost('problema'),
@@ -201,13 +236,8 @@ class CitaController extends BaseController
                     'aseo_personal' => $this->request->getPost('aseo_personal'),
                     'conducta' => $this->request->getPost('conducta'),
                 ]);
-
-                if ($detalleExistente)
-                    $detalleCitaModel->update($detalleExistente['id'], $detalleData);
-                else {
-                    $detalleData['cita_id'] = $id;
-                    $detalleCitaModel->insert($detalleData);
-                }
+                $detalleData['cita_id'] = $id;
+                $detalleCitaModel->crear($detalleData);
             }
 
             $db->transCommit();

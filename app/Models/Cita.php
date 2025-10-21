@@ -24,6 +24,11 @@ class Cita extends BaseModel
         return $this->insert($data, true);
     }
 
+    public function actualizar(int $id, array $data): bool
+    {
+        return $this->update($id, $data);
+    }
+
     public function obtenerPorId($id)
     {
         return $this->where('id', $id)->first();

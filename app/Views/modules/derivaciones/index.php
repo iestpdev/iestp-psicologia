@@ -81,7 +81,7 @@
 
                         <a id="eliminar-${row.id}"
                         href="<?= base_url('api/derivaciones/delete/') ?>${row.id}"
-                        class="btn btn-sm btn-${row.estado == 0 ? "danger" : "secondary disabled"}"
+                        class="btn btn-sm btn-danger"
                         data-confirm
                         data-title="Eliminar Derivación"
                         data-text="¿Desea eliminar esta derivación?"

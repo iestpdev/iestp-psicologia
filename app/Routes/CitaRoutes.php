@@ -8,6 +8,8 @@ $routes->group('citas',['filter' => 'auth'], function ($routes) {
 
 $routes->group('api',['filter' => 'auth'], function ($routes) {
     $routes->post('citas/add', 'CitaController::saveCita');
+    $routes->post('citas/update/(:num)', 'CitaController::updateCita/$1');
+    $routes->get('citas/delete/(:num)', 'CitaController::deleteCita/$1');
 
     $routes->post('citas/generar-asistidas-pdf', 'CitaController::generarAsistidasPdf');
 });
