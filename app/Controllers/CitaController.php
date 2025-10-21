@@ -44,7 +44,7 @@ class CitaController extends BaseController
             $data['derivacion'] = $derivacionModel->obtenerPorId($citaEncontrada['derivacion_id']);
         }
 
-        if($citaEncontrada['asistencia']==='ASISTIDO') {
+        if ($citaEncontrada['asistencia'] === 'ASISTIDO') {
             $detalleCitaModel = new DetalleCita();
             $data['detalleCita'] = $detalleCitaModel->obtenerPorCitaId($citaEncontrada['id']);
         }
@@ -65,6 +65,14 @@ class CitaController extends BaseController
 
         $derivacionModel = new Derivacion();
         $data['derivaciones_pendientes'] = $derivacionModel->obtenerPendientes();
+
+        $alumnoId = $this->request->getGet('alumnoId');
+        $data['alumnoEnviado'] = $alumnoId ? (int) $alumnoId : null;
+
+        if ($alumnoId) {
+            $familiarModel = new Familiar();
+            $data['familiares'] = $familiarModel->listarPorAlumnoId($alumnoId);
+        }
 
         return view('modules/citas/crear', $data);
     }
@@ -195,6 +203,12 @@ class CitaController extends BaseController
 
             $db->transCommit();
             clear_datatable_cache('CitaFullInfo');
+
+            $alunmoEnviado = $this->request->getPost('isAlumnoEnviado');
+            if ($alunmoEnviado) {
+                return redirect()->to(uri: '/alumnos/info/' . $alunmoEnviado)->with('success', 'Consulta registrada con éxito');
+            }
+
             return redirect()->to(uri: '/citas')->with('success', 'Consulta registrada con éxito');
         } catch (\Throwable $e) {
             $db->transRollback();

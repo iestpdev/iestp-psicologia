@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Alumno;
+use App\Models\Cita;
 use App\Models\Familiar;
 use App\Models\Mantenimiento\EstadoCivil;
 use App\Models\Mantenimiento\Parentesco;
@@ -32,10 +33,14 @@ class AlumnoController extends BaseController
         $parentescoModel = new Parentesco();
         $parentescos = $parentescoModel->listar();
 
+        $citaModel = new Cita();
+        $citas = $citaModel->listarPorAlumnoId($alumnoId);
+
         return view('modules/alumnos/details/index', [
             'alumno' => $alumno,
             'familiares' => $familiares,
-            'parentescos' => $parentescos
+            'parentescos' => $parentescos,
+            'citas' => $citas
         ]);
     }
 

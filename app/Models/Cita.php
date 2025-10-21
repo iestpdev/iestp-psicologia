@@ -39,6 +39,36 @@ class Cita extends BaseModel
         return $this->where('id', $id)->first();
     }
 
+    public function listarPorAlumnoId(int $alumnoId): array
+    {
+        $builder = $this->db->table($this->table . ' c')
+            ->select("
+            c.id,
+            c.tipo_derivacion,
+            c.atencion_fech,
+            c.hora_inicio,
+            c.hora_fin,
+            c.asistencia,
+            c.motivo,
+
+            c.usuario_id,
+            CONCAT(p.nombres, ' ', p.apellidos) AS usuario_nombres_completos,
+            p.dni AS usuario_dni,
+            u.rol AS usuario_rol,
+
+            c.created_at,
+            c.updated_at
+        ")
+            ->join('usuarios u', 'u.id = c.usuario_id', 'left')
+            ->join('personas p', 'p.id = u.persona_id', 'left')
+            ->where('c.alumno_id', $alumnoId)
+            ->where('c.deleted_at', null)
+            ->orderBy('c.created_at', 'DESC');
+
+        return $builder->get()->getResultArray();
+    }
+
+
     public function obtenerPorDerivacionId(int $derivacionId): ?array
     {
         return $this->where('derivacion_id', $derivacionId)->first();

@@ -37,7 +37,7 @@
 
                     <form action="<?= base_url('api/citas/add') ?>" method="POST">
                         <?= csrf_field() ?>
-                        
+                        <input type="hidden" name="isAlumnoEnviado" value="<?= esc($alumnoEnviado) ?>">
                         <div class="row">
                             <!-- Tipo de derivación -->
                             <div class="col-md-6">
@@ -45,10 +45,14 @@
                                     <label class="form-label">
                                         Tipo de derivación <span class="required-mark">*</span>
                                     </label>
-                                    <select name="tipo_derivacion" id="tipo_derivacion" class="form-control-custom" required>
-                                        <option value="AUTONOMO" <?= set_select('tipo_derivacion', 'AUTONOMO', true) ?>>Autónomo</option>
-                                        <option value="DOCENTE" <?= set_select('tipo_derivacion', 'DOCENTE') ?>>Docente</option>
-                                        <option value="FAMILIAR" <?= set_select('tipo_derivacion', 'FAMILIAR') ?>>Familiar</option>
+                                    <select name="tipo_derivacion" id="tipo_derivacion" class="form-control-custom"
+                                        required>
+                                        <option value="AUTONOMO" <?= set_select('tipo_derivacion', 'AUTONOMO', true) ?>>
+                                            Autónomo</option>
+                                        <option value="DOCENTE" <?= set_select('tipo_derivacion', 'DOCENTE') ?>>Docente
+                                        </option>
+                                        <option value="FAMILIAR" <?= set_select('tipo_derivacion', 'FAMILIAR') ?>>
+                                            Familiar</option>
                                     </select>
                                 </div>
                             </div>
@@ -80,10 +84,12 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="form-label">Programa de estudio</label>
-                                        <select id="programaEstudio" name="programa_estudio" class="form-control-custom">
+                                        <select id="programaEstudio" name="programa_estudio"
+                                            class="form-control-custom">
                                             <option value="">Filtre por programa de estudio</option>
                                             <?php foreach ($programaEstudios as $programaEstudio): ?>
-                                                <option value="<?= $programaEstudio['id'] ?>" <?= set_select('programa_estudio', $programaEstudio['id']) ?>>
+                                                <option value="<?= $programaEstudio['id'] ?>"
+                                                    <?= set_select('programa_estudio', $programaEstudio['id']) ?>>
                                                     <?= esc($programaEstudio['nombre']) ?>
                                                 </option>
                                             <?php endforeach; ?>
@@ -98,7 +104,8 @@
                                         <select id="ciclo" name="ciclo" class="form-control-custom">
                                             <option value="">Filtre por ciclo</option>
                                             <?php for ($i = 1; $i <= 6; $i++): ?>
-                                                <option value="<?= $i ?>" <?= set_select('ciclo', $i) ?>><?= $i ?>º Ciclo</option>
+                                                <option value="<?= $i ?>" <?= set_select('ciclo', $i) ?>><?= $i ?>º Ciclo
+                                                </option>
                                             <?php endfor; ?>
                                         </select>
                                     </div>
@@ -122,9 +129,9 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="form-label">DNI</label>
-                                        <input type="text" id="inputDNIAlumno" class="form-control-custom" 
-                                               placeholder="Filtrar por DNI de alumno" maxlength="8" pattern="[0-9]{8}"
-                                               value="<?= set_value('dni_alumno') ?>">
+                                        <input type="text" id="inputDNIAlumno" class="form-control-custom"
+                                            placeholder="Filtrar por DNI de alumno" maxlength="8" pattern="[0-9]{8}"
+                                            value="<?= set_value('dni_alumno') ?>">
                                         <span id="msg-dni-alumno"></span>
                                     </div>
                                 </div>
@@ -132,10 +139,10 @@
                                 <div class="col-md-8">
                                     <div class="form-group">
                                         <label class="form-label">Alumno <span class="required-mark">*</span></label>
-                                        <select id="alumnoSelect" name="alumno">
+                                        <select id="alumnoSelect" name="alumno" required>
                                             <option value="">-- Seleccione un alumno --</option>
                                             <?php foreach ($alumnos as $alumno): ?>
-                                                <option value="<?= $alumno['id'] ?>" <?= set_select('alumno', $alumno['id']) ?>>
+                                                <option value="<?= $alumno['id'] ?>" <?= set_select('alumno', $alumno['id'], isset($alumnoEnviado) && $alumnoEnviado == $alumno['id']) ?>>
                                                     <?= esc($alumno['alumno_nombres_completos']) ?>
                                                 </option>
                                             <?php endforeach; ?>
@@ -150,7 +157,8 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label class="form-label">Derivaciones pendientes <span class="required-mark">*</span></label>
+                                    <label class="form-label">Derivaciones pendientes <span
+                                            class="required-mark">*</span></label>
                                     <select id="derivacionSelect" name="derivacion">
                                         <option value="">-- Seleccione una derivación pendiente --</option>
                                         <?php foreach ($derivaciones_pendientes as $deriv_pen): ?>
@@ -162,15 +170,28 @@
                                 </div>
                             </div>
                         </div>
-
                         <!-- Familiares -->
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="form-label">Familiares <span class="required-mark">*</span></label>
-                                    <select id="familiarSelect" name="familiar" class="form-control-custom">
-                                        <option value="<?= set_value('familiar') ?>"><?= set_value('familiar') ? 'Seleccionado previamente' : '-- Seleccione --' ?></option>
+
+                                    <select id="familiarSelect" name="familiar" class="form-control-custom"
+                                        <?= isset($familiares) && !empty($familiares) ? 'required' : '' ?>>
+                                        <?php if (isset($familiares) && !empty($familiares)): ?>
+                                            <option value="">-- Seleccione un familiar --</option>
+                                            <?php foreach ($familiares as $familiar): ?>
+                                                <option value="<?= esc($familiar['id']) ?>" <?= set_select('familiar', $familiar['id']) ?>>
+                                                    <?= esc($familiar['info_pariente']) ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <option value="<?= set_value('familiar') ?>">
+                                                <?= set_value('familiar') ? 'Seleccionado previamente' : '-- Seleccione --' ?>
+                                            </option>
+                                        <?php endif; ?>
                                     </select>
+
                                 </div>
                             </div>
                         </div>
@@ -178,7 +199,8 @@
                         <!-- Motivo -->
                         <div class="textarea-wrapper">
                             <label class="textarea-label">Motivos <span class="required-mark">*</span></label>
-                            <textarea name="motivo" class="auto-expand-textarea" placeholder="Detalle el motivo..." maxlength="500"><?= set_value('motivo') ?></textarea>
+                            <textarea name="motivo" class="auto-expand-textarea" placeholder="Detalle el motivo..."
+                                maxlength="500"><?= set_value('motivo') ?></textarea>
                             <div class="character-count"><?= strlen(set_value('motivo')) ?>/500</div>
                         </div>
 
@@ -186,20 +208,24 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="form-label">Fecha de atención <span class="required-mark">*</span></label>
-                                    <input type="date" name="fecha_atencion" class="form-control-custom" required value="<?= set_value('fecha_atencion') ?>">
+                                    <label class="form-label">Fecha de atención <span
+                                            class="required-mark">*</span></label>
+                                    <input type="date" name="fecha_atencion" class="form-control-custom" required
+                                        value="<?= set_value('fecha_atencion') ?>">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="form-label">Hora inicio <span class="required-mark">*</span></label>
-                                    <input type="time" name="hora_inicio" class="form-control-custom" required value="<?= set_value('hora_inicio') ?>">
+                                    <input type="time" name="hora_inicio" class="form-control-custom" required
+                                        value="<?= set_value('hora_inicio') ?>">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="form-label">Hora fin <span class="required-mark">*</span></label>
-                                    <input type="time" name="hora_fin" class="form-control-custom" required value="<?= set_value('hora_fin') ?>">
+                                    <input type="time" name="hora_fin" class="form-control-custom" required
+                                        value="<?= set_value('hora_fin') ?>">
                                 </div>
                             </div>
                         </div>
@@ -210,8 +236,10 @@
                                 <div class="form-group">
                                     <label class="form-label">Asistencia <span class="required-mark">*</span></label>
                                     <div>
-                                        <label><input type="radio" name="asistencia" value="PENDIENTE" <?= set_radio('asistencia', 'PENDIENTE') ?>> Pendiente</label>
-                                        <label><input type="radio" name="asistencia" value="ASISTIDO" <?= set_radio('asistencia', 'ASISTIDO') ?>> Asistido</label>
+                                        <label><input type="radio" name="asistencia" value="PENDIENTE"
+                                                <?= set_radio('asistencia', 'PENDIENTE') ?>> Pendiente</label>
+                                        <label><input type="radio" name="asistencia" value="ASISTIDO"
+                                                <?= set_radio('asistencia', 'ASISTIDO') ?>> Asistido</label>
                                     </div>
                                 </div>
                             </div>
@@ -221,7 +249,7 @@
                         <fieldset id="detallesCitaFieldset" class="fieldset">
                             <legend>Detalles de la consulta</legend>
 
-                            <?php 
+                            <?php
                             $textareas = [
                                 'problema' => 'Problema',
                                 'recomendacion' => 'Recomendación',
@@ -232,7 +260,9 @@
                             foreach ($textareas as $name => $label): ?>
                                 <div class="textarea-wrapper">
                                     <label class="textarea-label"><?= $label ?></label>
-                                    <textarea name="<?= $name ?>" class="auto-expand-textarea" placeholder="Detalle <?= strtolower($label) ?>..." maxlength="500"><?= set_value($name) ?></textarea>
+                                    <textarea name="<?= $name ?>" class="auto-expand-textarea"
+                                        placeholder="Detalle <?= strtolower($label) ?>..."
+                                        maxlength="500"><?= set_value($name) ?></textarea>
                                     <div class="character-count"><?= strlen(set_value($name)) ?>/500</div>
                                 </div>
                             <?php endforeach; ?>
@@ -356,7 +386,11 @@
     document.addEventListener('DOMContentLoaded', function () {
         // SELECT DE FAMILIARES POR ALUMNOID
         const familiarSelect = document.getElementById("familiarSelect");
-        familiarSelect.innerHTML = "<option value=''>-- Seleccione un familiar --</option>";
+
+        // Evitar limpiar el select si ya tiene familiares renderizados desde PHP
+        if (familiarSelect.options.length <= 1) {
+            familiarSelect.innerHTML = "<option value=''>-- Seleccione un familiar --</option>";
+        }
 
         // textarea - motivo
         const motivoTextArea = document.querySelector('textarea[name="motivo"]');
