@@ -41,6 +41,7 @@
                     data-text="¿Desea actualizar esta consulta?"
                     data-icon="question">
                         <?= csrf_field() ?>
+                        <input type="hidden" name="isAlumnoEnviado" value="<?= esc($desdePerfil) ?>">
                         <div class="row">
                             <!-- Tipo de derivación -->
                             <div class="col-md-6 mb-3 mt-3">

@@ -54,9 +54,9 @@
                             <?php
                             $link = ($cita['asistencia'] === 'ASISTIDO' || $cita['asistencia'] === 'AUSENTE')
                                 ? base_url('citas/info/' . $cita['id'])
-                                : base_url('citas/editar/' . $cita['id']);
+                                : base_url('citas/editar/' . $cita['id'].'?desdePerfil=true');
                             ?>
-                            <a href="<?= $link ?>" class="text-decoration-none text-reset" target="_blank">
+                            <a href="<?= $link ?>" class="text-decoration-none text-reset">
                                 <div class="card border-0 shadow-sm w-100 clickable-card">
                                     <div
                                         class="card-body d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">

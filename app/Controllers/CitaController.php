@@ -105,6 +105,9 @@ class CitaController extends BaseController
         $usuarioModel = new Usuario();
         $data['psicologos'] = $usuarioModel->obtenerPsicologos();
 
+        $desdePerfil = $this->request->getGet('desdePerfil');
+        $data['desdePerfil'] = $desdePerfil === 'true';
+
         return view('modules/citas/editar', $data);
     }
 
@@ -263,6 +266,12 @@ class CitaController extends BaseController
 
             $db->transCommit();
             clear_datatable_cache('CitaFullInfo');
+
+            $desdePerfil = $this->request->getPost('isAlumnoEnviado');
+            if ($desdePerfil && $citaActual['alumno_id']) {
+                return redirect()->to('/alumnos/info/' . $citaActual['alumno_id'])->with('success', 'Consulta actualizada con éxito');
+            }
+
             return redirect()->to('/citas')->with('success', 'Consulta actualizada con éxito');
         } catch (\Throwable $e) {
             $db->transRollback();
