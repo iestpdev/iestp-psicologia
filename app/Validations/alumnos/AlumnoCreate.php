@@ -5,16 +5,16 @@ namespace App\Validations\Alumnos;
 class AlumnoCreate
 {
     public array $rules = [
-        'dni'               => 'required|exact_length[8]|numeric|is_unique_soft[alumnos.dni]',
-        'nombres'           => 'required|min_length[2]|max_length[100]',
-        'apellidos'         => 'required|min_length[2]|max_length[100]',
-        'telefono'          => 'permit_empty|exact_length[9]|numeric',
+        'dni'               => 'trim|required|exact_length[8]|numeric|is_unique_soft[alumnos.dni]',
+        'nombres'           => 'trim|required|min_length[2]|max_length[100]',
+        'apellidos'         => 'trim|required|min_length[2]|max_length[100]',
+        'telefono'          => 'trim|permit_empty|exact_length[9]|numeric',
         'programa_estudio'  => 'required|is_natural_no_zero',
         'ciclo'             => 'required|in_list[1,2,3,4,5,6]',
         'turno'             => 'required|in_list[M,T]',
         'sexo'              => 'required|in_list[M,F]',
-        'direccion_nac'     => 'permit_empty|min_length[5]|max_length[255]',
-        'domicilio'         => 'permit_empty|min_length[5]|max_length[255]',
+        'direccion_nac'     => 'trim|permit_empty|min_length[5]|max_length[255]',
+        'domicilio'         => 'trim|permit_empty|min_length[5]|max_length[255]',
         'fecha_nac'         => 'permit_empty|valid_date',
         'religion'          => 'required|is_natural_no_zero',
         'estado_civil'      => 'required|is_natural_no_zero',

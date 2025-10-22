@@ -22,9 +22,53 @@ class Alumno extends BaseModel
         'estado_civil_id',
     ];
 
+    public function eliminar(int $id): bool
+    {
+        return $this->delete($id);
+    }
+
     public function crear(array $data): int
     {
         return $this->insert($data, true);
+    }
+
+    public function actualizar(int $id, array $data): bool
+    {
+        return $this->update($id, $data);
+    }
+
+    public function obtenerPorId(int $id): ?array
+    {
+        $builder = $this->db->table("{$this->table} AS a");
+
+        $builder->select("
+        a.id,
+        a.dni,
+        CONCAT(a.nombres, ' ', a.apellidos) AS alumno_nombres_completos,
+        a.nombres,
+        a.apellidos,
+        a.telefono,
+        a.direccion_nac,
+        a.fecha_nac,
+        a.domicilio,
+        a.sexo,
+        a.ciclo,
+        a.turno,
+        pe.nombre AS programa_estudio,
+        r.nombre AS religion,
+        ec.nombre AS estado_civil
+    ");
+
+        $builder->join('programas_estudios AS pe', 'pe.id = a.programa_estudio_id', 'left');
+        $builder->join('religiones AS r', 'r.id = a.religion_id', 'left');
+        $builder->join('estados_civiles AS ec', 'ec.id = a.estado_civil_id', 'left');
+        $builder->where('a.deleted_at', null);
+        $builder->where('a.id', $id);
+
+        $query = $builder->get();
+        $result = $query->getRowArray();
+
+        return $result ?: null;
     }
 
     public function obtenerAlumnos(
@@ -52,6 +96,7 @@ class Alumno extends BaseModel
             ciclo, 
             turno'
         );
+        $builder->where('deleted_at', null);
 
         return $builder->get()->getResultArray();
     }

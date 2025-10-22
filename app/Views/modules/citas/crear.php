@@ -37,70 +37,83 @@
 
                     <form action="<?= base_url('api/citas/add') ?>" method="POST">
                         <?= csrf_field() ?>
+                        <input type="hidden" name="isAlumnoEnviado" value="<?= esc($alumnoEnviado) ?>">
                         <div class="row">
                             <!-- Tipo de derivación -->
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">
-                                        tipo de derivación <span class="required-mark">*</span>
+                                        Tipo de derivación <span class="required-mark">*</span>
                                     </label>
-                                    <select name="tipo_derivacion" id="tipo_derivacion" class="form-control-custom" required>
-                                        <option value="AUTONOMO" selected>Autónomo</option>
-                                        <option value="DOCENTE">Docente</option>
-                                        <option value="FAMILIAR">Familiar</option>
+                                    <select name="tipo_derivacion" id="tipo_derivacion" class="form-control-custom"
+                                        required>
+                                        <option value="AUTONOMO" <?= set_select('tipo_derivacion', 'AUTONOMO', true) ?>>
+                                            Autónomo</option>
+                                        <option value="DOCENTE" <?= set_select('tipo_derivacion', 'DOCENTE') ?>>Docente
+                                        </option>
+                                        <option value="FAMILIAR" <?= set_select('tipo_derivacion', 'FAMILIAR') ?>>
+                                            Familiar</option>
                                     </select>
                                 </div>
                             </div>
 
-                            <!-- Psicologo asignado -->
+                            <!-- Psicólogo asignado -->
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">
-                                        Psicologo asignado <span class="required-mark">*</span>
+                                        Psicólogo asignado <span class="required-mark">*</span>
                                     </label>
-                                    <select name="usuario_id" id="usuario_id" class="form-control-custom" required>
-                                        <option value="">-- Seleccione un psicologo --</option>
-                                        <?php foreach ($psicologos as $psicologo): ?>
-                                            <option value="<?= $psicologo['id'] ?>"><?= esc($psicologo['persona_nombres_completos']) ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
+                                    <?php if (session('user.rol') === 'ADMIN'): ?>
+                                        <select name="usuario_id" id="usuario_id" class="form-control-custom" required>
+                                            <option value="">-- Seleccione un psicólogo --</option>
+                                            <?php foreach ($psicologos as $psicologo): ?>
+                                                <option value="<?= $psicologo['id'] ?>" <?= set_select('usuario_id', $psicologo['id']) ?>>
+                                                    <?= esc($psicologo['persona_nombres_completos']) ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    <?php elseif (session('user.rol') === 'PSICOLOGO'): ?>
+                                        <input type="text" class="form-control-custom"
+                                            value="<?= esc(session('user.nombres') . ' ' . session('user.apellidos')) ?>"
+                                            disabled>
+                                        <input type="hidden" name="usuario_id" value="<?= esc(session('user.id')) ?>">
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
 
-                        <!--filtros de alumno -->
+                        <!-- Filtros de alumno -->
                         <fieldset id="seccionFiltros" class="fieldset">
                             <legend>Filtros de alumno</legend>
-                            <!-- sección ALUMNO: Filtro ProgramaEstudio, ciclo, turno, DNI y alumno_nombres_completos -->
+
                             <div class="row">
                                 <!-- Programa de estudio -->
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label class="form-label">
-                                            Programa de estudio
-                                        </label>
-                                        <select id="programaEstudio" name="programa_estudio" class="form-control-custom">
+                                        <label class="form-label">Programa de estudio</label>
+                                        <select id="programaEstudio" name="programa_estudio"
+                                            class="form-control-custom">
                                             <option value="">Filtre por programa de estudio</option>
                                             <?php foreach ($programaEstudios as $programaEstudio): ?>
-                                                <option value="<?= $programaEstudio['id'] ?>"><?= esc($programaEstudio['nombre']) ?></option>
+                                                <option value="<?= $programaEstudio['id'] ?>"
+                                                    <?= set_select('programa_estudio', $programaEstudio['id']) ?>>
+                                                    <?= esc($programaEstudio['nombre']) ?>
+                                                </option>
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
                                 </div>
+
                                 <!-- Ciclo -->
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label class="form-label">
-                                            Ciclo
-                                        </label>
+                                        <label class="form-label">Ciclo</label>
                                         <select id="ciclo" name="ciclo" class="form-control-custom">
                                             <option value="">Filtre por ciclo</option>
-                                            <option value="1">1er Ciclo</option>
-                                            <option value="2">2do Ciclo</option>
-                                            <option value="3">3er Ciclo</option>
-                                            <option value="4">4to Ciclo</option>
-                                            <option value="5">5to Ciclo</option>
-                                            <option value="6">6to Ciclo</option>
+                                            <?php for ($i = 1; $i <= 6; $i++): ?>
+                                                <option value="<?= $i ?>" <?= set_select('ciclo', $i) ?>><?= $i ?>º Ciclo
+                                                </option>
+                                            <?php endfor; ?>
                                         </select>
                                     </div>
                                 </div>
@@ -108,38 +121,37 @@
                                 <!-- Turno -->
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label class="form-label">
-                                            Turno
-                                        </label>
+                                        <label class="form-label">Turno</label>
                                         <select id="turno" name="turno" class="form-control-custom">
                                             <option value="">Filtre por turno</option>
-                                            <option value="M">Mañana</option>
-                                            <option value="T">Tarde</option>
+                                            <option value="M" <?= set_select('turno', 'M') ?>>Mañana</option>
+                                            <option value="T" <?= set_select('turno', 'T') ?>>Tarde</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- sección ALUMNO: Filtro DNI y alumno_nombres_completos-->
+                            <!-- Alumno -->
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label class="form-label">
-                                            DNI
-                                        </label>
-                                        <input type="text" id="inputDNIAlumno" class="form-control-custom" placeholder="Filtrar por DNI de alumno" maxlength="8" pattern="[0-9]{8}">
+                                        <label class="form-label">DNI</label>
+                                        <input type="text" id="inputDNIAlumno" class="form-control-custom"
+                                            placeholder="Filtrar por DNI de alumno" maxlength="8" pattern="[0-9]{8}"
+                                            value="<?= set_value('dni_alumno') ?>">
                                         <span id="msg-dni-alumno"></span>
                                     </div>
                                 </div>
+
                                 <div class="col-md-8">
                                     <div class="form-group">
-                                        <label class="form-label">
-                                            Alumno <span class="required-mark">*</span>
-                                        </label>
-                                        <select id="alumnoSelect" name="alumno" required>
+                                        <label class="form-label">Alumno <span class="required-mark">*</span></label>
+                                        <select id="alumnoSelect" name="alumno">
                                             <option value="">-- Seleccione un alumno --</option>
                                             <?php foreach ($alumnos as $alumno): ?>
-                                                <option value="<?= $alumno['id'] ?>"><?= esc($alumno['alumno_nombres_completos']) ?></option>
+                                                <option value="<?= $alumno['id'] ?>" <?= set_select('alumno', $alumno['id'], isset($alumnoEnviado) && $alumnoEnviado == $alumno['id']) ?>>
+                                                    <?= esc($alumno['alumno_nombres_completos']) ?>
+                                                </option>
                                             <?php endforeach; ?>
                                         </select>
                                         <span id="msg-filtros-alumno"></span>
@@ -152,74 +164,75 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label class="form-label">
-                                        Derivaciones pendientes <span class="required-mark">*</span>
-                                    </label>
-                                    <select id="derivacionSelect" name="derivacion" required>
-                                        <option value="">-- Seleccione un derivacion pendiente --</option>
+                                    <label class="form-label">Derivaciones pendientes <span
+                                            class="required-mark">*</span></label>
+                                    <select id="derivacionSelect" name="derivacion">
+                                        <option value="">-- Seleccione una derivación pendiente --</option>
                                         <?php foreach ($derivaciones_pendientes as $deriv_pen): ?>
-                                            <option value="<?= $deriv_pen['id'] ?>"><?= esc($deriv_pen['data_derivacion']) ?></option>
+                                            <option value="<?= $deriv_pen['id'] ?>" <?= set_select('derivacion', $deriv_pen['id']) ?>>
+                                                <?= esc($deriv_pen['data_derivacion']) ?>
+                                            </option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Familiares del alumno -->
+                        <!-- Familiares -->
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label class="form-label">
-                                        Familiares <span class="required-mark">*</span>
-                                    </label>
-                                    <select id="familiarSelect" name="familiar" class="form-control-custom" required>
+                                    <label class="form-label">Familiares <span class="required-mark">*</span></label>
+
+                                    <select id="familiarSelect" name="familiar" class="form-control-custom"
+                                        <?= isset($familiares) && !empty($familiares) ? 'required' : '' ?>>
+                                        <?php if (isset($familiares) && !empty($familiares)): ?>
+                                            <option value="">-- Seleccione un familiar --</option>
+                                            <?php foreach ($familiares as $familiar): ?>
+                                                <option value="<?= esc($familiar['id']) ?>" <?= set_select('familiar', $familiar['id']) ?>>
+                                                    <?= esc($familiar['info_pariente']) ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <option value="<?= set_value('familiar') ?>">
+                                                <?= set_value('familiar') ? 'Seleccionado previamente' : '-- Seleccione --' ?>
+                                            </option>
+                                        <?php endif; ?>
                                     </select>
+
                                 </div>
                             </div>
                         </div>
 
                         <!-- Motivo -->
                         <div class="textarea-wrapper">
-                            <label class="textarea-label" for="auto-textarea">
-                                Motivos <span class="required-mark">*</span>
-                            </label>
-                            <textarea
-                                name="motivo"
-                                class="auto-expand-textarea"
-                                placeholder="Detalle el motivo de la derivación..."
-                                maxlength="500"></textarea>
-                            <div class="character-count">0/500</div>
+                            <label class="textarea-label">Motivos <span class="required-mark">*</span></label>
+                            <textarea name="motivo" class="auto-expand-textarea" placeholder="Detalle el motivo..."
+                                maxlength="500"><?= set_value('motivo') ?></textarea>
+                            <div class="character-count"><?= strlen(set_value('motivo')) ?>/500</div>
                         </div>
 
-                        <!-- Atencion -->
+                        <!-- Atención -->
                         <div class="row">
-                            <!-- Fecha de atención -->
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="form-label">
-                                        Fecha de atención <span class="required-mark">*</span>
-                                    </label>
-                                    <input type="date" name="fecha_atencion" class="form-control-custom" required>
+                                    <label class="form-label">Fecha de atención <span
+                                            class="required-mark">*</span></label>
+                                    <input type="date" name="fecha_atencion" class="form-control-custom" required
+                                        value="<?= set_value('fecha_atencion') ?>">
                                 </div>
                             </div>
-
-                            <!-- Hora inicio -->
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="form-label">
-                                        Hora inicio <span class="required-mark">*</span>
-                                    </label>
-                                    <input type="time" name="hora_inicio" class="form-control-custom" required>
+                                    <label class="form-label">Hora inicio <span class="required-mark">*</span></label>
+                                    <input type="time" name="hora_inicio" class="form-control-custom" required
+                                        value="<?= set_value('hora_inicio') ?>">
                                 </div>
                             </div>
-
-                            <!-- Hora fin -->
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="form-label">
-                                        Hora fin <span class="required-mark">*</span>
-                                    </label>
-                                    <input type="time" name="hora_fin" class="form-control-custom" required>
+                                    <label class="form-label">Hora fin <span class="required-mark">*</span></label>
+                                    <input type="time" name="hora_fin" class="form-control-custom" required
+                                        value="<?= set_value('hora_fin') ?>">
                                 </div>
                             </div>
                         </div>
@@ -228,80 +241,38 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label class="form-label">
-                                        Asistencia <span class="required-mark">*</span>
-                                    </label>
+                                    <label class="form-label">Asistencia <span class="required-mark">*</span></label>
                                     <div>
-                                        <label><input type="radio" name="asistencia" value="PENDIENTE" required> Pendiente</label>
-                                        <label><input type="radio" name="asistencia" value="ASISTIDO" required> Asistido</label>
+                                        <label><input type="radio" name="asistencia" value="PENDIENTE"
+                                                <?= set_radio('asistencia', 'PENDIENTE') ?>> Pendiente</label>
+                                        <label><input type="radio" name="asistencia" value="ASISTIDO"
+                                                <?= set_radio('asistencia', 'ASISTIDO') ?>> Asistido</label>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!--detalles de la consulta -->
+                        <!-- Detalles -->
                         <fieldset id="detallesCitaFieldset" class="fieldset">
                             <legend>Detalles de la consulta</legend>
-                            <!-- Problema -->
-                            <div class="textarea-wrapper">
-                                <label class="textarea-label" for="auto-textarea">
-                                    Problema
-                                </label>
-                                <textarea
-                                    name="problema"
-                                    class="auto-expand-textarea"
-                                    placeholder="Detalle el problema..."
-                                    maxlength="500"></textarea>
-                                <div class="character-count">0/500</div>
-                            </div>
-                            <!-- Recomendación -->
-                            <div class="textarea-wrapper">
-                                <label class="textarea-label" for="auto-textarea">
-                                    Recomendación
-                                </label>
-                                <textarea
-                                    name="recomendacion"
-                                    class="auto-expand-textarea"
-                                    placeholder="Detalle la recomendación..."
-                                    maxlength="500"></textarea>
-                                <div class="character-count">0/500</div>
-                            </div>
-                            <!-- Aspecto físico -->
-                            <div class="textarea-wrapper">
-                                <label class="textarea-label" for="auto-textarea">
-                                    Aspecto físico
-                                </label>
-                                <textarea
-                                    name="aspecto_fisico"
-                                    class="auto-expand-textarea"
-                                    placeholder="Detalle el aspecto fisico..."
-                                    maxlength="500"></textarea>
-                                <div class="character-count">0/500</div>
-                            </div>
-                            <!-- Aseo personal -->
-                            <div class="textarea-wrapper">
-                                <label class="textarea-label" for="auto-textarea">
-                                    Aseo personal
-                                </label>
-                                <textarea
-                                    name="aseo_personal"
-                                    class="auto-expand-textarea"
-                                    placeholder="Detalle el aseo personal..."
-                                    maxlength="500"></textarea>
-                                <div class="character-count">0/500</div>
-                            </div>
-                            <!-- Conducta -->
-                            <div class="textarea-wrapper">
-                                <label class="textarea-label" for="auto-textarea">
-                                    Conducta
-                                </label>
-                                <textarea
-                                    name="conducta"
-                                    class="auto-expand-textarea"
-                                    placeholder="Detalle la conducta..."
-                                    maxlength="500"></textarea>
-                                <div class="character-count">0/500</div>
-                            </div>
+
+                            <?php
+                            $textareas = [
+                                'problema' => 'Problema',
+                                'recomendacion' => 'Recomendación',
+                                'aspecto_fisico' => 'Aspecto físico',
+                                'aseo_personal' => 'Aseo personal',
+                                'conducta' => 'Conducta'
+                            ];
+                            foreach ($textareas as $name => $label): ?>
+                                <div class="textarea-wrapper">
+                                    <label class="textarea-label"><?= $label ?></label>
+                                    <textarea name="<?= $name ?>" class="auto-expand-textarea"
+                                        placeholder="Detalle <?= strtolower($label) ?>..."
+                                        maxlength="500"><?= set_value($name) ?></textarea>
+                                    <div class="character-count"><?= strlen(set_value($name)) ?>/500</div>
+                                </div>
+                            <?php endforeach; ?>
                         </fieldset>
 
                         <div class="row">
@@ -332,7 +303,7 @@
         }
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const radiosAsistencia = document.querySelectorAll('input[name="asistencia"]');
         const detallesCitaFieldset = document.getElementById('detallesCitaFieldset');
 
@@ -348,7 +319,7 @@
 </script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const tipoDerivacion = document.getElementById('tipo_derivacion');
 
         // Secciones del formulario
@@ -409,7 +380,7 @@
         }
 
         // Evento: cada vez que cambia el tipo
-        tipoDerivacion.addEventListener('change', function() {
+        tipoDerivacion.addEventListener('change', function () {
             mostrarSegunTipo(this.value);
         });
 
@@ -418,12 +389,15 @@
     });
 </script>
 
-
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         // SELECT DE FAMILIARES POR ALUMNOID
         const familiarSelect = document.getElementById("familiarSelect");
-        familiarSelect.innerHTML = "<option value=''>-- Seleccione un familiar --</option>";
+
+        // Evitar limpiar el select si ya tiene familiares renderizados desde PHP
+        if (familiarSelect.options.length <= 1) {
+            familiarSelect.innerHTML = "<option value=''>-- Seleccione un familiar --</option>";
+        }
 
         // textarea - motivo
         const motivoTextArea = document.querySelector('textarea[name="motivo"]');
@@ -435,7 +409,7 @@
             valueField: 'id',
             labelField: 'alumno_nombres_completos',
             searchField: 'alumno_nombres_completos',
-            load: function(query, callback) {
+            load: function (query, callback) {
                 if (!query.length) return callback();
                 fetch('<?= base_url("api/alumnos/obtener-alumnos") ?>?term=' + encodeURIComponent(query))
                     .then(res => res.json())
@@ -452,9 +426,9 @@
         });
 
         // Capturando el valor del alumno con cada cambio
-        alumnoSelect.on('change', async function(value) {
+        alumnoSelect.on('change', async function (value) {
             if (value) {
-                setTimeout(function() {
+                setTimeout(function () {
                     $('#inputDNIAlumno').val('');
                     $('#msg-dni-alumno').text('');
                 }, 1000);
@@ -473,7 +447,7 @@
         });
 
         // Filtro de DNI para Alumno
-        $('#inputDNIAlumno').on('input', function() {
+        $('#inputDNIAlumno').on('input', function () {
             const dni = $(this).val();
 
             if (dni.length === 8) {
@@ -507,7 +481,7 @@
         // ===============================
         // FILTROS EXTRA (programa, ciclo, turno)
         // ===============================
-        $('#programaEstudio, #ciclo, #turno').on('change', function() {
+        $('#programaEstudio, #ciclo, #turno').on('change', function () {
             const programaEstudio = $('#programaEstudio').val();
             const ciclo = $('#ciclo').val();
             const turno = $('#turno').val();
@@ -553,7 +527,7 @@
             valueField: 'id',
             labelField: 'data_derivacion',
             searchField: 'data_derivacion',
-            load: function(query, callback) {
+            load: function (query, callback) {
                 if (!query.length) return callback();
                 fetch('<?= base_url("api/derivaciones/obtener-pendientes") ?>?term=' + encodeURIComponent(query))
                     .then(res => res.json())
@@ -570,10 +544,11 @@
         });
 
         // Detectar los cambios de valor en el select de Derivaciones
-        derivacionSelect.on('change', async function(value) {
+        derivacionSelect.on('change', async function (value) {
             const res = await fetch(`/api/derivaciones/obtener-por-id/${value}`);
-            const derivacion = await res.json();
-            motivoTextArea.value = derivacion.motivo;
+            const data = await res.json();
+            console.log(data)
+            motivoTextArea.value = data.derivacion.motivo;
         });
     });
 </script>

@@ -2,9 +2,6 @@
 <?= $this->extend('layouts/master') ?>
 <?= $this->section('content') ?>
 
-<?= $this->include('messages/msg-success') ?>
-<?= $this->include('messages/msg-error') ?>
-
 <style>
     .msg-dni-success {
         color: green;
@@ -33,30 +30,44 @@
                         'backUrl' => base_url('derivaciones')
                     ]) ?>
 
-                    <form action="<?= base_url('api/derivaciones/add') ?>" method="POST">
+                    <form action="<?= base_url('api/derivaciones/add') ?>" method="POST" data-confirm
+                        data-title="Registrar Derivación" data-text="¿Desea registrar esta nueva derivación?"
+                        data-icon="question">
                         <?= csrf_field() ?>
                         <!-- sección DOCENTE: Filtro DNI y docente_nombres_completos-->
                         <div class="row">
+                            <?php if (session('user.rol') === 'ADMIN' || session('user.rol') === 'PSICOLOGO'): ?>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="form-label">
                                         DNI
                                     </label>
-                                    <input type="text" id="dniInput" class="form-control-custom" placeholder="Filtrar por DNI de docente" maxlength="8" pattern="[0-9]{8}">
+                                    <input type="text" id="dniInput" class="form-control-custom"
+                                        placeholder="Filtrar por DNI de docente" maxlength="8" pattern="[0-9]{8}">
                                     <span id="msg-dni"></span>
                                 </div>
                             </div>
+                            <?php endif; ?>
                             <div class="col-md-8">
                                 <div class="form-group">
                                     <label class="form-label">
                                         Docente <span class="required-mark">*</span>
                                     </label>
+                                    <?php if (session('user.rol') === 'ADMIN' || session('user.rol') === 'PSICOLOGO'): ?>
                                     <select id="docenteSelect" name="docente" required>
                                         <option value="">Seleccione un docente</option>
                                         <?php foreach ($docentes as $docente): ?>
-                                            <option value="<?= $docente['id'] ?>"><?= esc($docente['persona_nombres_completos']) ?></option>
+                                            <option value="<?= $docente['id'] ?>" <?= set_select('docente', $docente['id']) ?>>
+                                                <?= esc($docente['persona_nombres_completos']) ?>
+                                            </option>
                                         <?php endforeach; ?>
                                     </select>
+                                    <?php elseif (session('user.rol') === 'DOCENTE'): ?>
+                                        <input type="text" class="form-control-custom"
+                                               value="<?= esc(session('user.nombres').' '.session('user.apellidos') ) ?>" disabled>
+                                        <input type="hidden" name="docente" 
+                                               value="<?= esc(session('user.id')) ?>">
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
@@ -71,10 +82,13 @@
                                         <label class="form-label">
                                             Programa de estudio
                                         </label>
-                                        <select id="programaEstudio" name="programa_estudio" class="form-control-custom">
+                                        <select id="programaEstudio" name="programa_estudio"
+                                            class="form-control-custom">
                                             <option value="">Filtre por programa de estudio</option>
                                             <?php foreach ($programaEstudios as $programaEstudio): ?>
-                                                <option value="<?= $programaEstudio['id'] ?>"><?= esc($programaEstudio['nombre']) ?></option>
+                                                <option value="<?= $programaEstudio['id'] ?>">
+                                                    <?= esc($programaEstudio['nombre']) ?>
+                                                </option>
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
@@ -119,7 +133,8 @@
                                         <label class="form-label">
                                             DNI
                                         </label>
-                                        <input type="text" id="inputDNIAlumno" class="form-control-custom" placeholder="Filtrar por DNI de alumno" maxlength="8" pattern="[0-9]{8}">
+                                        <input type="text" id="inputDNIAlumno" class="form-control-custom"
+                                            placeholder="Filtrar por DNI de alumno" maxlength="8" pattern="[0-9]{8}">
                                         <span id="msg-dni-alumno"></span>
                                     </div>
                                 </div>
@@ -128,10 +143,12 @@
                                         <label class="form-label">
                                             Alumno <span class="required-mark">*</span>
                                         </label>
-                                        <select id="alumnoSelect" name="alumno" required>
-                                            <option value="">Seleccione un alumno</option>
+                                        <select id="alumnoSelect" name="alumno">
+                                            <option value="">-- Seleccione un alumno --</option>
                                             <?php foreach ($alumnos as $alumno): ?>
-                                                <option value="<?= $alumno['id'] ?>"><?= esc($alumno['alumno_nombres_completos']) ?></option>
+                                                <option value="<?= $alumno['id'] ?>" <?= set_select('alumno', $alumno['id'], isset($alumnoEnviado) && $alumnoEnviado == $alumno['id']) ?>>
+                                                    <?= esc($alumno['alumno_nombres_completos']) ?>
+                                                </option>
                                             <?php endforeach; ?>
                                         </select>
                                         <span id="msg-filtros-alumno"></span>
@@ -145,12 +162,10 @@
                             <label class="textarea-label" for="auto-textarea">
                                 Motivos <span class="required-mark">*</span>
                             </label>
-                            <textarea
-                                name="motivo"
-                                class="auto-expand-textarea"
+                            <textarea name="motivo" class="auto-expand-textarea"
                                 placeholder="Detalle el motivo de la derivación..."
-                                maxlength="500"></textarea>
-                            <div class="character-count">0/500</div>
+                                maxlength="500"><?= set_value('motivo') ?></textarea>
+                            <div class="character-count"><?= strlen(set_value('motivo')) ?>/500</div>
                         </div>
 
                         <!-- Urgencia -->
@@ -161,9 +176,15 @@
                                         Urgencia <span class="required-mark">*</span>
                                     </label>
                                     <div>
-                                        <label><input type="radio" name="urgencia" value="BAJA" required> Baja</label>
-                                        <label><input type="radio" name="urgencia" value="MEDIA" required> Media</label>
-                                        <label><input type="radio" name="urgencia" value="ALTA" required> Alta</label>
+                                        <label>
+                                            <input type="radio" name="urgencia" value="BAJA" <?= set_radio('urgencia', 'BAJA') ?> required> Baja
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="urgencia" value="MEDIA" <?= set_radio('urgencia', 'MEDIA') ?> required> Media
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="urgencia" value="ALTA" <?= set_radio('urgencia', 'ALTA') ?> required> Alta
+                                        </label>
                                     </div>
                                 </div>
                             </div>
@@ -185,15 +206,16 @@
 <?= $this->include('shared/selects/tomSelect') ?>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         // ===============================
         // DOCENTES
         // ===============================
+        if (document.getElementById('docenteSelect')) {
         let docenteSelect = new TomSelect('#docenteSelect', {
             valueField: 'id',
             labelField: 'persona_nombres_completos',
             searchField: 'persona_nombres_completos',
-            load: function(query, callback) {
+            load: function (query, callback) {
                 if (!query.length) return callback();
                 fetch('<?= base_url("api/usuarios/obtener-docentes") ?>?term=' + encodeURIComponent(query))
                     .then(res => res.json())
@@ -210,7 +232,7 @@
         });
 
         // Filtro de DNI para Docente
-        $('#dniInput').on('input', function() {
+        $('#dniInput').on('input', function () {
             const dni = $(this).val();
 
             if (dni.length === 8) {
@@ -237,14 +259,15 @@
         });
 
         // Capturando el valor del docente con cada cambio
-        docenteSelect.on('change', function(value) {
+        docenteSelect.on('change', function (value) {
             if (value) {
-                setTimeout(function() {
+                setTimeout(function () {
                     $('#dniInput').val('');
                     $('#msg-dni').text('');
                 }, 1000);
             }
         });
+    };
 
         // ===============================
         // ALUMNOS
@@ -253,7 +276,7 @@
             valueField: 'id',
             labelField: 'alumno_nombres_completos',
             searchField: 'alumno_nombres_completos',
-            load: function(query, callback) {
+            load: function (query, callback) {
                 if (!query.length) return callback();
                 fetch('<?= base_url("api/alumnos/obtener-alumnos") ?>?term=' + encodeURIComponent(query))
                     .then(res => res.json())
@@ -270,7 +293,7 @@
         });
 
         // Filtro de DNI para Alumno
-        $('#inputDNIAlumno').on('input', function() {
+        $('#inputDNIAlumno').on('input', function () {
             const dni = $(this).val();
 
             if (dni.length === 8) {
@@ -302,9 +325,9 @@
         });
 
         // Capturando el valor del alumno con cada cambio
-        alumnoSelect.on('change', function(value) {
+        alumnoSelect.on('change', function (value) {
             if (value) {
-                setTimeout(function() {
+                setTimeout(function () {
                     $('#inputDNIAlumno').val('');
                     $('#msg-dni-alumno').text('');
                 }, 1000);
@@ -314,7 +337,7 @@
         // ===============================
         // FILTROS EXTRA (programa, ciclo, turno)
         // ===============================
-        $('#programaEstudio, #ciclo, #turno').on('change', function() {
+        $('#programaEstudio, #ciclo, #turno').on('change', function () {
             const programaEstudio = $('#programaEstudio').val();
             const ciclo = $('#ciclo').val();
             const turno = $('#turno').val();
@@ -353,6 +376,6 @@
         });
     });
 </script>
-
+<?= $this->include('shared/alerts/sweetAlert2') ?>
 
 <?= $this->endSection() ?>

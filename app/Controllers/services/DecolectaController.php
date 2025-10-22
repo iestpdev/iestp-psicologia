@@ -1,22 +1,19 @@
 <?php
 
-namespace App\Controllers\services;
+namespace App\Controllers\Services;
 
 use App\Services\DecolectaService;
 use App\Controllers\BaseController;
 
 class DecolectaController extends BaseController
 {
-    public function getDataByDni($dni)
+    public function getDataByDni(string $dni)
     {
-        try {
-            $decolecta = new DecolectaService();
-            $data = $decolecta->consultarDni($dni);
+        $service = new DecolectaService();
+        $result = $service->consultarDni($dni);
 
-            return $this->response->setJSON($data);
-        } catch (\Throwable $e) {
-            return $this->response->setStatusCode(500)
-                ->setJSON(['error' => $e->getMessage()]);
-        }
+        return $this->response
+            ->setStatusCode($result['status'])
+            ->setJSON($result['data'] ?? ['error' => $result['error'] ?? 'Error desconocido']);
     }
 }

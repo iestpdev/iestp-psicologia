@@ -159,7 +159,7 @@
         </div>
     </div>
 </div>
-
+<?= $this->include('shared/toasts/notyf') ?>
 <script type="module" src="<?= base_url('js/services/decolecta.js') ?>"></script>
 <script src="<?= base_url('js/shared/inputs/showPassInput.js') ?>"></script>
 <?= $this->include('shared/alerts/sweetAlert2') ?>

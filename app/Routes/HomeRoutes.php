@@ -1,3 +1,3 @@
 <?php
 
-$routes->get('/', 'HomeController::index');
+$routes->get('/', 'HomeController::index', ['filter' => ['auth', 'role:ADMIN,PSICOLOGO']]);

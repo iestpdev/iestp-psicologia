@@ -7,7 +7,7 @@ class DerivacionCreate
     public array $rules = [
         'docente' => 'required|is_natural_no_zero',
         'alumno'  => 'required|is_natural_no_zero',
-        'motivo'  => 'required|min_length[10]|max_length[500]',
+        'motivo'  => 'trim|required|min_length[10]|max_length[500]',
         'urgencia' => 'required|in_list[BAJA,MEDIA,ALTA]',
     ];
 

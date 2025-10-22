@@ -67,6 +67,9 @@ CREATE TABLE alumnos (
     FOREIGN KEY (estado_civil_id) REFERENCES estados_civiles(id)
 ) ENGINE=INNODB;
 
+/*
+ //TODO: la relacion entre parientes y familiares está mal hecha :')
+ */
 CREATE TABLE parientes(
 	id						BIGINT AUTO_INCREMENT PRIMARY KEY,
 	nombres				VARCHAR(70) NOT NULL,
@@ -116,6 +119,18 @@ CREATE TABLE usuarios(
 	FOREIGN KEY (persona_id) REFERENCES personas(id)			
 )ENGINE=INNODB;
 
+CREATE TABLE configuraciones(
+	id							BIGINT AUTO_INCREMENT PRIMARY KEY,
+	usuario_id				BIGINT NOT NULL,
+	auth_SMS					BOOL DEFAULT FALSE,
+	auth_email				BOOL DEFAULT FALSE,
+	notif_email				BOOL DEFAULT FALSE,
+	created_at				DATETIME NULL,
+	updated_at				DATETIME NULL,
+	deleted_at				DATETIME NULL,
+	FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+)ENGINE=INNODB;
+
 CREATE TABLE derivaciones(
 	id						BIGINT AUTO_INCREMENT PRIMARY KEY,
 	usuario_id			BIGINT NOT NULL,
@@ -141,6 +156,7 @@ CREATE TABLE citas(
 	alumno_id			BIGINT NOT NULL,
 	derivacion_id		BIGINT NULL,
 	familiar_id			BIGINT NULL,
+	motivo				TEXT NOT NULL,
 	created_at			DATETIME NULL,
 	updated_at			DATETIME NULL,
 	deleted_at			DATETIME NULL,
@@ -153,11 +169,10 @@ CREATE TABLE citas(
 CREATE TABLE detalle_cita(
 	id						BIGINT AUTO_INCREMENT PRIMARY KEY,
 	cita_id				BIGINT NOT NULL,
-	motivo				VARCHAR(255) NOT NULL,
-	problema				VARCHAR(255) NULL,
-	recomendacion		VARCHAR(255) NULL,
-	aspecto_fisico		VARCHAR(255) NULL,
-	aseo_personal		VARCHAR(255) NULL,
-	conducta				VARCHAR(255) NULL,
+	problema				TEXT NULL,
+	recomendacion		TEXT NULL,
+	aspecto_fisico		TEXT NULL,
+	aseo_personal		TEXT NULL,
+	conducta				TEXT NULL,
 	FOREIGN KEY (cita_id) REFERENCES citas(id)
 )ENGINE=INNODB;

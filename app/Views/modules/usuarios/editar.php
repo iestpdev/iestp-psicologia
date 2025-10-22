@@ -49,7 +49,7 @@
                                     <label class="form-label">
                                         DNI <span class="required-mark">*</span>
                                     </label>
-                                    <input type="text" name="dni" class="form-control-custom"
+                                    <input type="text" name="dni" id="dni" class="form-control-custom"
                                         placeholder="Ingrese el DNI" maxlength="8" pattern="[0-9]{8}"
                                         inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');"
                                         value="<?= $usuario['dni'] ?>" required>
@@ -63,7 +63,7 @@
                                     <label class="form-label">
                                         Nombres <span class="required-mark">*</span>
                                     </label>
-                                    <input type="text" name="nombres" class="form-control-custom"
+                                    <input type="text" name="nombres" id="nombres" class="form-control-custom"
                                         placeholder="Ingrese los nombres" value="<?= $usuario['nombres'] ?>" required>
                                 </div>
                             </div>
@@ -73,7 +73,7 @@
                                     <label class="form-label">
                                         Apellidos <span class="required-mark">*</span>
                                     </label>
-                                    <input type="text" name="apellidos" class="form-control-custom"
+                                    <input type="text" name="apellidos" id="apellidos" class="form-control-custom"
                                         placeholder="Ingrese los apellidos" value="<?= $usuario['apellidos'] ?>"
                                         required>
                                 </div>
@@ -139,6 +139,8 @@
         </div>
     </div>
 </div>
+<?= $this->include('shared/toasts/notyf') ?>
+<script type="module" src="<?= base_url('js/services/decolecta.js') ?>"></script>
 <?= $this->include('shared/alerts/sweetAlert2') ?>
 
 <?= $this->endSection() ?>

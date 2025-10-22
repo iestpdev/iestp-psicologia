@@ -17,7 +17,28 @@ class Usuario extends BaseModel
 
     public function obtenerPorUsername($username)
     {
-        return $this->where('username', $username)->first();
+        $builder = $this->db->table($this->table . ' u')
+            ->select("
+            p.id AS persona_id,
+            p.nombres,
+            p.apellidos,
+            p.dni,
+            p.telefono,
+            u.id,
+            u.correo_institucional,
+            u.username,
+            u.userpass,
+            u.rol,
+            u.estado,
+            u.created_at,
+            u.updated_at,
+            u.deleted_at
+        ")
+            ->join('personas p', 'u.persona_id = p.id', 'left')
+            ->where('u.deleted_at', null)
+            ->where('u.username', $username);
+
+        return $builder->get()->getRowArray();
     }
 
     public function obtenerPorId(int $id)
@@ -39,6 +60,7 @@ class Usuario extends BaseModel
             u.deleted_at
         ")
             ->join('personas p', 'u.persona_id = p.id', 'left')
+            ->where('u.deleted_at', null)
             ->where('u.id', $id);
 
         return $builder->get()->getRowArray();
@@ -80,7 +102,8 @@ class Usuario extends BaseModel
             u.deleted_at
         ")
             ->join('personas p', 'u.persona_id = p.id', 'left')
-            ->where('u.rol', 'DOCENTE');
+            ->where('u.rol', 'DOCENTE')
+            ->where('u.deleted_at', null);
 
         if (!empty($dni)) {
             $builder->where('p.dni', $dni);
@@ -103,7 +126,9 @@ class Usuario extends BaseModel
             u.deleted_at
         ")
             ->join('personas p', 'u.persona_id = p.id', 'left')
-            ->where('u.rol', 'PSICOLOGO');
+            ->where('u.rol', 'PSICOLOGO')
+            ->where('u.deleted_at', null)
+            ->where('u.deleted_at', null);
 
         return $builder->get()->getResultArray();
     }

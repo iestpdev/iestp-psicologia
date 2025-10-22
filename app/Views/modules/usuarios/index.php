@@ -19,6 +19,8 @@
             </a>
         </div>
     </div>
+        <!-- enviando solo el id del usuario logeado para excluirlo de la tabla usuario -->
+    <input type="hidden" id="usuarioLogeadoId" value="<?= esc(session('user.id')) ?>">
     <table id="datatable">
         <colgroup>
             <col width="5%">
@@ -54,79 +56,59 @@
 <?= $this->include('shared/table/datatable') ?>
 <script>
     $(document).ready(function () {
-        const table = initDataTable("<?= base_url('api/datatable/UsuarioFullInfo') ?>", [{
-            data: "dni"
-        },
-        {
-            data: "persona_nombres_completos",
-        },
-        {
-            data: "correo_institucional"
-        },
-        {
-            data: "username"
-        },
-        {
-            data: "telefono",
-            render: function (data) {
-                return renderNullable(data);
-            }
-        },
-        {
-            data: "rol"
-        },
-        {
-            data: "created_at",
-            render: function (data) {
-                return dateFormat(data);
-            }
-        },
-        {
-            data: "estado",
-            render: function (data) {
-                return data == 1 ?
-                    '<span class="badge bg-success">Activo</span>' :
-                    '<span class="badge bg-danger">Inactivo</span>';
-            }
-        },
-        {
-            data: "id",
-            orderable: false,
-            searchable: false,
-            render: function (data) {
-                return `
-                        <button id="key-${data}" class="btn btn-sm btn-info">
-                        <ion-icon name="key-outline" class="icon-lg"></ion-icon>
-                        </button>
-
-                        <a id="editar-${data}" href="<?= base_url('usuarios/editar/') ?>${data}" class="btn btn-sm btn-warning">
-                        <ion-icon name="create-outline" class="icon-lg"></ion-icon>
-                        </a>
-                        
-                        <a id="eliminar-${data}"
-                        href="<?= base_url('api/usuarios/delete/') ?>${data}"
-                        class="btn btn-sm btn-danger"
-                        data-confirm
-                        data-title="Eliminar Usuario"
-                        data-text="¿Desea eliminar este usuario?"
-                        data-icon="warning">
-                        <ion-icon name="trash-outline" class="icon-lg"></ion-icon>
-                        </a>
-                    `;
-            }
-        }
-        ], {
-            // extraOptions
+        const usuarioLogeadoId = document.getElementById('usuarioLogeadoId').value || '';
+        const extraOptions = {
+            ajax: {
+                data: function (d) {
+                    d.exclude_id = usuarioLogeadoId;
+                }
+            },
             dom: 'lrtip', // quitando el buscador default de DataTables
             responsive: true
-        });
+        };
 
-        // Vinculando input search personalizado con DataTables
+        const table = initDataTable("<?= base_url('api/datatable/UsuarioFullInfo') ?>", [
+            { data: "dni" },
+            { data: "persona_nombres_completos" },
+            { data: "correo_institucional" },
+            { data: "username" },
+            { data: "telefono", render: function (data) { return renderNullable(data); } },
+            { data: "rol" },
+            { data: "created_at", render: function (data) { return dateFormat(data); } },
+            {
+                data: "estado", render: function (data) {
+                    return data == 1
+                        ? '<span class="badge bg-success">Activo</span>'
+                        : '<span class="badge bg-danger">Inactivo</span>';
+                }
+            },
+            {
+                data: "id", orderable: false, searchable: false, render: function (data) {
+                    return `
+                <button id="key-${data}" class="btn btn-sm btn-info">
+                    <ion-icon name="key-outline" class="icon-lg"></ion-icon>
+                </button>
+                <a id="editar-${data}" href="<?= base_url('usuarios/editar/') ?>${data}" class="btn btn-sm btn-warning">
+                    <ion-icon name="create-outline" class="icon-lg"></ion-icon>
+                </a>
+                <a id="eliminar-${data}" href="<?= base_url('api/usuarios/delete/') ?>${data}"
+                    class="btn btn-sm btn-danger"
+                    data-confirm
+                    data-title="Eliminar Usuario"
+                    data-text="¿Desea eliminar este usuario?"
+                    data-icon="warning">
+                    <ion-icon name="trash-outline" class="icon-lg"></ion-icon>
+                </a>
+            `;
+                }
+            }
+        ], extraOptions);
+
         attachSearchInput(table, 'searchUsuarios');
     });
 </script>
 
-<?= $this->include('modules/usuarios/modal/modalChangePass/modalChangePass-script') ?>
 <?= $this->include('shared/alerts/sweetAlert2') ?>
+<?= $this->include('modules/usuarios/modal/modalChangePass/modalChangePass-script') ?>
 
 <?= $this->endSection() ?>
