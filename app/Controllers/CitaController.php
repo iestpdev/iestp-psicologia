@@ -168,7 +168,7 @@ class CitaController extends BaseController
 
     public function saveCita()
     {
-        helper(['validation', 'input', 'cache']);
+        helper(['validation', 'input']);
         $errors = runValidation('cita_create', $this->request);
 
         $DerivacionEnviaDesdeHome = $this->request->getPost('isDerivacionDocente');
@@ -229,8 +229,6 @@ class CitaController extends BaseController
             }
 
             $db->transCommit();
-            clear_datatable_cache('CitaFullInfo');
-
             $alunmoEnviado = $this->request->getPost('isAlumnoEnviado');
             if ($alunmoEnviado) {
                 return redirect()->to(uri: '/alumnos/info/' . $alunmoEnviado)->with('success', 'Consulta registrada con éxito');
@@ -245,7 +243,7 @@ class CitaController extends BaseController
 
     public function updateCita($id)
     {
-        helper(['validation', 'input', 'cache']);
+        helper(['validation', 'input']);
         $errors = runValidation('cita_update', $this->request);
         if (!empty($errors))
             return redirect()->back()->withInput()->with('errors', $errors);
@@ -289,8 +287,6 @@ class CitaController extends BaseController
             }
 
             $db->transCommit();
-            clear_datatable_cache('CitaFullInfo');
-
             $desdePerfil = $this->request->getPost('isAlumnoEnviado');
             if ($desdePerfil && $citaActual['alumno_id']) {
                 return redirect()->to('/alumnos/info/' . $citaActual['alumno_id'])->with('success', 'Consulta actualizada con éxito');
@@ -305,8 +301,6 @@ class CitaController extends BaseController
 
     public function deleteCita($id)
     {
-        helper('cache');
-
         $db = \Config\Database::connect();
         $db->transBegin();
         try {
@@ -319,7 +313,6 @@ class CitaController extends BaseController
                 throw new \Exception("Error al eliminar Consulta");
 
             $db->transCommit();
-            clear_datatable_cache('CitaFullInfo');
             return redirect()->to('/citas')->with('success', 'Consulta eliminada correctamente');
         } catch (\Throwable $e) {
             $db->transRollback();

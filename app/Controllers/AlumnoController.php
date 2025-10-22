@@ -83,8 +83,6 @@ class AlumnoController extends BaseController
 
     public function deleteAlumno($id)
     {
-        helper('cache');
-
         $alumnoModel = new Alumno();
         try {
             $alumno = $alumnoModel->obtenerPorId($id);
@@ -93,7 +91,6 @@ class AlumnoController extends BaseController
             if (!$alumnoModel->eliminar($id))
                 throw new \Exception("Error al eliminar alumno");
 
-            clear_datatable_cache('AlumnoFullInfo');
             return redirect()->to('/alumnos')->with('success', 'Alumno eliminado correctamente');
         } catch (\Throwable $e) {
             return redirect()->to('/alumnos')->with('error', 'Hubo un error: ' . $e->getMessage());
@@ -102,7 +99,7 @@ class AlumnoController extends BaseController
 
     public function saveAlumno()
     {
-        helper(['validation', 'input', 'cache']);
+        helper(['validation', 'input']);
         $errors = runValidation('alumno_create', $this->request);
         if (!empty($errors))
             return redirect()->to('/alumnos/crear')->withInput()->with('errors', $errors);
@@ -131,7 +128,6 @@ class AlumnoController extends BaseController
                 throw new \Exception("Error al crear Alumno");
 
             $db->transCommit();
-            clear_datatable_cache('AlumnoFullInfo');
             return redirect()->to('/alumnos')->with('success', 'Alumno registrado con éxito');
         } catch (\Throwable $e) {
             $db->transRollback();
@@ -141,7 +137,7 @@ class AlumnoController extends BaseController
 
     public function updateAlumno($id)
     {
-        helper(['validation', 'input', 'cache']);
+        helper(['validation', 'input']);
         $errors = runValidation('alumno_update', $this->request);
 
         if (!empty($errors))
@@ -176,7 +172,6 @@ class AlumnoController extends BaseController
             $alumnoModel->actualizar($id, $alumnoData);
 
             $db->transCommit();
-            clear_datatable_cache('AlumnoFullInfo');
             return redirect()->to('/alumnos')->with('success', 'Alumno actualizado correctamente');
         } catch (\Throwable $e) {
             $db->transRollback();

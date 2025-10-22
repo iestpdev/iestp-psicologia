@@ -36,8 +36,6 @@ class UsuarioController extends BaseController
 
     public function deleteUsuario($id)
     {
-        helper('cache');
-
         $usuarioModel = new Usuario();
         $personaModel = new Persona();
 
@@ -54,7 +52,6 @@ class UsuarioController extends BaseController
                 throw new \Exception("Error al eliminar persona asociada");
 
             $db->transCommit();
-            clear_datatable_cache('UsuarioFullInfo');
             return redirect()->to('/usuarios')->with('success', 'Usuario eliminado correctamente');
         } catch (\Throwable $e) {
             $db->transRollback();
@@ -64,7 +61,7 @@ class UsuarioController extends BaseController
 
     public function saveUsuario()
     {
-        helper(['validation', 'input', 'cache']);
+        helper(['validation', 'input']);
         $errors = [];
         $errors = array_merge($errors, runValidation('persona_create', $this->request));
         $errors = array_merge($errors, runValidation('usuario_create', $this->request));
@@ -100,7 +97,6 @@ class UsuarioController extends BaseController
                 throw new \Exception("Error al crear Usuario");
 
             $db->transCommit();
-            clear_datatable_cache('UsuarioFullInfo');
             return redirect()->to('/usuarios')->with('success', 'Usuario registrado con éxito');
         } catch (\Throwable $e) {
             $db->transRollback();
@@ -110,7 +106,7 @@ class UsuarioController extends BaseController
 
     public function updateUsuario($id)
     {
-        helper(['validation', 'input', 'cache']);
+        helper(['validation', 'input']);
         $errors = [];
         $errors = array_merge($errors, runValidation('persona_update', $this->request));
         $errors = array_merge($errors, runValidation('usuario_update', $this->request));
@@ -145,7 +141,6 @@ class UsuarioController extends BaseController
             $personaModel->actualizar($usuarioActual['persona_id'], $personaData);
 
             $db->transCommit();
-            clear_datatable_cache('UsuarioFullInfo');
             return redirect()->to('/usuarios')->with('success', 'Usuario actualizado correctamente');
         } catch (\Throwable $e) {
             $db->transRollback();

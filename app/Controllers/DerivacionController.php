@@ -78,7 +78,7 @@ class DerivacionController extends BaseController
 
     public function saveDerivacion()
     {
-        helper(['validation', 'input', 'cache']);
+        helper(['validation', 'input']);
         $errors = runValidation('derivacion_create', $this->request);
         if (!empty($errors))
             return redirect()->to('/derivaciones/crear')->withInput()->with('errors', $errors);
@@ -96,7 +96,6 @@ class DerivacionController extends BaseController
 
             if (!$derivacionId)
                 throw new \Exception("Error al registrar la derivación");
-            clear_datatable_cache('DerivacionFullInfo');
             return redirect()->to('/derivaciones')->with('success', 'Derivación registrada con éxito');
         } catch (\Throwable $e) {
             return redirect()->back()->withInput()->with('error', 'Hubo un error: ' . $e->getMessage());
@@ -105,7 +104,7 @@ class DerivacionController extends BaseController
 
     public function updateDerivacion($id)
     {
-        helper(['validation', 'input', 'cache']);
+        helper(['validation', 'input']);
         $errors = runValidation('derivacion_update', $this->request);
         if (!empty($errors))
             return redirect()->back()->withInput()->with('errors', $errors);
@@ -127,7 +126,6 @@ class DerivacionController extends BaseController
             ]);
 
             $derivacionModel->actualizar($id, $data);
-            clear_datatable_cache('DerivacionFullInfo');
             return redirect()->to('/derivaciones')->with('success', 'Derivación actualizada correctamente');
         } catch (\Throwable $e) {
             return redirect()->back()->withInput()->with('error', 'Error al actualizar: ' . $e->getMessage());
@@ -136,8 +134,6 @@ class DerivacionController extends BaseController
 
     public function deleteDerivacion($id)
     {
-        helper('cache');
-
         $derivacionModel = new Derivacion();
         try {
             $derivacion = $derivacionModel->obtenerPorId($id);
@@ -147,7 +143,6 @@ class DerivacionController extends BaseController
             if (!$derivacionModel->eliminar($id))
                 throw new \Exception("Error al eliminar Derivación");
 
-            clear_datatable_cache('DerivacionFullInfo');
             return redirect()->to('/derivaciones')->with('success', 'Derivación eliminada correctamente');
         } catch (\Throwable $e) {
             return redirect()->to('/derivaciones')->with('error', 'Hubo un error: ' . $e->getMessage());
