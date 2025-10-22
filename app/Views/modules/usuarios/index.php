@@ -19,6 +19,7 @@
             </a>
         </div>
     </div>
+        <!-- enviando solo el id del usuario logeado para excluirlo de la tabla usuario -->
     <input type="hidden" id="usuarioLogeadoId" value="<?= esc(session('user.id')) ?>">
     <table id="datatable">
         <colgroup>

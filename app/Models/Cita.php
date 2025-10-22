@@ -39,7 +39,7 @@ class Cita extends BaseModel
         return $this->where('id', $id)->first();
     }
 
-    public function obtenerPendientes(): array
+    public function obtenerPendientes(?int $usuarioId = null): array
     {
         $builder = $this->db->table($this->table . ' c')
             ->select("
@@ -48,12 +48,17 @@ class Cita extends BaseModel
             c.hora_inicio,
             c.hora_fin,
             c.asistencia,
+            c.usuario_id,
             CONCAT(a.nombres, ' ', a.apellidos) AS alumno_nombres_completos
         ")
             ->join('alumnos a', 'a.id = c.alumno_id', 'left')
             ->where('c.asistencia', 'PENDIENTE')
             ->where('c.deleted_at', null)
             ->orderBy('c.atencion_fech', 'DESC');
+
+        if (!empty($usuarioId)) {
+            $builder->where('c.usuario_id', $usuarioId);
+        }
 
         return $builder->get()->getResultArray();
     }

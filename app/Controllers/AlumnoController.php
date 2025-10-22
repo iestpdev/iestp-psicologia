@@ -179,7 +179,6 @@ class AlumnoController extends BaseController
         }
     }
 
-
     public function obtenerAlumnos()
     {
         $dni = $this->request->getGet('dni');

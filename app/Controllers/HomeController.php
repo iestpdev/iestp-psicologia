@@ -9,8 +9,16 @@ class HomeController extends BaseController
 {
     public function index(): string
     {
+        $session = session();
+        $user = $session->get('user');
+
         $citaModel = new Cita();
-        $data['citas'] = $citaModel->obtenerPendientes();
+        
+        if ($user && $user['rol'] === 'PSICOLOGO') {
+            $data['citas'] = $citaModel->obtenerPendientes($user['id']);
+        } else {
+            $data['citas'] = $citaModel->obtenerPendientes();
+        }
 
         $derivacionModel = new Derivacion();
         $data['derivaciones'] = $derivacionModel->obtenerPendientesParaHome();

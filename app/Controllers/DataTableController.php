@@ -14,6 +14,8 @@ class DataTableController extends BaseController
         $busqueda   = $request->getGet('search')['value'] ?? '';   // texto buscado
         $peticion   = $request->getGet('draw');                    // número de petición (DataTables)
         $excludeId  = $request->getGet('exclude_id');              // id de usuario logeado
+        $whereField = $request->getGet('where_field');             // campo de filtro adicional (ejm: traer todos los registros donde usuario_id = 7)
+        $whereValue = $request->getGet('where_value');             // valor del campo (ejm: 7)
 
         // Construir el namespace completo del modelo (ej: App\Models\Views\UsuarioFullInfo)
         $modelClass = "App\\Models\\Views\\" . $modelName;
@@ -38,9 +40,9 @@ class DataTableController extends BaseController
 
         // Obtener los datos directamente (sin cache)
         $data = [
-            "recordsTotal"    => $model->countAll($excludeId),
-            "recordsFiltered" => $model->countFiltered($busqueda, $excludeId),
-            "data"            => $model->getDatatables($inicio, $cantidad, $busqueda, $excludeId)
+            "recordsTotal"    => $model->countAll($excludeId, $whereField, $whereValue),
+            "recordsFiltered" => $model->countFiltered($busqueda, $excludeId, $whereField, $whereValue),
+            "data"            => $model->getDatatables($inicio, $cantidad, $busqueda, $excludeId, $whereField, $whereValue)
         ];
 
         // Responder con el formato esperado por DataTables

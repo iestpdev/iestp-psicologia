@@ -1,3 +1,8 @@
+<?php
+$session = session();
+$userLogged = $session->get('user');
+?>
+
 <?= $this->extend('layouts/master') ?>
 <?= $this->section('content') ?>
 
@@ -14,9 +19,9 @@
 
     <div class="profile-content col-7">
         <ul class="profile-content-menu">
-            <li> <a id="active">Historial Clinico</a></li>
+            <li> <a id="active"><i class="fa fa-clipboard-list me-1"></i>Historial</a></li>
             <!-- <li> <a>Perfil psicológico</a></li> -->
-            <li> <a><i class="fa fa-users"></i> Familiares</a></li>
+            <li> <a><i class="fa fa-users me-1"></i>Familiares</a></li>
         </ul>
         <!-- perfil psicologico container  -->
         <!-- 
@@ -54,14 +59,60 @@
                             <?php
                             $link = ($cita['asistencia'] === 'ASISTIDO' || $cita['asistencia'] === 'AUSENTE')
                                 ? base_url('citas/info/' . $cita['id'])
-                                : base_url('citas/editar/' . $cita['id'].'?desdePerfil=true');
+                                : base_url('citas/editar/' . $cita['id'] . '?desdePerfil=true');
+
+                            // verificando si debe ser clickeable
+                            $isClickable = true;
+
+                            if ($userLogged['rol'] === 'PSICOLOGO' && $userLogged['id'] != $cita['usuario_id']) {
+                                $isClickable = false;
+                            }
                             ?>
-                            <a href="<?= $link ?>" class="text-decoration-none text-reset">
-                                <div class="card border-0 shadow-sm w-100 clickable-card">
+
+                            <?php if ($isClickable): ?>
+                                <a href="<?= $link ?>" class="text-decoration-none text-reset">
+                                    <div class="card border-0 shadow-sm w-100 clickable-card">
+                                        <div
+                                            class="card-body d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+                                            <div>
+                                                <h6 class="fw-semibold mb-1 text-primary">
+                                                    <i class="bi bi-calendar-check me-1"></i>
+                                                    <?= esc($cita['tipo_derivacion']) ?> – <?= esc($cita['atencion_fech']) ?>
+                                                </h6>
+                                                <p class="mb-1 text-muted small">
+                                                    <i class="bi bi-clock me-1"></i>
+                                                    <?= substr($cita['hora_inicio'], 0, 5) ?> -
+                                                    <?= substr($cita['hora_fin'], 0, 5) ?>
+                                                </p>
+                                                <p class="mb-1 small text-secondary">
+                                                    <i class="bi bi-person-badge me-1"></i>
+                                                    Psicólogo: <?= esc($cita['usuario_nombres_completos'] ?? 'No asignado') ?>
+                                                </p>
+                                                <p class="mb-0 text-muted">
+                                                    <?= esc(mb_strlen($cita['motivo']) > 50 ? mb_substr($cita['motivo'], 0, 50) . '...' : $cita['motivo']) ?>
+                                                </p>
+                                            </div>
+
+                                            <div class="mt-3 mt-md-0 text-md-end">
+                                                <span class="badge 
+                                                    <?= $cita['asistencia'] === 'ASISTIDO'
+                                                        ? 'bg-success'
+                                                        : ($cita['asistencia'] === 'AUSENTE'
+                                                            ? 'bg-danger text-light'
+                                                            : 'bg-warning text-dark')
+                                                        ?>">
+                                                    <?= esc($cita['asistencia']) ?>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            <?php else: ?>
+                                <div class="card border-0 shadow-sm w-100 not-clickable-card">
                                     <div
                                         class="card-body d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
                                         <div>
-                                            <h6 class="fw-semibold mb-1 text-primary">
+                                            <h6 class="fw-semibold mb-1 text-secondary">
                                                 <i class="bi bi-calendar-check me-1"></i>
                                                 <?= esc($cita['tipo_derivacion']) ?> – <?= esc($cita['atencion_fech']) ?>
                                             </h6>
@@ -81,20 +132,21 @@
 
                                         <div class="mt-3 mt-md-0 text-md-end">
                                             <span class="badge 
-                                            <?= $cita['asistencia'] === 'ASISTIDO'
-                                                ? 'bg-success'
-                                                : ($cita['asistencia'] === 'AUSENTE'
-                                                    ? 'bg-danger text-light'
-                                                    : 'bg-warning text-dark')
-                                                ?>">
+                                                <?= $cita['asistencia'] === 'ASISTIDO'
+                                                    ? 'bg-success'
+                                                    : ($cita['asistencia'] === 'AUSENTE'
+                                                        ? 'bg-danger text-light'
+                                                        : 'bg-warning text-dark')
+                                                    ?>">
                                                 <?= esc($cita['asistencia']) ?>
                                             </span>
                                         </div>
                                     </div>
                                 </div>
-                            </a>
+                            <?php endif; ?>
                         </div>
-                    <?php endforeach ?>
+                    <?php endforeach; ?>
+
                 </div>
             <?php else: ?>
                 <div class="alert alert-secondary text-center mt-3">
@@ -338,6 +390,17 @@
         background-color: var(--gray);
         transform: translateY(-2px);
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .not-clickable-card {
+        border-left: 4px solid #999;
+        cursor: not-allowed;
+        opacity: 0.8;
+        transition: background-color 0.2s ease;
+    }
+
+    .not-clickable-card:hover {
+        background-color: #f9f9f9;
     }
 </style>
 
