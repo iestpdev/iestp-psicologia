@@ -6,10 +6,10 @@ use CodeIgniter\Model;
 
 class BaseModel extends Model
 {
-    protected $useTimestamps  = true;
-    protected $createdField   = 'created_at';
-    protected $updatedField   = 'updated_at';
-    protected $deletedField   = 'deleted_at';
+    protected $useTimestamps = true;
+    protected $createdField = 'created_at';
+    protected $updatedField = 'updated_at';
+    protected $deletedField = 'deleted_at';
     protected $useSoftDeletes = true;
 
     // Cada modelo hijo podrá definir sus columnas filtrables
@@ -21,7 +21,7 @@ class BaseModel extends Model
     /**
      * Devuelve registros paginados y filtrados
      */
-    public function getDatatables(int $inicio, int $cantidad, string $busqueda = ''): array
+    public function getDatatables(int $inicio, int $cantidad, string $busqueda = '', $excludeId = null): array
     {
         $builder = $this->db->table($this->table);
 
@@ -29,6 +29,11 @@ class BaseModel extends Model
 
         if ($this->useSoftDeletes && !empty($this->deletedField)) {
             $builder->where("{$this->table}.{$this->deletedField}", null);
+        }
+
+        // excluimos un registro en especifico (ejm: excluimos el usuario logeado de una lista de usuarios)
+        if (!empty($excludeId)) {
+            $builder->where("{$this->table}.id !=", $excludeId);
         }
 
         // Filtro de búsqueda global
@@ -52,21 +57,30 @@ class BaseModel extends Model
     /**
      * Cuenta todos los registros (con soft deletes aplicados)
      */
-    public function countAll(): int
+    public function countAll($excludeId = null): int
     {
-        return $this->db->table($this->table)
-            ->where("{$this->deletedField}", null)
-            ->countAllResults();
+        $builder = $this->db->table($this->table)
+            ->where("{$this->deletedField}", null);
+
+        if (!empty($excludeId)) {
+            $builder->where("{$this->table}.id !=", $excludeId);
+        }
+
+        return $builder->countAllResults();
     }
 
     /**
      * Cuenta registros filtrados por búsqueda
      */
-    public function countFiltered(string $busqueda = ''): int
+    public function countFiltered(string $busqueda = '', $excludeId = null): int
     {
         $builder = $this->db->table($this->table)
             ->select('COUNT(*) as total')
             ->where("{$this->deletedField}", null);
+
+        if (!empty($excludeId)) {
+            $builder->where("{$this->table}.id !=", $excludeId);
+        }
 
         if (!empty($busqueda) && !empty($this->searchableFields)) {
             $builder->groupStart();

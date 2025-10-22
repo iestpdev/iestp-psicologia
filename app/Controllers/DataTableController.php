@@ -11,7 +11,8 @@ class DataTableController extends BaseController
         $inicio = (int) $request->getGet('start');            // desde qué registro
         $cantidad = (int) $request->getGet('length');           // cuántos registros mostrar
         $busqueda = $request->getGet('search')['value'] ?? '';  // texto buscado
-        $peticion = $request->getGet('draw');                   // número de petición (DataTables)
+        $peticion = $request->getGet('draw');                 // número de petición (DataTables)
+        $excludeId = $request->getGet('exclude_id');        //id de usuario logeado
 
         // construyendo el namespace completo del modelo
         $modelClass = "App\\Models\\Views\\" . $modelName;
@@ -33,16 +34,24 @@ class DataTableController extends BaseController
             ]);
         }
 
-        $cacheKey = "datatable_{$modelName}_{$inicio}_{$cantidad}_" . md5($busqueda);
-        $cached = cache($cacheKey);
+        $isSearch = !empty($busqueda);
+
+        if (!$isSearch) {
+            $cacheKey = "datatable_{$modelName}_{$inicio}_{$cantidad}_exclude{$excludeId}";
+            $cached = cache($cacheKey);
+        } else {
+            $cached = null; // no usamos cache si hay búsqueda
+        }
 
         if ($cached === null) {
             $cached = [
-                "recordsTotal" => $model->countAll(),
-                "recordsFiltered" => $model->countFiltered($busqueda),
-                "data" => $model->getDatatables($inicio, $cantidad, $busqueda)
+                "recordsTotal" => $model->countAll($excludeId),
+                "recordsFiltered" => $model->countFiltered($busqueda, $excludeId),
+                "data" => $model->getDatatables($inicio, $cantidad, $busqueda, $excludeId)
             ];
-            cache()->save($cacheKey, $cached, 3600);
+            if (!$isSearch) {
+                cache()->save($cacheKey, $cached, 3600);
+            }
         }
 
         return $this->response->setJSON(array_merge($cached, [

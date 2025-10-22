@@ -30,10 +30,22 @@ function initDataTable(ajaxUrl, columns, extraOptions = {}) {
         }
     });
 
+    // Extraemos ajax.data si viene en extraOptions
+    const extraAjaxData = extraOptions.ajax?.data || null;
+
+    // Eliminamos extraOptions.ajax para evitar sobreescribir por completo el bloque
+    if (extraOptions.ajax) delete extraOptions.ajax;
+
     return $('#datatable').DataTable($.extend(true, {
         ajax: {
             url: ajaxUrl,
-            type: "GET"
+            type: "GET",
+            // combinamos ajax.data solo si fue pasado
+            data: function (d) {
+                if (typeof extraAjaxData === 'function') {
+                    extraAjaxData(d); // inyectamos parámetros personalizados
+                }
+            }
         },
         columns: columns
     }, extraOptions));
