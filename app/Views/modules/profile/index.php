@@ -61,7 +61,7 @@
       <div class="col-md-6">
         <h4>Autenticación 2FA</h4>
         <div class="mb-3 form-check">
-          <input type="checkbox" class="form-check-input" id="newsletterCheck" checked>
+          <input type="checkbox" class="form-check-input" id="newsletterCheck">
           <label class="form-check-label" for="newsletterCheck">Recibir código por SMS</label>
         </div>
         <div class="mb-3 form-check">

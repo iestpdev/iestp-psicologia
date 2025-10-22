@@ -43,7 +43,7 @@
         <!-- Consultas container -->
         <div class="consultas-container">
             <div class="consultas-header d-flex justify-content-between align-items-center mb-3">
-                <a href="<?= base_url('citas/crear?alumnoId=' . $alumno['id']) ?>" class="btn btn-sm btn-primary ms-3">
+                <a href="<?= base_url('citas/crear?alumnoId=' . $alumno['id']) ?>" class="btn btn-sm btn-primary">
                     <i class="fa fa-plus"></i> Registrar nueva consulta
                 </a>
             </div>

@@ -86,4 +86,24 @@ class Derivacion extends BaseModel
 
         return $builder->get()->getResultArray();
     }
+
+    public function obtenerPendientesParaHome(): array
+    {
+        $builder = $this->db->table($this->table . ' d')
+            ->select("
+            d.id,
+            d.urgencia,
+            d.recibido AS estado,
+            a.nombres AS alumno_nombres,
+            a.apellidos AS alumno_apellidos,
+            pe.nombre AS programa_estudio
+        ")
+            ->join('alumnos a', 'a.id = d.alumno_id', 'left')
+            ->join('programas_estudios pe', 'pe.id = a.programa_estudio_id', 'left')
+            ->where('d.recibido', 0)
+            ->where('d.deleted_at', null)
+            ->orderBy('d.urgencia', 'DESC');
+
+        return $builder->get()->getResultArray();
+    }
 }

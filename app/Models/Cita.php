@@ -39,6 +39,25 @@ class Cita extends BaseModel
         return $this->where('id', $id)->first();
     }
 
+    public function obtenerPendientes(): array
+    {
+        $builder = $this->db->table($this->table . ' c')
+            ->select("
+            c.id,
+            c.atencion_fech,
+            c.hora_inicio,
+            c.hora_fin,
+            c.asistencia,
+            CONCAT(a.nombres, ' ', a.apellidos) AS alumno_nombres_completos
+        ")
+            ->join('alumnos a', 'a.id = c.alumno_id', 'left')
+            ->where('c.asistencia', 'PENDIENTE')
+            ->where('c.deleted_at', null)
+            ->orderBy('c.atencion_fech', 'DESC');
+
+        return $builder->get()->getResultArray();
+    }
+
     public function listarPorAlumnoId(int $alumnoId): array
     {
         $builder = $this->db->table($this->table . ' c')
