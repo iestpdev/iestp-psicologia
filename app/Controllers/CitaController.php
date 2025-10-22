@@ -77,6 +77,23 @@ class CitaController extends BaseController
         return view('modules/citas/crear', $data);
     }
 
+    public function crearPorDerivDocente($deriDocenteId): string
+    {
+        $derivacionModel = new Derivacion();
+        $derivacionEncontrada = $derivacionModel->obtenerPorId($deriDocenteId);
+        if (!$derivacionEncontrada) {
+            return view('errors/html/error_404', [
+                'message' => 'derivación no encontrada'
+            ]);
+        }
+        $data['derivacionEnviada'] = $derivacionEncontrada;
+
+        $usuarioModel = new Usuario();
+        $data['psicologos'] = $usuarioModel->obtenerPsicologos();
+
+        return view('modules/citas/crearPorDerivDocente', $data);
+    }
+
     public function editar($citaId): string
     {
         $citaModel = new Cita();
@@ -153,8 +170,15 @@ class CitaController extends BaseController
     {
         helper(['validation', 'input', 'cache']);
         $errors = runValidation('cita_create', $this->request);
-        if (!empty($errors))
-            return redirect()->to('/citas/crear')->withInput()->with('errors', $errors);
+
+        $DerivacionEnviaDesdeHome = $this->request->getPost('isDerivacionDocente');
+        if (!empty($errors)) {
+            if ($DerivacionEnviaDesdeHome) {
+                return redirect()->to('citas/crearPorDerivDocente/' . $DerivacionEnviaDesdeHome)->withInput()->with('errors', $errors);
+            } else {
+                return redirect()->to('/citas/crear')->withInput()->with('errors', $errors);
+            }
+        }
 
         $asistencia = $this->request->getPost('asistencia');
         $tipoDerivacion = $this->request->getPost('tipo_derivacion');

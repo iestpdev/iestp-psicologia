@@ -56,7 +56,8 @@ class Derivacion extends BaseModel
 
                 p.id AS docente_persona_id,
                 CONCAT(p.nombres, ' ', p.apellidos) AS docente_nombres_completos,
-                p.dni AS docente_dni
+                p.dni AS docente_dni,
+                CONCAT('DOCENTE: ',p.nombres, ' ', p.apellidos,' -> ALUMNO: ',a.nombres, ' ', a.apellidos,'- URGENCIA: ',d.urgencia) AS data_derivacion
             ")
             ->join('alumnos a', 'a.id = d.alumno_id', 'left')
             ->join('programas_estudios pe', 'pe.id = a.programa_estudio_id', 'left')

@@ -107,7 +107,7 @@ $primerApellido = explode(' ', trim($userLogged['apellidos']))[0] ?? '';
                             </p>
                             <span><?= esc($derivacion['programa_estudio']) ?></span>
                         </div>
-                        <a href="<?= base_url('citas/crear?derivacionId=' . $derivacion['id']) ?>" class="btn-details"
+                        <a href="<?= base_url('citas/crearPorDerivDocente/' . $derivacion['id']) ?>" class="btn-details"
                             title="Agendar consulta">
                             <ion-icon name="heart-circle-outline"></ion-icon>
                         </a>
