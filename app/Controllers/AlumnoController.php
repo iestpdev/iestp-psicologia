@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Alumno;
+use App\Models\Cita;
 use App\Models\Familiar;
 use App\Models\Mantenimiento\EstadoCivil;
 use App\Models\Mantenimiento\Parentesco;
@@ -18,6 +19,9 @@ class AlumnoController extends BaseController
 
     public function info($alumnoId): string
     {
+        $session = session();
+        $user = $session->get('user');
+        
         $alumnoModel = new Alumno();
         $alumno = $alumnoModel->obtenerPorId($alumnoId);
         if (!$alumno) {
@@ -32,10 +36,18 @@ class AlumnoController extends BaseController
         $parentescoModel = new Parentesco();
         $parentescos = $parentescoModel->listar();
 
+        $citaModel = new Cita();
+        if ($user && $user['rol'] === 'PSICOLOGO') {
+        $citas = $citaModel->listarPorAlumnoId($alumnoId);
+        } else {
+            $citas = $citaModel->listarPorAlumnoId($alumnoId, $user['id']);
+        }
+
         return view('modules/alumnos/details/index', [
             'alumno' => $alumno,
             'familiares' => $familiares,
-            'parentescos' => $parentescos
+            'parentescos' => $parentescos,
+            'citas' => $citas
         ]);
     }
 
@@ -78,8 +90,6 @@ class AlumnoController extends BaseController
 
     public function deleteAlumno($id)
     {
-        helper('cache');
-
         $alumnoModel = new Alumno();
         try {
             $alumno = $alumnoModel->obtenerPorId($id);
@@ -88,7 +98,6 @@ class AlumnoController extends BaseController
             if (!$alumnoModel->eliminar($id))
                 throw new \Exception("Error al eliminar alumno");
 
-            clear_datatable_cache('AlumnoFullInfo');
             return redirect()->to('/alumnos')->with('success', 'Alumno eliminado correctamente');
         } catch (\Throwable $e) {
             return redirect()->to('/alumnos')->with('error', 'Hubo un error: ' . $e->getMessage());
@@ -97,7 +106,7 @@ class AlumnoController extends BaseController
 
     public function saveAlumno()
     {
-        helper(['validation', 'input', 'cache']);
+        helper(['validation', 'input']);
         $errors = runValidation('alumno_create', $this->request);
         if (!empty($errors))
             return redirect()->to('/alumnos/crear')->withInput()->with('errors', $errors);
@@ -126,7 +135,6 @@ class AlumnoController extends BaseController
                 throw new \Exception("Error al crear Alumno");
 
             $db->transCommit();
-            clear_datatable_cache('AlumnoFullInfo');
             return redirect()->to('/alumnos')->with('success', 'Alumno registrado con éxito');
         } catch (\Throwable $e) {
             $db->transRollback();
@@ -136,7 +144,7 @@ class AlumnoController extends BaseController
 
     public function updateAlumno($id)
     {
-        helper(['validation', 'input', 'cache']);
+        helper(['validation', 'input']);
         $errors = runValidation('alumno_update', $this->request);
 
         if (!empty($errors))
@@ -171,14 +179,12 @@ class AlumnoController extends BaseController
             $alumnoModel->actualizar($id, $alumnoData);
 
             $db->transCommit();
-            clear_datatable_cache('AlumnoFullInfo');
             return redirect()->to('/alumnos')->with('success', 'Alumno actualizado correctamente');
         } catch (\Throwable $e) {
             $db->transRollback();
             return redirect()->back()->withInput()->with('error', 'Error al actualizar: ' . $e->getMessage());
         }
     }
-
 
     public function obtenerAlumnos()
     {

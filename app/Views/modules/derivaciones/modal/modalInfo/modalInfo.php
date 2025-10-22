@@ -24,7 +24,8 @@
                         <i class="fa fa-user-graduate"></i> <strong>ALUMNO</strong>
                         <p id="alumno-nombre"></p>
                         <small><i class="fa fa-id-card"></i> <span id="alumno-dni"></span></small>
-                        <small><i class="fa-solid fa-graduation-cap"></i> <span id="alumno-programa-estudio"></span></small>
+                        <small><i class="fa-solid fa-graduation-cap"></i> <span
+                                id="alumno-programa-estudio"></span></small>
                     </div>
                 </div>
 
@@ -48,7 +49,8 @@
 
                 <!-- Fechas -->
                 <div class="section">
-                    <small style="color: #0358CB; font-weight: 600;"><i class="fa fa-calendar-plus"></i> CREADO: <span id="created-at" style="color: black; font-weight: 400;"></span></small>
+                    <small style="color: #0358CB; font-weight: 600;"><i class="fa fa-calendar-plus"></i> CREADO: <span
+                            id="created-at" style="color: black; font-weight: 400;"></span></small>
                 </div>
             </div>
 
@@ -110,7 +112,9 @@
         padding: 1rem;
         flex: 1 1 200px;
     }
-    .person>i,strong{
+
+    .person>i,
+    strong {
         color: #0358CB;
     }
 
@@ -197,5 +201,92 @@
     .btn-custom-secondary {
         background: #e5e7eb;
         color: #374151;
+    }
+
+    /* Estilos para la sección de cita */
+    .cita-section {
+        margin-top: 1rem;
+        display: block;
+    }
+
+    .cita-container {
+        background: linear-gradient(135deg, #0358CB 0%, #0066cc 100%);
+        border-radius: 12px;
+        padding: .7rem;
+        box-shadow: 0 4px 12px rgba(3, 88, 203, 0.15);
+        border: 1px solid rgba(3, 88, 203, 0.2);
+    }
+
+    .cita-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1.2rem;
+        color: #fff;
+        font-size: 1rem;
+    }
+
+    .cita-header i {
+        font-size: 1.3rem;
+    }
+
+    .cita-header strong {
+        color: #fff;
+        letter-spacing: 0.5px;
+    }
+
+    .cita-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+    }
+
+    .cita-item {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 10px;
+        padding: 1rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.8rem;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .cita-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .cita-item i {
+        color: #0358CB;
+        font-size: 1.2rem;
+        margin-top: 0.2rem;
+    }
+
+    .cita-item-content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+        flex: 1;
+    }
+
+    .cita-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .cita-value {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1f2937;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .cita-details {
+            grid-template-columns: 1fr;
+        }
     }
 </style>

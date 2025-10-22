@@ -41,6 +41,7 @@ class CreateCitasTable extends Migration
             ],
             'alumno_id' => [
                 'type' => 'BIGINT',
+                'unsigned' => true,
                 'null' => false,
             ],
             'derivacion_id' => [

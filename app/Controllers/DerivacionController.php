@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Alumno;
+use App\Models\Cita;
 use App\Models\Derivacion;
 use App\Models\Mantenimiento\ProgramaEstudio;
 use App\Models\Usuario;
@@ -24,6 +25,9 @@ class DerivacionController extends BaseController
 
         $alumnoModel = new Alumno();
         $data['alumnos'] = $alumnoModel->obtenerAlumnos();
+
+        $alumnoId = $this->request->getGet('alumnoId');
+        $data['alumnoEnviado'] = $alumnoId ? (int) $alumnoId : null;
 
         return view('modules/derivaciones/crear', $data);
     }
@@ -48,7 +52,20 @@ class DerivacionController extends BaseController
     public function obtenerPorId($derivacionId)
     {
         $derivacionModel = new Derivacion();
-        return $this->response->setJSON($derivacionModel->obtenerPorId((int) $derivacionId));
+        $derivacionEncontrada = $derivacionModel->obtenerPorId((int) $derivacionId);
+
+        if($derivacionEncontrada['estado']){
+            $citaModel = new Cita();
+            $citaEncontrada = $citaModel->obtenerPorDerivacionId((int) $derivacionId);
+            return $this->response->setJSON([
+                'derivacion' => $derivacionEncontrada,
+                'cita' => $citaEncontrada
+            ]);
+        }
+
+        return $this->response->setJSON([
+            'derivacion' => $derivacionEncontrada
+        ]);
     }
 
     public function obtenerPendientes()
@@ -64,7 +81,7 @@ class DerivacionController extends BaseController
 
     public function saveDerivacion()
     {
-        helper(['validation', 'input', 'cache']);
+        helper(['validation', 'input']);
         $errors = runValidation('derivacion_create', $this->request);
         if (!empty($errors))
             return redirect()->to('/derivaciones/crear')->withInput()->with('errors', $errors);
@@ -82,7 +99,6 @@ class DerivacionController extends BaseController
 
             if (!$derivacionId)
                 throw new \Exception("Error al registrar la derivación");
-            clear_datatable_cache('DerivacionFullInfo');
             return redirect()->to('/derivaciones')->with('success', 'Derivación registrada con éxito');
         } catch (\Throwable $e) {
             return redirect()->back()->withInput()->with('error', 'Hubo un error: ' . $e->getMessage());
@@ -91,7 +107,7 @@ class DerivacionController extends BaseController
 
     public function updateDerivacion($id)
     {
-        helper(['validation', 'input', 'cache']);
+        helper(['validation', 'input']);
         $errors = runValidation('derivacion_update', $this->request);
         if (!empty($errors))
             return redirect()->back()->withInput()->with('errors', $errors);
@@ -113,7 +129,6 @@ class DerivacionController extends BaseController
             ]);
 
             $derivacionModel->actualizar($id, $data);
-            clear_datatable_cache('DerivacionFullInfo');
             return redirect()->to('/derivaciones')->with('success', 'Derivación actualizada correctamente');
         } catch (\Throwable $e) {
             return redirect()->back()->withInput()->with('error', 'Error al actualizar: ' . $e->getMessage());
@@ -122,21 +137,15 @@ class DerivacionController extends BaseController
 
     public function deleteDerivacion($id)
     {
-        helper('cache');
-
         $derivacionModel = new Derivacion();
         try {
             $derivacion = $derivacionModel->obtenerPorId($id);
             if (!$derivacion)
                 throw new \Exception("Derivación no encontrada");
 
-            if ($derivacion['estado'])
-                throw new \Exception("No se puede eliminar una derivación que ya fue recibida");
-
             if (!$derivacionModel->eliminar($id))
                 throw new \Exception("Error al eliminar Derivación");
 
-            clear_datatable_cache('DerivacionFullInfo');
             return redirect()->to('/derivaciones')->with('success', 'Derivación eliminada correctamente');
         } catch (\Throwable $e) {
             return redirect()->to('/derivaciones')->with('error', 'Hubo un error: ' . $e->getMessage());

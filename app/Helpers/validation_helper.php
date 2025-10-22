@@ -57,6 +57,9 @@ if (!function_exists('runValidation')) {
             case 'cita_create':
                 $validationClass = new \App\Validations\Citas\CitaCreate();
                 break;
+            case 'cita_update':
+                $validationClass = new \App\Validations\Citas\CitaUpdate();
+                break;
 
             default:
                 throw new \Exception("No hay validación definida para la entidad: {$entity}");

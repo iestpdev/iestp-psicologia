@@ -63,4 +63,23 @@ class CustomRules
 
         return $builder->countAllResults() === 0;
     }
+
+    /**
+     * Verifica que la hora final sea mayor que la hora inicial
+     *
+     * Uso: check_time_range[hora_inicio]
+     */
+    public function check_time_range(string $horaFin, string $field, array $data): bool
+    {
+        // Validar que el campo de comparación exista
+        if (!isset($data[$field])) {
+            return true; // No se puede validar si no hay hora de inicio
+        }
+
+        $horaInicio = strtotime($data[$field]);
+        $horaFin = strtotime($horaFin);
+
+        // Retorna true si hora fin > hora inicio
+        return $horaFin > $horaInicio;
+    }
 }

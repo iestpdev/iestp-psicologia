@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
         $this->call('FamiliaresSeeder');
         $this->call('PersonasSeeder');
         $this->call('UsuariosSeeder');
+        $this->call('ConfiguracionesSeeder');
         $this->call('DerivacionesSeeder');
         $this->call('CitasSeeder');
         $this->call('DetalleCitaSeeder');

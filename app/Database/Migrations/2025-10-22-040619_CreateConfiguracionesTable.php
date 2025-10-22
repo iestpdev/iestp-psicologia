@@ -4,23 +4,31 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class CreateFamiliaresTable extends Migration
+class CreateConfiguracionesTable extends Migration
 {
     public function up()
     {
         $this->forge->addField([
             'id' => [
-                'type'           => 'BIGINT',
-                'auto_increment' => true,
-            ],
-            'alumno_id' => [
                 'type' => 'BIGINT',
                 'unsigned' => true,
-                'null' => false,
+                'auto_increment' => true,
             ],
-            'pariente_id' => [
+            'usuario_id' => [
                 'type' => 'BIGINT',
                 'null' => false,
+            ],
+            'auth_SMS' => [
+                'type' => 'BOOLEAN',
+                'default' => false,
+            ],
+            'auth_email' => [
+                'type' => 'BOOLEAN',
+                'default' => false,
+            ],
+            'notif_email' => [
+                'type' => 'BOOLEAN',
+                'default' => false,
             ],
             'created_at' => [
                 'type' => 'DATETIME',
@@ -37,13 +45,15 @@ class CreateFamiliaresTable extends Migration
         ]);
 
         $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('alumno_id', 'alumnos', 'id', 'RESTRICT', 'RESTRICT');
-        $this->forge->addForeignKey('pariente_id', 'parientes', 'id', 'RESTRICT', 'RESTRICT');
-        $this->forge->createTable('familiares');
+
+        // Clave foránea
+        $this->forge->addForeignKey('usuario_id', 'usuarios', 'id', 'RESTRICT', 'RESTRICT');
+
+        $this->forge->createTable('configuraciones', true);
     }
 
     public function down()
     {
-        $this->forge->dropTable('familiares');
+        $this->forge->dropTable('configuraciones', true);
     }
 }

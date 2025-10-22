@@ -8,6 +8,7 @@ use CodeIgniter\Router\RouteCollection;
 
 // rutas por módulos
 require APPPATH . 'Routes/AuthRoutes.php';
+require APPPATH . 'Routes/ProfileRoutes.php';
 require APPPATH . 'Routes/HomeRoutes.php';
 require APPPATH . 'Routes/UsuarioRoutes.php';
 require APPPATH . 'Routes/AlumnoRoutes.php';
@@ -19,4 +20,3 @@ require APPPATH . 'Routes/DataTableRoutes.php';
 
 // services
 require APPPATH . 'Routes/services/DecolectaRoutes.php';
-

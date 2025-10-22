@@ -66,3 +66,8 @@
     color: var(--blue);
     cursor: pointer;
 }
+
+.user-icon-container>a:hover {
+    color: #0056b3;
+    transition: .4s;
+}

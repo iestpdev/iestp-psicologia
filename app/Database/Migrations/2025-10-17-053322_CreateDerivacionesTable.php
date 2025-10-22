@@ -19,6 +19,7 @@ class CreateDerivacionesTable extends Migration
             ],
             'alumno_id' => [
                 'type' => 'BIGINT',
+                'unsigned' => true,
                 'null' => false,
             ],
             'motivo' => [

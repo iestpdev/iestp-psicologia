@@ -23,4 +23,83 @@ class Cita extends BaseModel
     {
         return $this->insert($data, true);
     }
+
+    public function actualizar(int $id, array $data): bool
+    {
+        return $this->update($id, $data);
+    }
+
+    public function eliminar(int $id): bool
+    {
+        return $this->delete($id);
+    }
+
+    public function obtenerPorId($id)
+    {
+        return $this->where('id', $id)->first();
+    }
+
+    public function obtenerPendientes(?int $usuarioId = null): array
+    {
+        $builder = $this->db->table($this->table . ' c')
+            ->select("
+            c.id,
+            c.atencion_fech,
+            c.hora_inicio,
+            c.hora_fin,
+            c.asistencia,
+            c.usuario_id,
+            CONCAT(a.nombres, ' ', a.apellidos) AS alumno_nombres_completos
+        ")
+            ->join('alumnos a', 'a.id = c.alumno_id', 'left')
+            ->where('c.asistencia', 'PENDIENTE')
+            ->where('c.deleted_at', null)
+            ->orderBy('c.atencion_fech', 'DESC');
+
+        if (!empty($usuarioId)) {
+            $builder->where('c.usuario_id', $usuarioId);
+        }
+
+        return $builder->get()->getResultArray();
+    }
+
+    public function listarPorAlumnoId(int $alumnoId, ?int $usuarioId = null): array
+    {
+        $builder = $this->db->table($this->table . ' c')
+            ->select("
+            c.id,
+            c.tipo_derivacion,
+            c.atencion_fech,
+            c.hora_inicio,
+            c.hora_fin,
+            c.asistencia,
+            c.motivo,
+
+            c.usuario_id,
+            CONCAT(p.nombres, ' ', p.apellidos) AS usuario_nombres_completos,
+            p.dni AS usuario_dni,
+            u.rol AS usuario_rol,
+
+            c.created_at,
+            c.updated_at
+        ")
+            ->join('usuarios u', 'u.id = c.usuario_id', 'left')
+            ->join('personas p', 'p.id = u.persona_id', 'left')
+            ->where('c.alumno_id', $alumnoId)
+            ->where('c.deleted_at', null);
+
+            if (!empty($usuarioId)) {
+                $builder->orderBy("usuario_id = {$usuarioId}", 'DESC', false);
+            }
+
+            $builder->orderBy('c.atencion_fech', 'ASC');
+
+        return $builder->get()->getResultArray();
+    }
+
+
+    public function obtenerPorDerivacionId(int $derivacionId): ?array
+    {
+        return $this->where('derivacion_id', $derivacionId)->first();
+    }
 }

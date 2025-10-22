@@ -119,6 +119,18 @@ CREATE TABLE usuarios(
 	FOREIGN KEY (persona_id) REFERENCES personas(id)			
 )ENGINE=INNODB;
 
+CREATE TABLE configuraciones(
+	id							BIGINT AUTO_INCREMENT PRIMARY KEY,
+	usuario_id				BIGINT NOT NULL,
+	auth_SMS					BOOL DEFAULT FALSE,
+	auth_email				BOOL DEFAULT FALSE,
+	notif_email				BOOL DEFAULT FALSE,
+	created_at				DATETIME NULL,
+	updated_at				DATETIME NULL,
+	deleted_at				DATETIME NULL,
+	FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+)ENGINE=INNODB;
+
 CREATE TABLE derivaciones(
 	id						BIGINT AUTO_INCREMENT PRIMARY KEY,
 	usuario_id			BIGINT NOT NULL,

@@ -36,6 +36,7 @@
                         <?= csrf_field() ?>
                         <!-- sección DOCENTE: Filtro DNI y docente_nombres_completos-->
                         <div class="row">
+                            <?php if (session('user.rol') === 'ADMIN' || session('user.rol') === 'PSICOLOGO'): ?>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="form-label">
@@ -46,11 +47,13 @@
                                     <span id="msg-dni"></span>
                                 </div>
                             </div>
+                            <?php endif; ?>
                             <div class="col-md-8">
                                 <div class="form-group">
                                     <label class="form-label">
                                         Docente <span class="required-mark">*</span>
                                     </label>
+                                    <?php if (session('user.rol') === 'ADMIN' || session('user.rol') === 'PSICOLOGO'): ?>
                                     <select id="docenteSelect" name="docente" required>
                                         <option value="">Seleccione un docente</option>
                                         <?php foreach ($docentes as $docente): ?>
@@ -59,6 +62,12 @@
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
+                                    <?php elseif (session('user.rol') === 'DOCENTE'): ?>
+                                        <input type="text" class="form-control-custom"
+                                               value="<?= esc(session('user.nombres').' '.session('user.apellidos') ) ?>" disabled>
+                                        <input type="hidden" name="docente" 
+                                               value="<?= esc(session('user.id')) ?>">
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
@@ -134,10 +143,10 @@
                                         <label class="form-label">
                                             Alumno <span class="required-mark">*</span>
                                         </label>
-                                        <select id="alumnoSelect" name="alumno" required>
-                                            <option value="">Seleccione un alumno</option>
+                                        <select id="alumnoSelect" name="alumno">
+                                            <option value="">-- Seleccione un alumno --</option>
                                             <?php foreach ($alumnos as $alumno): ?>
-                                                <option value="<?= $alumno['id'] ?>" <?= set_select('alumno', $alumno['id']) ?>>
+                                                <option value="<?= $alumno['id'] ?>" <?= set_select('alumno', $alumno['id'], isset($alumnoEnviado) && $alumnoEnviado == $alumno['id']) ?>>
                                                     <?= esc($alumno['alumno_nombres_completos']) ?>
                                                 </option>
                                             <?php endforeach; ?>
@@ -201,6 +210,7 @@
         // ===============================
         // DOCENTES
         // ===============================
+        if (document.getElementById('docenteSelect')) {
         let docenteSelect = new TomSelect('#docenteSelect', {
             valueField: 'id',
             labelField: 'persona_nombres_completos',
@@ -257,6 +267,7 @@
                 }, 1000);
             }
         });
+    };
 
         // ===============================
         // ALUMNOS

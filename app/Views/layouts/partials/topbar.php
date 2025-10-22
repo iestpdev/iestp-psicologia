@@ -1,3 +1,13 @@
+<?php
+$session = session();
+$userLogged = $session->get('user');
+$primerNombre = explode(' ', trim($userLogged['nombres']))[0] ?? '';
+$primerApellido = explode(' ', trim($userLogged['apellidos']))[0] ?? '';
+$rol = ($userLogged['rol'] === 'ADMIN')
+    ? 'Administrador'
+    : (($userLogged['rol'] === 'PSICOLOGO') ? 'Psicólogo' : 'Docente');
+?>
+
 <!-- Topbar -->
 <div class="topbar">
     <!-- Botón hamburguesa -->
@@ -13,11 +23,13 @@
     <!-- Menú usuario -->
     <div class="user-menu-container">
         <div class="user-info">
-            <p class="user-name">Dante Luque</p>
-            <p class="user-role">administrador</p>
+            <p class="user-name"><?= esc($primerNombre . ' ' . $primerApellido) ?></p>
+            <p class="user-role"><?= esc($rol) ?></p>
         </div>
         <div class="user-icon-container">
-            <ion-icon name="person-circle-outline"></ion-icon>
+            <a href="<?= base_url('profile') ?>">
+                <ion-icon name="person-circle-outline"></ion-icon>
+            </a>
         </div>
     </div>
 </div>

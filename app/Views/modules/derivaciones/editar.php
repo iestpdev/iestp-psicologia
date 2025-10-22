@@ -31,38 +31,45 @@
                     ]) ?>
 
                     <form action="<?= base_url('api/derivaciones/update/' . $derivacion['id']) ?>" method="POST"
-                    data-confirm 
-                    data-title="Editar Derivación" 
-                    data-text="¿Desea actualizar esta derivación?"
-                    data-icon="question">
+                        data-confirm data-title="Editar Derivación" data-text="¿Desea actualizar esta derivación?"
+                        data-icon="question">
                         <?= csrf_field() ?>
                         <input type="hidden" name="id" value="<?= esc($derivacion['id']) ?>">
                         <!-- sección DOCENTE: Filtro DNI y docente_nombres_completos-->
                         <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        DNI
-                                    </label>
-                                    <input type="text" id="dniInput" class="form-control-custom"
-                                        placeholder="Filtrar por DNI de docente" maxlength="8" pattern="[0-9]{8}">
-                                    <span id="msg-dni"></span>
+                            <?php if (session('user.rol') === 'ADMIN' || session('user.rol') === 'PSICOLOGO'): ?>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            DNI
+                                        </label>
+                                        <input type="text" id="dniInput" class="form-control-custom"
+                                            placeholder="Filtrar por DNI de docente" maxlength="8" pattern="[0-9]{8}">
+                                        <span id="msg-dni"></span>
+                                    </div>
                                 </div>
-                            </div>
+                            <?php endif; ?>
                             <div class="col-md-8">
                                 <div class="form-group">
                                     <label class="form-label">
                                         Docente <span class="required-mark">*</span>
                                     </label>
-                                    <select name="docente" id="docenteSelect" required>
-                                        <option value="">Seleccione un docente</option>
-                                        <?php foreach ($docentes as $docente): ?>
-                                            <option value="<?= $docente['id'] ?>"
-                                                <?= $docente['id'] == $derivacion['docente_usuario_id'] ? 'selected' : '' ?>>
-                                                <?= esc($docente['persona_nombres_completos']) ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
+                                    <?php if (session('user.rol') === 'ADMIN' || session('user.rol') === 'PSICOLOGO'): ?>
+                                        <select name="docente" id="docenteSelect" required>
+                                            <option value="">Seleccione un docente</option>
+                                            <?php foreach ($docentes as $docente): ?>
+                                                <option value="<?= $docente['id'] ?>"
+                                                    <?= $docente['id'] == $derivacion['docente_usuario_id'] ? 'selected' : '' ?>>
+                                                    <?= esc($docente['persona_nombres_completos']) ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    <?php elseif (session('user.rol') === 'DOCENTE'): ?>
+                                        <input type="text" class="form-control-custom"
+                                            value="<?= esc(session('user.nombres') . ' ' . session('user.apellidos')) ?>"
+                                            disabled>
+                                        <input type="hidden" name="docente" value="<?= esc(session('user.id')) ?>">
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
@@ -209,62 +216,64 @@
         // ===============================
         // DOCENTES
         // ===============================
-        let docenteSelect = new TomSelect('#docenteSelect', {
-            valueField: 'id',
-            labelField: 'persona_nombres_completos',
-            searchField: 'persona_nombres_completos',
-            load: function (query, callback) {
-                if (!query.length) return callback();
-                fetch('<?= base_url("api/usuarios/obtener-docentes") ?>?term=' + encodeURIComponent(query))
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.status === 'success') {
-                            callback(data.data.map(docente => ({
-                                id: docente.id,
-                                persona_nombres_completos: docente.persona_nombres_completos
-                            })));
-                        }
-                    })
-                    .catch(() => callback());
-            }
-        });
+        if (document.getElementById('docenteSelect')) {
+            let docenteSelect = new TomSelect('#docenteSelect', {
+                valueField: 'id',
+                labelField: 'persona_nombres_completos',
+                searchField: 'persona_nombres_completos',
+                load: function (query, callback) {
+                    if (!query.length) return callback();
+                    fetch('<?= base_url("api/usuarios/obtener-docentes") ?>?term=' + encodeURIComponent(query))
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                callback(data.data.map(docente => ({
+                                    id: docente.id,
+                                    persona_nombres_completos: docente.persona_nombres_completos
+                                })));
+                            }
+                        })
+                        .catch(() => callback());
+                }
+            });
 
-        // Filtro de DNI para Docente
-        $('#dniInput').on('input', function () {
-            const dni = $(this).val();
+            // Filtro de DNI para Docente
+            $('#dniInput').on('input', function () {
+                const dni = $(this).val();
 
-            if (dni.length === 8) {
-                fetch('<?= base_url("api/usuarios/obtener-docentes") ?>/' + dni)
-                    .then(res => res.json())
-                    .then(data => {
-                        const docenteData = data.data;
-                        if (docenteData.length > 0) {
-                            const docente = docenteData[0];
-                            $('#msg-dni').text('Coincidencia encontrada').removeClass('msg-dni-error').addClass('msg-dni-success');
-                            docenteSelect.addOption({
-                                id: docente.id,
-                                persona_nombres_completos: docente.persona_nombres_completos
-                            });
-                            docenteSelect.setValue(docente.id);
-                        } else {
-                            docenteSelect.setValue('');
-                            $('#msg-dni').text('No se encontraron coincidencias').removeClass('msg-dni-success').addClass('msg-dni-error');
-                        }
-                    })
-            } else {
-                $('#msg-dni').text('').removeClass('msg-dni-error').removeClass('msg-dni-success');
-            }
-        });
+                if (dni.length === 8) {
+                    fetch('<?= base_url("api/usuarios/obtener-docentes") ?>/' + dni)
+                        .then(res => res.json())
+                        .then(data => {
+                            const docenteData = data.data;
+                            if (docenteData.length > 0) {
+                                const docente = docenteData[0];
+                                $('#msg-dni').text('Coincidencia encontrada').removeClass('msg-dni-error').addClass('msg-dni-success');
+                                docenteSelect.addOption({
+                                    id: docente.id,
+                                    persona_nombres_completos: docente.persona_nombres_completos
+                                });
+                                docenteSelect.setValue(docente.id);
+                            } else {
+                                docenteSelect.setValue('');
+                                $('#msg-dni').text('No se encontraron coincidencias').removeClass('msg-dni-success').addClass('msg-dni-error');
+                            }
+                        })
+                } else {
+                    $('#msg-dni').text('').removeClass('msg-dni-error').removeClass('msg-dni-success');
+                }
+            });
 
-        // Capturando el valor del docente con cada cambio
-        docenteSelect.on('change', function (value) {
-            if (value) {
-                setTimeout(function () {
-                    $('#dniInput').val('');
-                    $('#msg-dni').text('');
-                }, 1000);
-            }
-        });
+            // Capturando el valor del docente con cada cambio
+            docenteSelect.on('change', function (value) {
+                if (value) {
+                    setTimeout(function () {
+                        $('#dniInput').val('');
+                        $('#msg-dni').text('');
+                    }, 1000);
+                }
+            });
+        };
 
         // ===============================
         // ALUMNOS
