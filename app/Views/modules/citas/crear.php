@@ -539,8 +539,9 @@
         // Detectar los cambios de valor en el select de Derivaciones
         derivacionSelect.on('change', async function (value) {
             const res = await fetch(`/api/derivaciones/obtener-por-id/${value}`);
-            const derivacion = await res.json();
-            motivoTextArea.value = derivacion.motivo;
+            const data = await res.json();
+            console.log(data)
+            motivoTextArea.value = data.derivacion.motivo;
         });
     });
 </script>
