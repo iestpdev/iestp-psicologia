@@ -37,6 +37,10 @@ class AuthController extends BaseController
             'isLoggedIn' => true,
         ]);
 
+        if($usuario['rol'] === 'DOCENTE'){
+            return redirect()->to('/alumnos')->with('success', 'Bienvenido ' . esc($usuario['nombres']));
+        }
+        
         return redirect()->to('/')->with('success', 'Bienvenido ' . esc($usuario['nombres']));
     }
 
