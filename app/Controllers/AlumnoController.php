@@ -19,6 +19,9 @@ class AlumnoController extends BaseController
 
     public function info($alumnoId): string
     {
+        $session = session();
+        $user = $session->get('user');
+        
         $alumnoModel = new Alumno();
         $alumno = $alumnoModel->obtenerPorId($alumnoId);
         if (!$alumno) {
@@ -34,7 +37,11 @@ class AlumnoController extends BaseController
         $parentescos = $parentescoModel->listar();
 
         $citaModel = new Cita();
+        if ($user && $user['rol'] === 'PSICOLOGO') {
         $citas = $citaModel->listarPorAlumnoId($alumnoId);
+        } else {
+            $citas = $citaModel->listarPorAlumnoId($alumnoId, $user['id']);
+        }
 
         return view('modules/alumnos/details/index', [
             'alumno' => $alumno,

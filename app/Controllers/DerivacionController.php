@@ -26,6 +26,9 @@ class DerivacionController extends BaseController
         $alumnoModel = new Alumno();
         $data['alumnos'] = $alumnoModel->obtenerAlumnos();
 
+        $alumnoId = $this->request->getGet('alumnoId');
+        $data['alumnoEnviado'] = $alumnoId ? (int) $alumnoId : null;
+
         return view('modules/derivaciones/crear', $data);
     }
 

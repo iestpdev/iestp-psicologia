@@ -63,7 +63,7 @@ class Cita extends BaseModel
         return $builder->get()->getResultArray();
     }
 
-    public function listarPorAlumnoId(int $alumnoId): array
+    public function listarPorAlumnoId(int $alumnoId, ?int $usuarioId = null): array
     {
         $builder = $this->db->table($this->table . ' c')
             ->select("
@@ -86,8 +86,13 @@ class Cita extends BaseModel
             ->join('usuarios u', 'u.id = c.usuario_id', 'left')
             ->join('personas p', 'p.id = u.persona_id', 'left')
             ->where('c.alumno_id', $alumnoId)
-            ->where('c.deleted_at', null)
-            ->orderBy('c.created_at', 'DESC');
+            ->where('c.deleted_at', null);
+
+            if (!empty($usuarioId)) {
+                $builder->orderBy("usuario_id = {$usuarioId}", 'DESC', false);
+            }
+
+            $builder->orderBy('c.atencion_fech', 'ASC');
 
         return $builder->get()->getResultArray();
     }

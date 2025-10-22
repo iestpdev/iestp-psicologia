@@ -63,14 +63,21 @@
                                     <label class="form-label">
                                         Psicólogo asignado <span class="required-mark">*</span>
                                     </label>
-                                    <select name="usuario_id" id="usuario_id" class="form-control-custom" required>
-                                        <option value="">-- Seleccione un psicólogo --</option>
-                                        <?php foreach ($psicologos as $psicologo): ?>
-                                            <option value="<?= $psicologo['id'] ?>" <?= set_select('usuario_id', $psicologo['id']) ?>>
-                                                <?= esc($psicologo['persona_nombres_completos']) ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
+                                    <?php if (session('user.rol') === 'ADMIN'): ?>
+                                        <select name="usuario_id" id="usuario_id" class="form-control-custom" required>
+                                            <option value="">-- Seleccione un psicólogo --</option>
+                                            <?php foreach ($psicologos as $psicologo): ?>
+                                                <option value="<?= $psicologo['id'] ?>" <?= set_select('usuario_id', $psicologo['id']) ?>>
+                                                    <?= esc($psicologo['persona_nombres_completos']) ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    <?php elseif (session('user.rol') === 'PSICOLOGO'): ?>
+                                        <input type="text" class="form-control-custom"
+                                            value="<?= esc(session('user.nombres') . ' ' . session('user.apellidos')) ?>"
+                                            disabled>
+                                        <input type="hidden" name="usuario_id" value="<?= esc(session('user.id')) ?>">
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
