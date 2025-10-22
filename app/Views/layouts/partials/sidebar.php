@@ -1,3 +1,8 @@
+<?php
+$session = session();
+$userLogged = $session->get('user');
+?>
+
 <aside id="sidebar" class="navegacion">
   <ul>
     <li class="brand">
@@ -10,19 +15,23 @@
       </button>
     </li>
 
+    <?php if ($userLogged['rol'] === 'ADMIN' || $userLogged['rol'] === 'PSICOLOGO'): ?>
     <li>
       <a href="<?= base_url('/') ?>">
         <span class="icon"><ion-icon name="home-outline"></ion-icon></span>
         <span class="title">Home</span>
       </a>
     </li>
+    <?php endif; ?>
 
+    <?php if ($userLogged['rol'] === 'ADMIN'): ?>
     <li>
       <a href="<?= base_url('/usuarios') ?>">
         <span class="icon"><ion-icon name="people-outline"></ion-icon></span>
         <span class="title">Usuarios</span>
       </a>
     </li>
+    <?php endif; ?>
 
     <li>
       <a href="<?= base_url('/alumnos') ?>">
@@ -38,12 +47,14 @@
       </a>
     </li>
 
+    <?php if ($userLogged['rol'] === 'ADMIN' || $userLogged['rol'] === 'PSICOLOGO'): ?>
     <li>
       <a href="<?= base_url('/citas') ?>">
         <span class="icon"><ion-icon name="heart-circle-outline"></ion-icon></span>
         <span class="title">Consultas</span>
       </a>
     </li>
+    <?php endif; ?>
 
     <li>
       <a href="<?= base_url('/api/auth/logout') ?>">
