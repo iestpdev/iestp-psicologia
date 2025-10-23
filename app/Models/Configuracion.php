@@ -8,7 +8,6 @@ class Configuracion extends BaseModel
     protected $primaryKey = "id";
     protected $allowedFields = [
         'usuario_id',
-        'auth_SMS',
         'auth_email',
         'notif_email',
     ];

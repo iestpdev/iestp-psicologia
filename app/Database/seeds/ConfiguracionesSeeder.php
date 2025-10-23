@@ -13,7 +13,6 @@ class ConfiguracionesSeeder extends Seeder
         for ($i = 1; $i <= 15; $i++) { // cantidad de usuarios existentes
             $data[] = [
                 'usuario_id'  => $i,
-                'auth_SMS'    => false,
                 'auth_email'  => false,
                 'notif_email' => false,
                 'created_at'  => date('Y-m-d H:i:s'),

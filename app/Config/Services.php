@@ -5,6 +5,7 @@ namespace Config;
 use CodeIgniter\Config\BaseService;
 
 use App\Services\EmailService;
+use App\Services\SmsService;
 /**
  * Services Configuration file.
  *
@@ -27,5 +28,14 @@ class Services extends BaseService
         }
 
         return new EmailService();
+    }
+
+    public static function smsService($getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('smsService');
+        }
+
+        return new SmsService();
     }
 }

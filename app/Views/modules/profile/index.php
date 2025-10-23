@@ -70,11 +70,6 @@
       <div class="col-md-6">
         <h4>Autenticación 2FA</h4>
         <div class="mb-3 form-check">
-          <input type="checkbox" class="form-check-input" id="auth_SMS" name="auth_SMS"
-            <?= !empty($configuracion['auth_SMS']) && $configuracion['auth_SMS'] ? 'checked' : '' ?>>
-          <label class="form-check-label" for="auth_SMS">Recibir código por SMS</label>
-        </div>
-        <div class="mb-3 form-check">
           <input type="checkbox" class="form-check-input" id="auth_email" name="auth_email"
             <?= !empty($configuracion['auth_email']) && $configuracion['auth_email'] ? 'checked' : '' ?>>
           <label class="form-check-label" for="auth_email">Recibir código por email</label>

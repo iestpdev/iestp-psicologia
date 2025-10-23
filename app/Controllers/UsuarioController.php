@@ -100,7 +100,6 @@ class UsuarioController extends BaseController
             $configuracionModel = new Configuracion();
             $configuracionId = $configuracionModel->crear([
                 "usuario_id"=> $usuarioId,
-                "auth_SMS" => false,
                 "auth_email" => false,
                 "notif_email" => false,
             ]);

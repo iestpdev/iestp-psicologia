@@ -67,7 +67,6 @@ class ProfileController extends BaseController
             $ConfiguracionModel = new Configuracion();
             $configuracionData = normalize_input([
                 'usuario_id' => $usuarioId,
-                'auth_SMS' => $this->request->getPost('auth_SMS') ? 1 : 0,
                 'auth_email' => $this->request->getPost('auth_email') ? 1 : 0,
                 'notif_email' => $this->request->getPost('notif_email') ? 1 : 0,
             ]);
