@@ -134,7 +134,7 @@
     </div>
 
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-      <button type="button" class="btn btn-secondary me-md-2">Cancelar</button>
+      <a href="<?=base_url('/')?>" class="btn btn-secondary me-md-2">Cancelar</a>
       <button type="submit" class="btn btn-primary">Guardar cambios</button>
     </div>
   </form>

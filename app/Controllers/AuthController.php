@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\Configuracion;
 use App\Models\Usuario;
 use CodeIgniter\I18n\Time;
 
@@ -37,16 +38,49 @@ class AuthController extends BaseController
             return redirect()->back()->withInput()->with('error', 'Contraseña incorrecta');
         }
 
-        // --- INICIO DEL FLUJO 2FA ---
+        $configuracionModel = new Configuracion();
+        $configuracionUser = $configuracionModel->obtenerPorUsuarioId($usuario['id']);
 
-        // Ejecutar autenticación 2FA (Generar código, guardar, enviar email)
-        if (autenticacion2FA($usuario)) {
-            //Redirigir a la vista de verificación de código 2FA
-            return redirect()->to('/auth/verify2fa')->with('success', 'Hemos enviado un código de verificación a tu correo electrónico.');
+        if ($configuracionUser && $configuracionUser['auth_email']) {
+            // --- INICIO DEL FLUJO 2FA ---
+            // Ejecutar autenticación 2FA (Generar código, guardar, enviar email)
+            if (autenticacion2FA($usuario)) {
+                //Redirigir a la vista de verificación de código 2FA
+                return redirect()->to('/auth/verify2fa')->with('success', 'Hemos enviado un código de verificación a tu correo electrónico.');
+            }
+
+            // Fallo en 2FA (ej. No se pudo enviar el correo o guardar el código)
+            return redirect()->back()->withInput()->with('error', 'Fallo en la activación de 2FA. Inténtalo de nuevo.');
+        } else {
+            // --- FLUJO LOGIN DIRECTO (2FA DESACTIVADO) ---
+            return $this->doAuthLogin($usuario);
+        }
+    }
+
+    /**
+     * Inicia la sesión del usuario después de pasar todas las verificaciones.
+     * Este método se usa si el 2FA está desactivado, o después de pasar el 2FA.
+     */
+    private function doAuthLogin(array $usuario)
+    {
+        $session = session();
+        $session->set([
+            'user' => [
+                'id' => $usuario['id'],
+                'persona_id' => $usuario['persona_id'],
+                'nombres' => $usuario['nombres'],
+                'apellidos' => $usuario['apellidos'],
+                'username' => $usuario['username'],
+                'rol' => $usuario['rol'],
+            ],
+            'isLoggedIn' => true,
+        ]);
+
+        if ($usuario['rol'] === 'DOCENTE') {
+            return redirect()->to('/alumnos')->with('success', 'Bienvenido ' . esc($usuario['nombres']));
         }
 
-        // Fallo en 2FA (ej. No se pudo enviar el correo o guardar el código)
-        return redirect()->back()->withInput()->with('error', 'Fallo en la activación de 2FA. Inténtalo de nuevo.');
+        return redirect()->to('/')->with('success', 'Bienvenido ' . esc($usuario['nombres']));
     }
 
     /**
