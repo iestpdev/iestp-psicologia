@@ -547,7 +547,6 @@
         derivacionSelect.on('change', async function (value) {
             const res = await fetch(`/api/derivaciones/obtener-por-id/${value}`);
             const data = await res.json();
-            console.log(data)
             motivoTextArea.value = data.derivacion.motivo;
         });
     });

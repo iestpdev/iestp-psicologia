@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\Configuracion;
 use App\Models\Persona;
 use App\Models\Usuario;
 
@@ -95,6 +96,16 @@ class UsuarioController extends BaseController
             $usuarioId = $usuarioModel->crear($usuarioData);
             if (!$usuarioId)
                 throw new \Exception("Error al crear Usuario");
+
+            $configuracionModel = new Configuracion();
+            $configuracionId = $configuracionModel->crear([
+                "usuario_id"=> $usuarioId,
+                "auth_SMS" => false,
+                "auth_email" => false,
+                "notif_email" => false,
+            ]);
+            if (!$configuracionId)
+                throw new \Exception("Error al crear configuraciones predeterminadas");
 
             $db->transCommit();
             return redirect()->to('/usuarios')->with('success', 'Usuario registrado con éxito');

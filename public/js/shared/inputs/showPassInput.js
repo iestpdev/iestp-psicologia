@@ -20,4 +20,7 @@ function showPassInput(toggleBtnId, inputId) {
 
 document.addEventListener("DOMContentLoaded", () => {
     showPassInput("togglePassword", "password");
+    showPassInput("toggleCurrentPassword", "currentPassword");
+    showPassInput("toggleNewPassword", "newPassword");
+    showPassInput("toggleConfirmPassword", "confirmPassword");
 });

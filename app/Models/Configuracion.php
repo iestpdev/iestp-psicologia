@@ -1,8 +1,8 @@
 <?php
 
-use App\Models\BaseModel;
+namespace App\Models;
 
-class Notificaciones extends BaseModel
+class Configuracion extends BaseModel
 {
     protected $table = "configuraciones";
     protected $primaryKey = "id";
@@ -26,10 +26,5 @@ class Notificaciones extends BaseModel
     public function crear(array $data)
     {
         return $this->insert($data);
-    }
-
-    public function eliminarPorUsuarioId($usuarioId)
-    {
-        return $this->where('usuario_id', $usuarioId)->delete();
     }
 }

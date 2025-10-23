@@ -21,6 +21,11 @@ if (!function_exists('runValidation')) {
                 $validationClass = new \App\Validations\Usuarios\UsuarioUpdate();
                 break;
 
+            //profile
+            case 'profile_update':
+                $validationClass = new \App\Validations\Profile\ProfileUpdate();
+                break;
+
             //personas
             case 'persona_create':
                 $validationClass = new \App\Validations\Personas\PersonaCreate();
