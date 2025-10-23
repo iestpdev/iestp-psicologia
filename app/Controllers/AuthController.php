@@ -21,6 +21,10 @@ class AuthController extends BaseController
         if (!$usuario)
             return redirect()->back()->withInput()->with('error', 'Usuario no encontrado');
 
+        if (isset($usuario['estado']) && !$usuario['estado']) {
+            return redirect()->back()->withInput()->with('error', 'Tu cuenta está inactiva');
+        }
+
         if (!password_verify($password, $usuario['userpass'])) {
             return redirect()->back()->withInput()->with('error', 'Contraseña incorrecta');
         }
@@ -38,10 +42,10 @@ class AuthController extends BaseController
             'isLoggedIn' => true,
         ]);
 
-        if($usuario['rol'] === 'DOCENTE'){
+        if ($usuario['rol'] === 'DOCENTE') {
             return redirect()->to('/alumnos')->with('success', 'Bienvenido ' . esc($usuario['nombres']));
         }
-        
+
         return redirect()->to('/')->with('success', 'Bienvenido ' . esc($usuario['nombres']));
     }
 

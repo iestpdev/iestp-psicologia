@@ -78,7 +78,7 @@ class ProfileController extends BaseController
                 'apellidos' => $personaData['apellidos'],
                 'username' => $usuarioData['username'],
             ]);
-
+            
             $db->transCommit();
             return redirect()->to('/')->with('success', 'Perfil actualizado correctamente');
         } catch (\Exception $e) {

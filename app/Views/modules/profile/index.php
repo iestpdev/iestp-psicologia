@@ -23,16 +23,9 @@
 
         <div class="mb-3">
           <label for="dni" class="form-label">DNI</label>
-          <input 
-          type="text"
-          class="form-control" 
-          id="dni" 
-          name="dni"
-          placeholder="Ingrese el DNI" 
-          maxlength="8" pattern="[0-9]{8}"
-          inputmode="numeric" 
-          oninput="this.value = this.value.replace(/[^0-9]/g, '');"
-          value="<?= esc($usuario['dni'] ?? '') ?>">
+          <input type="text" class="form-control" id="dni" name="dni" placeholder="Ingrese el DNI" maxlength="8"
+            pattern="[0-9]{8}" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+            value="<?= esc($usuario['dni'] ?? '') ?>">
         </div>
 
         <div class="mb-3">
@@ -64,14 +57,8 @@
 
         <div class="mb-3">
           <label for="telefono" class="form-label">Teléfono</label>
-          <input 
-          type="tel" 
-          class="form-control" 
-          id="telefono" 
-          name="telefono"
-          placeholder="Ingrese el teléfono" 
-          maxlength="9"
-          value="<?= esc($usuario['telefono'] ?? '') ?>">
+          <input type="tel" class="form-control" id="telefono" name="telefono" placeholder="Ingrese el teléfono"
+            maxlength="9" value="<?= esc($usuario['telefono'] ?? '') ?>">
         </div>
 
       </div>
@@ -114,7 +101,7 @@
           <label class="form-label" for="currentPassword">Contraseña actual</label>
           <div class="input-group-custom">
             <input type="password" name="currentPassword" id="currentPassword" class="form-control-custom"
-              placeholder="Ingrese su contraseña actual" required>
+              placeholder="Ingrese su contraseña actual">
             <button type="button" class="btn-password-toggle" id="toggleCurrentPassword">
               <i data-lucide="eye"></i>
             </button>
@@ -124,7 +111,8 @@
         <div class="mb-3">
           <label for="newPassword" class="form-label">Nueva contraseña</label>
           <div class="input-group-custom">
-            <input type="password" class="form-control-custom" id="newPassword" name="newPassword">
+            <input type="password" class="form-control-custom" id="newPassword" name="newPassword"
+              placeholder="Ingrese su nueva contraseña">
             <button type="button" class="btn-password-toggle" id="toggleNewPassword">
               <i data-lucide="eye"></i>
             </button>
@@ -134,7 +122,8 @@
         <div class="mb-3">
           <label for="confirmPassword" class="form-label">Confirmar nueva contraseña</label>
           <div class="input-group-custom">
-            <input type="password" class="form-control-custom" id="confirmPassword" name="confirmPassword">
+            <input type="password" class="form-control-custom" id="confirmPassword" name="confirmPassword"
+              placeholder="Confirme su nueva contraseña">
             <button type="button" class="btn-password-toggle" id="toggleConfirmPassword">
               <i data-lucide="eye"></i>
             </button>
@@ -151,7 +140,46 @@
   </form>
 </div>
 <?= $this->include('shared/toasts/notyf') ?>
+<?= $this->include('shared/alerts/sweetAlert2') ?>
 <script type="module" src="<?= base_url('js/services/decolecta.js') ?>"></script>
 <script src="<?= base_url('js/shared/inputs/showPassInput.js') ?>"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.querySelector('form[action*="update-userlogged"]');
+    const currentPassword = document.getElementById('currentPassword');
+    const newPassword = document.getElementById('newPassword');
+    const confirmPassword = document.getElementById('confirmPassword');
+
+    form.addEventListener('submit', async (e) => {
+      const current = currentPassword.value.trim();
+      const newPass = newPassword.value.trim();
+      const confirm = confirmPassword.value.trim();
+
+      if (current && (!newPass || !confirm)) {
+        e.preventDefault();
+        await Swal.fire({
+          title: 'Campos incompletos',
+          text: 'Si desea cambiar su contraseña, debe llenar los tres campos: actual, nueva y confirmación.',
+          icon: 'warning',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Entendido',
+        });
+        return;
+      }
+
+      if (current && newPass && confirm && newPass !== confirm) {
+        e.preventDefault();
+        await Swal.fire({
+          title: 'Contraseñas no coinciden',
+          text: 'La nueva contraseña y la confirmación deben ser iguales.',
+          icon: 'error',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Revisar',
+        });
+        return;
+      }
+    });
+  });
+</script>
 
 <?= $this->endSection() ?>
