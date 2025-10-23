@@ -114,6 +114,8 @@ CREATE TABLE usuarios(
    rol             		ENUM('ADMIN', 'PSICOLOGO','DOCENTE'),
    estado					BOOLEAN DEFAULT TRUE,
 	created_at				DATETIME NULL,
+	codigo_2fa 				VARCHAR(6) NULL,
+   codigo_2fa_expira 	DATETIME NULL,
 	updated_at				DATETIME NULL,
 	deleted_at				DATETIME NULL,
 	FOREIGN KEY (persona_id) REFERENCES personas(id)			
