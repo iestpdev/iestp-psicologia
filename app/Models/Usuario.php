@@ -13,6 +13,8 @@ class Usuario extends BaseModel
         'persona_id',
         'rol',
         'estado',
+        'codigo_2fa',
+        'codigo_2fa_expira',
     ];
 
     public function obtenerPorUsername($username)
@@ -55,6 +57,8 @@ class Usuario extends BaseModel
             u.username,
             u.rol,
             u.estado,
+            u.codigo_2fa,
+            u.codigo_2fa_expira,
             u.created_at,
             u.updated_at,
             u.deleted_at

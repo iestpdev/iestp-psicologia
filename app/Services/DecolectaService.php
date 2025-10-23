@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use Config\Services;
-use CodeIgniter\HTTP\Exceptions\HTTPException;
 
 class DecolectaService
 {

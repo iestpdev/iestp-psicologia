@@ -42,6 +42,8 @@ class UsuariosSeeder extends Seeder
                 'persona_id'           => $usuario[3],
                 'rol'                  => $usuario[4],
                 'estado'               => true,
+                'codigo_2fa'           => null,
+                'codigo_2fa_expira'    => null,
                 'created_at'           => $usuario[5],
                 'updated_at'           => null,
                 'deleted_at'           => null,
