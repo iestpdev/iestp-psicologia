@@ -129,4 +129,4 @@ _modules/*
 .phpdoc/*
 phpdoc.xml
 phpDocumentor.phar
-
+docs/
