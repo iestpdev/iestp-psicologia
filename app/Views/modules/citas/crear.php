@@ -183,10 +183,8 @@
                                 <div class="form-group">
                                     <label class="form-label">Familiares <span class="required-mark">*</span></label>
 
-                                    <select id="familiarSelect" name="familiar" class="form-control-custom"
-                                        <?= isset($familiares) && !empty($familiares) ? 'required' : '' ?>>
+                                    <select id="familiarSelect" name="familiar" class="form-control-custom">
                                         <?php if (isset($familiares) && !empty($familiares)): ?>
-                                            <option value="">-- Seleccione un familiar --</option>
                                             <?php foreach ($familiares as $familiar): ?>
                                                 <option value="<?= esc($familiar['id']) ?>" <?= set_select('familiar', $familiar['id']) ?>>
                                                     <?= esc($familiar['info_pariente']) ?>
@@ -395,9 +393,9 @@
         const familiarSelect = document.getElementById("familiarSelect");
 
         // Evitar limpiar el select si ya tiene familiares renderizados desde PHP
-        if (familiarSelect.options.length <= 1) {
-            familiarSelect.innerHTML = "<option value=''>-- Seleccione un familiar --</option>";
-        }
+     
+
+        console.log(familiarSelect.options);
 
         // textarea - motivo
         const motivoTextArea = document.querySelector('textarea[name="motivo"]');
