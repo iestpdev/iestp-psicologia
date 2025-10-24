@@ -124,3 +124,9 @@ _modules/*
 
 /results/
 /phpunit*.xml
+
+# doc
+.phpdoc/*
+phpdoc.xml
+phpDocumentor.phar
+
