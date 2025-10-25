@@ -1,0 +1,51 @@
+<phpdocumentor
+  configVersion="3"
+  xmlns="https://www.phpdoc.org">
+
+  <title>IESTP Psicologia</title>
+
+  <paths>
+    <output>docs</output>
+    <cache>.phpdoc</cache>
+  </paths>
+
+    <settings>
+  </settings>
+
+  <version number="1">
+    <api>
+      <source dsn="app">
+        <path>Config/Email.php</path>
+        <path>Config/Services.php</path>
+        <path>Config/TextBeeConfig.php</path>
+        <path>Config/Validation.php</path>
+
+        <path>Models/BaseModel.php</path>
+        <path>Models/Usuario.php</path>
+        <path>Models/Persona.php</path>
+        <path>Models/Configuracion.php</path>
+
+        <path>Controllers/AuthController.php</path>
+        <path>Controllers/ProfileController.php</path>
+        <path>Controllers/UsuarioController.php</path>
+
+        <path>Helpers/*</path>
+        <path>Rules/*</path>
+
+        <path>Services/EmailService.php</path>
+        <path>Services/SmsService.php</path>
+
+        <path>Validations/usuarios/UsuarioCreate.php</path>
+        <path>Validations/usuarios/UsuarioUpdate.php</path>
+
+        <path>Validations/personas/PersonaCreate.php</path>
+        <path>Validations/personas/PersonaUpdate.php</path>
+
+        <path>Validations/profile/ProfileUpdate.php</path>
+      </source>
+
+      <ignore>
+      </ignore>
+    </api>
+  </version>
+</phpdocumentor>
