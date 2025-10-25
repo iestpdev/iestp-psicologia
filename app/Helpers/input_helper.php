@@ -2,22 +2,11 @@
 
 if (!function_exists('normalize_input')) {
     /**
-     * Limpia un arreglo de datos (por ejemplo, $_POST o partes de él),
-     * eliminando espacios y convirtiendo las cadenas vacías en NULL.
+     * Normaliza un arreglo de datos: elimina espacios y convierte
+     * cadenas vacías en null. Útil antes de guardar en la BD.
      *
-     * Ideal para usar antes de insertar o actualizar en base de datos,
-     * evitando guardar cadenas vacías ("") en campos que admiten NULL.
-     *
-     * @param array $data Arreglo asociativo (por ejemplo, $this->request->getPost()).
-     * @return array Arreglo normalizado (cadenas vacías reemplazadas por null).
-     *
-     * Ejemplo:
-     *   $personaData = normalize_input([
-     *       'nombre'   => '  Carlos  ',
-     *       'telefono' => '   ',
-     *   ]);
-     *   // Resultado:
-     *   // ['nombre' => 'Carlos', 'telefono' => null]
+     * @param array $data Datos de entrada (por ejemplo, $_POST).
+     * @return array Datos normalizados.
      */
     function normalize_input(array $data): array
     {

@@ -5,28 +5,54 @@ namespace App\Services;
 use CodeIgniter\Email\Email;
 
 /**
- * Servicio para el envío de correos electrónicos utilizando la configuración de CodeIgniter.
- * Se configura para usar SMTP de Gmail para la autenticación de 2 pasos (2FA).
+ * Servicio encargado del envío de correos electrónicos en el sistema IESTP Psicología.
+ *
+ * Esta clase actúa como una capa de abstracción sobre el servicio de correo de CodeIgniter,
+ * facilitando el envío de correos mediante el protocolo SMTP (por defecto configurado para Gmail).
+ *
+ * Actualmente se utiliza principalmente para el envío de códigos de autenticación en dos pasos (2FA),
+ * pero puede reutilizarse para otros fines de notificación.
+ *
+ * @package App\Services
  */
 class EmailService
 {
     /**
+     * Instancia del servicio de correo de CodeIgniter.
+     *
      * @var Email
      */
     protected $email;
 
+    /**
+     * Constructor: inicializa el servicio de correo utilizando la configuración definida en `Config\Email`.
+     */
     public function __construct()
     {
         $this->email = service('email');
     }
 
     /**
-     * Envía un correo electrónico con el código de 2FA.
+     * Envía un correo electrónico utilizando la configuración SMTP del sistema.
      *
-     * @param string $to La dirección de correo del destinatario.
-     * @param string $subject El asunto del correo.
-     * @param string $message El contenido HTML o de texto del correo.
-     * @return bool Retorna verdadero si el envío fue exitoso, falso en caso contrario.
+     * Este método configura los encabezados básicos (remitente, destinatario, asunto y tipo de contenido),
+     * y gestiona tanto los errores de envío como las excepciones que puedan ocurrir durante el proceso.
+     *
+     * @param string $to       Dirección de correo del destinatario.
+     * @param string $subject  Asunto del mensaje.
+     * @param string $message  Contenido del correo (HTML o texto plano).
+     *
+     * @return bool Retorna `true` si el correo fue enviado correctamente, o `false` si ocurrió algún error.
+     *
+     * @example
+     * ```php
+     * $emailService = new \App\Services\EmailService();
+     * $emailService->sendEmail(
+     *     'usuario@dominio.com',
+     *     'Código de verificación',
+     *     '<p>Tu código es: <strong>123456</strong></p>'
+     * );
+     * ```
      */
     public function sendEmail(string $to, string $subject, string $message): bool
     {
@@ -37,12 +63,14 @@ class EmailService
             $this->email->setMessage($message);
             $this->email->setMailType('html');
 
-            // Intenta enviar el correo
             if ($this->email->send()) {
-                // Éxito
                 return true;
             } else {
-                log_message('error', 'Fallo al enviar el correo a ' . $to . ': ' . $this->email->printDebugger(['headers']));
+                log_message(
+                    'error',
+                    'Fallo al enviar el correo a ' . $to . ': ' .
+                    $this->email->printDebugger(['headers'])
+                );
                 return false;
             }
         } catch (\Exception $e) {

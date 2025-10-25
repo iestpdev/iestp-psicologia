@@ -3,25 +3,26 @@
 namespace Config;
 
 use CodeIgniter\Config\BaseService;
-
 use App\Services\EmailService;
 use App\Services\SmsService;
+
 /**
- * Services Configuration file.
+ * Configuración personalizada de servicios del sistema.
  *
- * Services are simply other classes/libraries that the system uses
- * to do its job. This is used by CodeIgniter to allow the core of the
- * framework to be swapped out easily without affecting the usage within
- * the rest of your application.
+ * Define instancias reutilizables (singleton) para servicios propios
+ * como el envío de correos y mensajes SMS.
  *
- * This file holds any application-specific services, or service overrides
- * that you might need. An example has been included with the general
- * method format you should use for your service methods. For more examples,
- * see the core Services file at system/Config/Services.php.
+ * @package Config
  */
 class Services extends BaseService
 {
-    public static function emailService($getShared = true)
+    /**
+     * Retorna una instancia del servicio de correo electrónico.
+     *
+     * @param bool $getShared Indica si se debe obtener la instancia compartida.
+     * @return EmailService Instancia del servicio de correo.
+     */
+    public static function emailService(bool $getShared = true): EmailService
     {
         if ($getShared) {
             return static::getSharedInstance('emailService');
@@ -30,7 +31,13 @@ class Services extends BaseService
         return new EmailService();
     }
 
-    public static function smsService($getShared = true)
+    /**
+     * Retorna una instancia del servicio de mensajería SMS.
+     *
+     * @param bool $getShared Indica si se debe obtener la instancia compartida.
+     * @return SmsService Instancia del servicio SMS.
+     */
+    public static function smsService(bool $getShared = true): SmsService
     {
         if ($getShared) {
             return static::getSharedInstance('smsService');

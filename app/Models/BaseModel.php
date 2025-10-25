@@ -4,22 +4,66 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
+/**
+ * Class BaseModel
+ *
+ * Modelo base que extiende la funcionalidad de CodeIgniter\Model,
+ * agregando manejo de SoftDeletes, timestamps y métodos genéricos
+ * para DataTables y filtrado dinámico.
+ *
+ * @package App\Models
+ */
 class BaseModel extends Model
 {
+    /**
+     * @var bool Indica si se usarán los campos de timestamps automáticamente.
+     */
     protected $useTimestamps = true;
+
+    /**
+     * @var string Nombre del campo de creación.
+     */
     protected $createdField = 'created_at';
+
+    /**
+     * @var string Nombre del campo de actualización.
+     */
     protected $updatedField = 'updated_at';
+
+    /**
+     * @var string Nombre del campo de eliminación lógica.
+     */
     protected $deletedField = 'deleted_at';
+
+    /**
+     * @var bool Habilita el uso de Soft Deletes.
+     */
     protected $useSoftDeletes = true;
 
-    // Cada modelo hijo podrá definir sus columnas filtrables
+    /**
+     * @var array Campos disponibles para búsqueda global.
+     */
     protected array $searchableFields = [];
 
-    // Cada modelo hijo podrá definir sus columnas visibles (evitar exponer datos sensibles)
+    /**
+     * @var array Campos visibles al obtener registros (oculta datos sensibles).
+     */
     protected array $visibleFields = [];
 
     /**
-     * Devuelve registros paginados y filtrados
+     * Devuelve registros paginados y filtrados según los parámetros de búsqueda.
+     *
+     * @param int $inicio     Posición inicial del paginado.
+     * @param int $cantidad   Cantidad de registros por página.
+     * @param string $busqueda Texto de búsqueda opcional.
+     * @param int|null $excludeId ID que se debe excluir (por ejemplo, el usuario logueado).
+     * @param string|null $whereField Campo adicional para filtrar.
+     * @param mixed|null $whereValue Valor del filtro adicional.
+     *
+     * @return array Lista de registros filtrados.
+     *
+     * @example
+     * $model->getDatatables(0, 10, 'Juan', 1);
      */
     public function getDatatables(int $inicio, int $cantidad, string $busqueda = '', $excludeId = null, $whereField = null, $whereValue = null): array
     {
@@ -31,17 +75,14 @@ class BaseModel extends Model
             $builder->where("{$this->table}.{$this->deletedField}", null);
         }
 
-        // excluimos un registro en especifico (ejm: excluimos el usuario logeado de una lista de usuarios)
         if (!empty($excludeId)) {
             $builder->where("{$this->table}.id !=", $excludeId);
         }
 
-        // Filtro adicional dinámico (ej: usuario_id = 7)
         if (!empty($whereField) && !empty($whereValue)) {
             $builder->where($whereField, $whereValue);
         }
 
-        // Filtro de búsqueda global
         if (!empty($busqueda) && !empty($this->searchableFields)) {
             $builder->groupStart();
             foreach ($this->searchableFields as $field) {
@@ -50,17 +91,20 @@ class BaseModel extends Model
             $builder->groupEnd();
         }
 
-        // Orden por fecha de creación (más recientes primero)
         $builder->orderBy($this->createdField, 'DESC');
-
-        // Paginación
         $builder->limit($cantidad, $inicio);
 
         return $builder->get()->getResultArray();
     }
 
     /**
-     * Cuenta todos los registros (con soft deletes aplicados)
+     * Cuenta todos los registros del modelo, respetando Soft Deletes.
+     *
+     * @param int|null $excludeId ID que se debe excluir del conteo.
+     * @param string|null $whereField Campo adicional para filtrar.
+     * @param mixed|null $whereValue Valor del filtro adicional.
+     *
+     * @return int Cantidad total de registros.
      */
     public function countAll($excludeId = null, $whereField = null, $whereValue = null): int
     {
@@ -79,7 +123,14 @@ class BaseModel extends Model
     }
 
     /**
-     * Cuenta registros filtrados por búsqueda
+     * Cuenta los registros filtrados según un texto de búsqueda.
+     *
+     * @param string $busqueda Texto de búsqueda opcional.
+     * @param int|null $excludeId ID que se debe excluir del conteo.
+     * @param string|null $whereField Campo adicional para filtrar.
+     * @param mixed|null $whereValue Valor del filtro adicional.
+     *
+     * @return int Cantidad de registros filtrados.
      */
     public function countFiltered(string $busqueda = '', $excludeId = null, $whereField = null, $whereValue = null): int
     {
@@ -107,24 +158,25 @@ class BaseModel extends Model
     }
 
     /**
-     * Retorna los campos visibles
+     * Retorna los campos visibles que deben ser seleccionados en las consultas.
+     *
+     * Si el modelo hijo define `$visibleFields`, se priorizan sobre `$allowedFields`.
+     *
+     * @return string Campos separados por comas.
      */
     protected function getVisibleFields(): string
     {
-        // Si el hijo define visibleFields, usamos esos
         if (!empty($this->visibleFields)) {
             $fields = $this->visibleFields;
-        }
-        // Si no, caemos en allowedFields
-        else if (!empty($this->allowedFields)) {
+        } elseif (!empty($this->allowedFields)) {
             $fields = $this->allowedFields;
         }
 
-        // añadiendo timestamps si existen
         if ($this->useTimestamps) {
             $fields[] = $this->createdField;
             $fields[] = $this->updatedField;
         }
+
         if ($this->useSoftDeletes) {
             $fields[] = $this->deletedField;
         }

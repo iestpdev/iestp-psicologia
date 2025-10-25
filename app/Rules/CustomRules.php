@@ -4,6 +4,12 @@ namespace App\Rules;
 
 use Config\Database;
 
+/**
+ * Clase que contiene reglas de validación personalizadas
+ * para el sistema IESTP Psicología.
+ *
+ * @package App\Rules
+ */
 class CustomRules
 {
     /**

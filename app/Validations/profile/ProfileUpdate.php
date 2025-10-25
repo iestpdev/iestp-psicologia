@@ -2,14 +2,34 @@
 
 namespace App\Validations\Profile;
 
+/**
+ * Validación para la actualización de perfil de usuario.
+ *
+ * Define las reglas y mensajes de error al actualizar correo y nombre de usuario
+ * en el perfil del usuario.
+ */
 class ProfileUpdate
 {
+    /**
+     * Reglas de validación para los campos del formulario de perfil.
+     *
+     * - id: opcional, permite vacío.
+     * - correo: requerido, debe ser institucional, único considerando el ID actual.
+     * - username: requerido, único considerando el ID actual, longitud entre 4 y 70.
+     *
+     * @var array
+     */
     public array $rules = [
         'id' => 'permit_empty',
         'correo' => 'trim|required|valid_email|regex_match[/^[\w\.-]+@iestpchincha\.edu\.pe$/]|is_unique_soft[usuarios.correo_institucional,id,{id}]',
         'username' => 'trim|required|min_length[4]|max_length[70]|is_unique_soft[usuarios.username,id,{id}]',
     ];
 
+    /**
+     * Mensajes personalizados para los errores de validación.
+     *
+     * @var array
+     */
     public array $errors = [
         'correo' => [
             'required' => 'Debe ingresar el correo institucional',

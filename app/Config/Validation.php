@@ -7,19 +7,20 @@ use CodeIgniter\Validation\StrictRules\CreditCardRules;
 use CodeIgniter\Validation\StrictRules\FileRules;
 use CodeIgniter\Validation\StrictRules\FormatRules;
 use CodeIgniter\Validation\StrictRules\Rules;
-
-//custom validators
 use App\Rules\CustomRules;
 
+/**
+ * Configuración de validación del sistema.
+ *
+ * Define los conjuntos de reglas y las plantillas para mostrar errores
+ * utilizados por el servicio de validación de CodeIgniter.
+ *
+ * @package Config
+ */
 class Validation extends BaseConfig
 {
-    // --------------------------------------------------------------------
-    // Setup
-    // --------------------------------------------------------------------
-
     /**
-     * Stores the classes that contain the
-     * rules that are available.
+     * Clases que contienen las reglas de validación disponibles.
      *
      * @var list<string>
      */
@@ -28,14 +29,11 @@ class Validation extends BaseConfig
         FormatRules::class,
         FileRules::class,
         CreditCardRules::class,
-
-        //custom validators
-        CustomRules::class,
+        CustomRules::class, // Reglas personalizadas
     ];
 
     /**
-     * Specifies the views that are used to display the
-     * errors.
+     * Vistas utilizadas para mostrar los errores de validación.
      *
      * @var array<string, string>
      */
@@ -43,8 +41,4 @@ class Validation extends BaseConfig
         'list'   => 'CodeIgniter\Validation\Views\list',
         'single' => 'CodeIgniter\Validation\Views\single',
     ];
-
-    // --------------------------------------------------------------------
-    // Rules
-    // --------------------------------------------------------------------
 }

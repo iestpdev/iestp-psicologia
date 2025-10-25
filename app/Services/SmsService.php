@@ -11,6 +11,8 @@ use Config\TextBeeConfig;
 class SmsService
 {
     /**
+     * Configuración del servicio TextBee.
+     *
      * @var TextBeeConfig
      */
     protected $config;
@@ -21,11 +23,12 @@ class SmsService
     }
 
     /**
-     * Envía un mensaje SMS a uno o varios destinatarios usando TextBee.
+     * Envía un mensaje SMS a uno o varios destinatarios mediante la API de TextBee.
      *
-     * @param string|array $recipients Número(s) de teléfono en formato E.164 (ej: +51924747851).
-     * @param string $message Contenido del mensaje.
-     * @return bool Retorna verdadero si la solicitud fue exitosa (código 200/201), falso en caso contrario.
+     * @param string|array $recipients Número(s) de teléfono en formato E.164 
+     *                                (ejemplo: "+51924747851" o array de números).
+     * @param string $message Contenido del mensaje a enviar.
+     * @return bool True si el SMS se envió correctamente, False si falló la solicitud o conexión.
      */
     public function sendSms($recipients, string $message): bool
     {

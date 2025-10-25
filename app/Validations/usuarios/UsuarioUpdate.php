@@ -2,16 +2,38 @@
 
 namespace App\Validations\Usuarios;
 
+/**
+ * Validación para la actualización de usuarios.
+ *
+ * Define las reglas y mensajes de error utilizados al actualizar
+ * los datos de un usuario existente en el sistema.
+ */
 class UsuarioUpdate
 {
+    /**
+     * Reglas de validación para los campos del formulario de actualización.
+     *
+     * - id: opcional, permite vacío.
+     * - correo: requerido, debe ser institucional, único considerando el ID actual.
+     * - username: requerido, único considerando el ID actual, longitud entre 4 y 70.
+     * - rol: obligatorio, debe ser uno de los roles válidos (ADMIN, PSICOLOGO, DOCENTE).
+     * - estado: opcional, solo puede ser 0 o 1.
+     *
+     * @var array
+     */
     public array $rules = [
         'id'       => 'permit_empty',
         'correo'   => 'trim|required|valid_email|regex_match[/^[\w\.-]+@iestpchincha\.edu\.pe$/]|is_unique_soft[usuarios.correo_institucional,id,{id}]',
         'username' => 'trim|required|min_length[4]|max_length[70]|is_unique_soft[usuarios.username,id,{id}]',
         'rol'      => 'required|in_list[ADMIN,PSICOLOGO,DOCENTE]',
-        'estado' => 'in_list[0,1]',
+        'estado'   => 'in_list[0,1]',
     ];
 
+    /**
+     * Mensajes personalizados para los errores de validación.
+     *
+     * @var array
+     */
     public array $errors = [
         'correo' => [
             'required' => 'Debe ingresar el correo institucional',

@@ -6,8 +6,16 @@ use App\Models\Configuracion;
 use App\Models\Persona;
 use App\Models\Usuario;
 
+/**
+ * Controlador para la gestión del perfil del usuario autenticado.
+ */
 class ProfileController extends BaseController
 {
+    /**
+     * Muestra la vista del perfil del usuario con sus datos personales y configuración.
+     *
+     * @return string Vista del perfil del usuario.
+     */
     public function index(): string
     {
         $session = session();
@@ -23,6 +31,12 @@ class ProfileController extends BaseController
         return view('modules/profile/index', $data);
     }
 
+    /**
+     * Actualiza los datos del usuario autenticado, su información personal y configuración.
+     * También permite el cambio de contraseña y actualiza la sesión.
+     *
+     * @return \CodeIgniter\HTTP\RedirectResponse Redirige con mensaje de éxito o error.
+     */
     public function updateUserLogged()
     {
         helper(['validation', 'input']);
@@ -72,6 +86,7 @@ class ProfileController extends BaseController
             ]);
             $ConfiguracionModel->actualizarPorUsuarioId($usuarioId, $configuracionData);
 
+            // Actualiza los datos en la sesión
             $this->actualizarDatosSesion([
                 'nombres' => $personaData['nombres'],
                 'apellidos' => $personaData['apellidos'],
@@ -86,6 +101,13 @@ class ProfileController extends BaseController
         }
     }
 
+    /**
+     * Verifica y actualiza la contraseña del usuario autenticado.
+     *
+     * @param string $username Nombre de usuario del usuario autenticado.
+     * @throws \Exception Si la validación o actualización falla.
+     * @return void
+     */
     private function verificarYActualizarPassword(string $username): void
     {
         $currentPassword = $this->request->getPost('currentPassword');
@@ -103,25 +125,27 @@ class ProfileController extends BaseController
         if (!$usuario)
             throw new \Exception("Usuario no encontrado para cambio de contraseña");
 
-        // Verificar que la contraseña actual coincida
         if (!password_verify($currentPassword, $usuario['userpass'])) {
             throw new \Exception("La contraseña actual no es correcta");
         }
 
-        // Verificar que la nueva contraseña sea diferente
         if ($currentPassword === $newPassword) {
             throw new \Exception("La nueva contraseña no puede ser igual a la actual");
         }
 
-        // Verificar que la confirmación coincida
         if ($newPassword !== $confirmPassword) {
             throw new \Exception("La confirmación de la contraseña no coincide");
         }
 
-        // Actualizar la contraseña 
         $usuarioModel->actualizar($usuario['id'], ['userpass' => $newPassword]);
     }
 
+    /**
+     * Actualiza los datos almacenados en la sesión del usuario autenticado.
+     *
+     * @param array $usuarioActualizado Datos actualizados del usuario (nombres, apellidos, username).
+     * @return void
+     */
     private function actualizarDatosSesion(array $usuarioActualizado): void
     {
         $session = session();
