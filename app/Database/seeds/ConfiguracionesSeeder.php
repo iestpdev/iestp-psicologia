@@ -21,6 +21,16 @@ class ConfiguracionesSeeder extends Seeder
             ];
         }
 
+        // Dante Admin
+        $data[] = [
+            'usuario_id'  => 16,
+            'auth_email'  => true,
+            'notif_email' => false,
+            'created_at'  => date('Y-m-d H:i:s'),
+            'updated_at'  => null,
+            'deleted_at'  => null,
+        ];
+
         $this->db->table('configuraciones')->insertBatch($data);
     }
 }
