@@ -231,7 +231,7 @@ $primerApellido = explode(' ', trim($userLogged['apellidos']))[0] ?? '';
     }
 
     .btn-edit {
-        background: #ffc107;
+        background: #0272e9ff;
         color: white;
         width: 32px;
         height: 32px;
@@ -244,7 +244,7 @@ $primerApellido = explode(' ', trim($userLogged['apellidos']))[0] ?? '';
     }
 
     .btn-edit:hover {
-        background: #ffb300;
+        background: #027afbff;
         transform: scale(1.05);
     }
 
@@ -292,20 +292,22 @@ $primerApellido = explode(' ', trim($userLogged['apellidos']))[0] ?? '';
     }
 
     .btn-details {
-        background: #28a745;
+        background: #0272e9ff;
         color: white;
         width: 32px;
         height: 32px;
+        font-size: 1.3rem;
         display: inline-flex;
         align-items: center;
         justify-content: center;
+        text-align: center;
         border-radius: 6px;
         transition: 0.3s;
         text-decoration: none;
     }
 
     .btn-details:hover {
-        background: #218838;
+        background: #027afbff;
         transform: scale(1.05);
     }
 
