@@ -6,7 +6,6 @@ use App\Models\Alumno;
 use App\Models\Cita;
 use App\Models\Derivacion;
 use App\Models\Mantenimiento\ProgramaEstudio;
-use App\Models\Notificacion;
 use App\Models\Usuario;
 
 class DerivacionController extends BaseController

@@ -8,8 +8,6 @@ use App\Models\Derivacion;
 use App\Models\DetalleCita;
 use App\Models\Familiar;
 use App\Models\Mantenimiento\ProgramaEstudio;
-use App\Models\Notificacion;
-use App\Models\NotificacionUsuario;
 use App\Models\Usuario;
 use App\Services\SmsService;
 
@@ -233,7 +231,9 @@ class CitaController extends BaseController
 
             $db->transCommit();
 
-            // envio de sms al alumno
+            // =========================================================================
+            // ENVÍO DE SMS
+            // =========================================================================
             if ($citaId) {
                 $alumnoId = $derivacionEncontrada ? $derivacionEncontrada['alumno_id'] : $this->request->getPost('alumno');
                 $alumnoModel = new Alumno();
@@ -362,7 +362,6 @@ class CitaController extends BaseController
             if ($desdePerfil && $citaActual['alumno_id']) {
                 return redirect()->to('/alumnos/info/' . $citaActual['alumno_id'])->with('success', 'Consulta actualizada con éxito');
             }
-
             return redirect()->to('/citas')->with('success', 'Consulta actualizada con éxito');
         } catch (\Throwable $e) {
             $db->transRollback();
