@@ -3,25 +3,30 @@
 namespace App\Controllers;
 
 use App\Models\Notificacion;
+use App\Models\NotificacionUsuario;
 
 class NotificacionController extends BaseController
 {
-    public function listarPorReceptorId($receptorId = null)
+    public function listar($receptorId = null)
     {
         $notificacionModel = new Notificacion();
-        return $this->response->setJSON($notificacionModel->listarPorReceptorId((int) $receptorId));
+
+        if($receptorId){
+            $notifacionUsuarioModel = new NotificacionUsuario();
+            $notificacionesUsuarioEspecifico = $notifacionUsuarioModel->listarPorUsuarioId($receptorId);
+
+            return $this->response->setJSON($notificacionesUsuarioEspecifico);
+        }
+
+        return $this->response->setJSON($notificacionModel->listar());
     }
 
     public function marcarComoLeidoPorReceptorId($receptorId = null)
     {
         $notificacionModel = new Notificacion();
-        $resultado = $notificacionModel->marcarComoLeidoPorReceptorId($receptorId ? (int) $receptorId : null);
-
-        return $this->response->setJSON([
-            'success' => $resultado,
-            'message' => $resultado
-                ? 'Notificaciones marcadas como leídas correctamente.'
-                : 'No se encontraron notificaciones para actualizar.'
-        ]);
+        if($receptorId){
+             $notifacionUsuarioModel = new NotificacionUsuario();
+             
+        }
     }
 }

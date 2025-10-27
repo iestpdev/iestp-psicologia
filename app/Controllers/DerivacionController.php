@@ -108,10 +108,8 @@ class DerivacionController extends BaseController
                 "tipoNotificacion" => "CREACIÓN",
                 "entidad" => "DERIVACIÓN",
                 "emisor" => $this->request->getPost('docente'),
-                "receptor" => null,
                 "descripcion" => "El docente {$derivacion['docente_nombres_completos']} ha derivado al alumno {$derivacion['alumno_nombres_completos']}",
-                "leido" => false
-            ]);
+            ]);   
 
             return redirect()->to('/derivaciones')->with('success', 'Derivación registrada con éxito');
         } catch (\Throwable $e) {

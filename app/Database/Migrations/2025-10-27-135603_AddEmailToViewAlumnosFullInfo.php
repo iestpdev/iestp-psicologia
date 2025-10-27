@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class CreateViewAlumnosFullInfo extends Migration
+class UpdateViewAlumnosFullInfoAddEmail extends Migration
 {
     public function up()
     {
@@ -13,6 +13,7 @@ class CreateViewAlumnosFullInfo extends Migration
             SELECT 
                 a.id,
                 a.dni,
+                a.email,
                 CONCAT(a.nombres, ' ', a.apellidos) AS alumno_nombres_completos,
                 a.ciclo,
                 a.turno,
