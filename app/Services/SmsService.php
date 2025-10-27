@@ -38,7 +38,7 @@ class SmsService
         }
 
         // URL completa del endpoint
-        $url = $this->config->apiUrl . $this->config->deviceId . '/send-sms';
+        $url = $this->config->apiUrl;
 
         // Cuerpo de la solicitud
         $body = [

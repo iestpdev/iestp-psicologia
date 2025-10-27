@@ -9,6 +9,7 @@ use App\Models\DetalleCita;
 use App\Models\Familiar;
 use App\Models\Mantenimiento\ProgramaEstudio;
 use App\Models\Usuario;
+use App\Services\SmsService;
 
 class CitaController extends BaseController
 {
@@ -229,6 +230,31 @@ class CitaController extends BaseController
             }
 
             $db->transCommit();
+
+            // envio de sms al alumno
+            if ($citaId) {
+                $alumnoId = $derivacionEncontrada ? $derivacionEncontrada['alumno_id'] : $this->request->getPost('alumno');
+                $alumnoModel = new Alumno();
+                $alumnoEncontrado = $alumnoModel->obtenerPorId($alumnoId);
+                if ($alumnoEncontrado && !empty($alumnoEncontrado['telefono']) && $asistencia === 'PENDIENTE') {
+                    $smsService = new SmsService();
+
+                    // Formatear los datos para el mensaje
+                    $fecha = date('d/m/Y', strtotime($citaData['atencion_fech']));
+                    $horaInicio = $citaData['hora_inicio'];
+                    $horaFin = $citaData['hora_fin'];
+                    $recipients = '+51' . $alumnoEncontrado['telefono'];
+
+                    // Construir el mensaje
+                    $mensaje = "IESTP Psicología: Estimado alumno, has sido citado a una sesión. "
+                        . "Fecha: {$fecha}, Hora: {$horaInicio} - {$horaFin}. "
+                        . "Por favor, asiste puntualmente.";
+
+                    // Enviar el SMS
+                    $smsService->sendSms($recipients, $mensaje);
+                }
+            }
+
             $alunmoEnviado = $this->request->getPost('isAlumnoEnviado');
             if ($alunmoEnviado) {
                 return redirect()->to(uri: '/alumnos/info/' . $alunmoEnviado)->with('success', 'Consulta registrada con éxito');
@@ -270,6 +296,22 @@ class CitaController extends BaseController
                 'motivo' => $this->request->getPost('motivo'),
                 'asistencia' => $asistencia,
             ]);
+
+            // =========================================================================
+            // Lógica para determinar si se debe enviar un SMS
+            // Se enviará si la asistencia sigue PENDIENTE Y la fecha/hora ha cambiado.
+            // =========================================================================
+            $sendSmsUpdate = false;
+            if ($data['asistencia'] === 'PENDIENTE') {
+                // Verificar si hubo cambio en la fecha u hora respecto a los datos actuales
+                $fechaCambio = $data['atencion_fech'] !== $citaActual['atencion_fech'];
+                $horaInicioCambio = $data['hora_inicio'] !== $citaActual['hora_inicio'];
+                $horaFinCambio = $data['hora_fin'] !== $citaActual['hora_fin'];
+
+                if ($fechaCambio || $horaInicioCambio || $horaFinCambio) {
+                    $sendSmsUpdate = true;
+                }
+            }
             $citaModel->actualizar($id, $data);
 
             if ($asistencia === 'ASISTIDO') {
@@ -287,6 +329,33 @@ class CitaController extends BaseController
             }
 
             $db->transCommit();
+
+            // =========================================================================
+            // ENVÍO DE SMS
+            // =========================================================================
+            $alumnoModel = new Alumno();
+            if ($sendSmsUpdate) {
+                $alumnoEncontrado = $alumnoModel->obtenerPorId($citaActual['alumno_id']);
+
+                if ($alumnoEncontrado && !empty($alumnoEncontrado['telefono'])) {
+                    $smsService = new SmsService();
+
+                    // Usamos los datos $data ACTUALIZADOS para el mensaje
+                    $fecha = date('d/m/Y', strtotime($data['atencion_fech']));
+                    $horaInicio = $data['hora_inicio'];
+                    $horaFin = $data['hora_fin'];
+                    $recipients = '+51' . $alumnoEncontrado['telefono'];
+
+                    // El mensaje indica que la cita fue modificada
+                    $mensaje = "IESTP Psicología: ¡IMPORTANTE! Su cita ha sido MODIFICADA. "
+                        . "Nueva Fecha: {$fecha}, Hora: {$horaInicio} - {$horaFin}. "
+                        . "Por favor, verifique los detalles.";
+
+                    // Envio del SMS
+                    $smsService->sendSms($recipients, $mensaje);
+                }
+            }
+
             $desdePerfil = $this->request->getPost('isAlumnoEnviado');
             if ($desdePerfil && $citaActual['alumno_id']) {
                 return redirect()->to('/alumnos/info/' . $citaActual['alumno_id'])->with('success', 'Consulta actualizada con éxito');

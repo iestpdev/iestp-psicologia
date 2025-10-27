@@ -35,7 +35,9 @@
                         'backUrl' => base_url('citas')
                     ]) ?>
 
-                    <form action="<?= base_url('api/citas/add') ?>" method="POST">
+                    <form action="<?= base_url('api/citas/add') ?>" method="POST" data-confirm
+                        data-title="Registrar Consulta" data-text="¿Desea registrar esta nueva consulta?"
+                        data-icon="question">
                         <?= csrf_field() ?>
                         <input type="hidden" name="isAlumnoEnviado" value="<?= esc($alumnoEnviado) ?>">
                         <div class="row">
@@ -392,11 +394,6 @@
         // SELECT DE FAMILIARES POR ALUMNOID
         const familiarSelect = document.getElementById("familiarSelect");
 
-        // Evitar limpiar el select si ya tiene familiares renderizados desde PHP
-     
-
-        console.log(familiarSelect.options);
-
         // textarea - motivo
         const motivoTextArea = document.querySelector('textarea[name="motivo"]');
 
@@ -549,5 +546,6 @@
         });
     });
 </script>
+<?= $this->include('shared/alerts/sweetAlert2') ?>
 
 <?= $this->endSection() ?>

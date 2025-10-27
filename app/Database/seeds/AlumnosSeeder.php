@@ -40,7 +40,7 @@ class AlumnosSeeder extends Seeder
                 ['Daniela', 'López', '74920385', '74920385@iestpchincha.edu.pe', '967890452', 'Calle Amazonas 123, Lima', '2000-03-27', 'Av. Universitaria 321, Lima', 'F', '4', 'M', 3, 7, 4],
                 ['Esteban', 'Suárez', '74829122', '74829122@iestpchincha.edu.pe', '978901456', 'Av. El Inca 456, Cusco', '1999-08-13', 'Jr. Pachacútec 432, Cusco', 'M', '5', 'T', 4, 8, 5],
                 ['Valeria', 'Aguilar', '73928417', '73928417@iestpchincha.edu.pe', '912345987', 'Calle Misti 321, Arequipa', '1998-02-22', 'Av. Salaverry 555, Arequipa', 'F', '6', 'M', 5, 9, 6],
-                ['Prueba', 'test', '73920485', 'danteluque007@gmail.com', '934561223', 'Jr. Ica 432, Piura', '1997-10-10', 'Av. Sucre 123, Piura', 'M', '1', 'T', 6, 10, 1],
+                ['Prueba', 'test', '73920485', 'danteluque007@gmail.com', '922836571', 'Jr. Ica 432, Piura', '1997-10-10', 'Av. Sucre 123, Piura', 'M', '1', 'T', 6, 10, 1],
         ];
 
         $rows = [];
