@@ -7,6 +7,7 @@ class AlumnoUpdate
     public array $rules = [
         'id' => 'permit_empty',
         'dni' => 'trim|required|exact_length[8]|numeric|is_unique_soft[alumnos.dni,id,{id}]',
+        'correo' => 'trim|required|valid_email|regex_match[/^[\w\.-]+@iestpchincha\.edu\.pe$/]|is_unique_soft[alumnos.email,id,{id}]',
         'nombres' => 'trim|required|min_length[2]|max_length[100]',
         'apellidos' => 'trim|required|min_length[2]|max_length[100]',
         'telefono' => 'trim|permit_empty|exact_length[9]|numeric',
@@ -17,8 +18,8 @@ class AlumnoUpdate
         'direccion_nac' => 'trim|permit_empty|min_length[5]|max_length[255]',
         'domicilio' => 'trim|permit_empty|min_length[5]|max_length[255]',
         'fecha_nac' => 'permit_empty|valid_date',
-        'religion' => 'required|is_natural_no_zero',
-        'estado_civil' => 'required|is_natural_no_zero',
+        'religion' => 'permit_empty',
+        'estado_civil' => 'permit_empty',
     ];
 
     public array $errors = [
@@ -68,14 +69,6 @@ class AlumnoUpdate
         ],
         'fecha_nac' => [
             'valid_date' => 'La fecha de nacimiento no es válida',
-        ],
-        'religion' => [
-            'required' => 'La religión es obligatoria',
-            'is_natural_no_zero' => 'Seleccione una religión válida',
-        ],
-        'estado_civil' => [
-            'required' => 'El estado civil es obligatorio',
-            'is_natural_no_zero' => 'Seleccione un estado civil válido',
         ],
     ];
 }

@@ -25,6 +25,16 @@
 
         <div class="info-item">
             <div class="info-icon">
+                <i class="fa-solid fa-envelope"></i>
+            </div>
+            <div class="info-content">
+                <span class="info-label">Email</span>
+                <span class="info-value"><?= esc($alumno['email'] ?? 'No registrado') ?></span>
+            </div>
+        </div>
+
+        <div class="info-item">
+            <div class="info-icon">
                 <i class="fa fa-map-marker-alt"></i>
             </div>
             <div class="info-content">

@@ -12,6 +12,7 @@ class AlumnoFullInfo extends BaseModel
     protected array $visibleFields = [
         'id',
         'dni',
+        'email',
         'alumno_nombres_completos',
         'ciclo',
         'turno',

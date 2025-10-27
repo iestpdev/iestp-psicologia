@@ -10,6 +10,7 @@ class Alumno extends BaseModel
         'nombres',
         'apellidos',
         'dni',
+        'email',
         'telefono',
         'direccion_nac',
         'fecha_nac',
@@ -44,6 +45,7 @@ class Alumno extends BaseModel
         $builder->select("
         a.id,
         a.dni,
+        a.email,
         CONCAT(a.nombres, ' ', a.apellidos) AS alumno_nombres_completos,
         a.nombres,
         a.apellidos,
@@ -92,6 +94,7 @@ class Alumno extends BaseModel
             id, 
             CONCAT(nombres, " ", apellidos) AS alumno_nombres_completos, 
             dni, 
+            email,
             programa_estudio_id, 
             ciclo, 
             turno'

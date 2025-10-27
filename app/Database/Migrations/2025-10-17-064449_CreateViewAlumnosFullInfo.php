@@ -13,6 +13,7 @@ class CreateViewAlumnosFullInfo extends Migration
             SELECT 
                 a.id,
                 a.dni,
+                a.email,
                 CONCAT(a.nombres, ' ', a.apellidos) AS alumno_nombres_completos,
                 a.ciclo,
                 a.turno,

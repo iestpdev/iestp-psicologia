@@ -15,16 +15,13 @@
             'backUrl' => base_url('alumnos')
           ]) ?>
 
-          <form action="<?= base_url('api/alumnos/update/' . $alumno['id']) ?>" method="POST"
-            data-confirm 
-            data-title="Editar Alumno" 
-            data-text="¿Desea actualizar este alumno?"
-            data-icon="question">
+          <form action="<?= base_url('api/alumnos/update/' . $alumno['id']) ?>" method="POST" data-confirm
+            data-title="Editar Alumno" data-text="¿Desea actualizar este alumno?" data-icon="question">
             <?= csrf_field() ?>
             <input type="hidden" name="id" value="<?= esc($alumno['id']) ?>">
 
             <div class="row">
-              <!-- DNI, Nombres y Apellidos-->
+              <!-- DNI, email-->
               <div class="col-md-4">
                 <div class="form-group">
                   <label class="form-label">DNI <span class="required-mark">*</span></label>
@@ -33,7 +30,19 @@
                 </div>
               </div>
 
-              <div class="col-md-4">
+              <div class="col-md-8">
+                <div class="form-group">
+                  <label class="form-label">Correo institucional <span class="required-mark">*</span></label>
+                  <input type="email" name="correo" class="form-control-custom" value="<?= $alumno['email'] ?>"
+                    placeholder="ejemplo@iestpchincha.edu.pe" required>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <!-- Nombres y Apellidos-->
+              <div class="col-md-6">
                 <div class="form-group">
                   <label class="form-label">Nombres <span class="required-mark">*</span></label>
                   <input type="text" name="nombres" class="form-control-custom" value="<?= esc($alumno['nombres']) ?>"
@@ -41,7 +50,7 @@
                 </div>
               </div>
 
-              <div class="col-md-4">
+              <div class="col-md-6">
                 <div class="form-group">
                   <label class="form-label">Apellidos <span class="required-mark">*</span></label>
                   <input type="text" name="apellidos" class="form-control-custom"
@@ -155,8 +164,8 @@
               <!-- Religion -->
               <div class="col-md-6">
                 <div class="form-group">
-                  <label class="form-label">Religión <span class="required-mark">*</span></label>
-                  <select name="religion" class="form-control-custom" required>
+                  <label class="form-label">Religión</label>
+                  <select name="religion" class="form-control-custom">
                     <option value="">-- Seleccione una religión--</option>
                     <?php foreach ($religiones as $religion): ?>
                       <option value="<?= $religion['id'] ?>" <?= $religion['id'] == $alumno['religion_id'] ? 'selected' : '' ?>>
@@ -170,8 +179,8 @@
               <!-- Estado civil -->
               <div class="col-md-6">
                 <div class="form-group">
-                  <label class="form-label">Estado civil <span class="required-mark">*</span></label>
-                  <select name="estado_civil" class="form-control-custom" required>
+                  <label class="form-label">Estado civil</label>
+                  <select name="estado_civil" class="form-control-custom">
                     <option value="">-- Seleccione un estado civil--</option>
                     <?php foreach ($estados_civiles as $estado_civil): ?>
                       <option value="<?= $estado_civil['id'] ?>" <?= $estado_civil['id'] == $alumno['estado_civil_id'] ? 'selected' : '' ?>>

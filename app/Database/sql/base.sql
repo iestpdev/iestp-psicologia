@@ -49,6 +49,7 @@ CREATE TABLE alumnos (
     nombres             VARCHAR(70) NOT NULL,
     apellidos           VARCHAR(70) NOT NULL,
     dni                 CHAR(8) NOT NULL,
+	email               VARCHAR(120) NOT NULL,
     telefono            VARCHAR(9) NULL,
     direccion_nac       TEXT NULL,
     fecha_nac           DATE NULL,
