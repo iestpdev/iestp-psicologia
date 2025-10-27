@@ -160,7 +160,7 @@ class AuthController extends BaseController
 
         if ($currentTime->isAfter($expirationTime)) {
             $usuarioModel->update($userId, ['codigo_2fa' => null, 'codigo_2fa_expira' => null]);
-            return redirect()->back()->withInput()->with('error', 'El código de verificación ha expirado. Intenta iniciar sesión de nuevo.');
+            return redirect()->to('/auth/login')->with('error', 'El código de verificación ha expirado. Intenta iniciar sesión de nuevo.');
         }
 
         // Limpiar código y completar login
