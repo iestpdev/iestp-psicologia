@@ -6,6 +6,7 @@ use App\Models\Alumno;
 use App\Models\Cita;
 use App\Models\Derivacion;
 use App\Models\Mantenimiento\ProgramaEstudio;
+use App\Models\Notificacion;
 use App\Models\Usuario;
 
 class DerivacionController extends BaseController
@@ -54,7 +55,7 @@ class DerivacionController extends BaseController
         $derivacionModel = new Derivacion();
         $derivacionEncontrada = $derivacionModel->obtenerPorId((int) $derivacionId);
 
-        if($derivacionEncontrada['estado']){
+        if ($derivacionEncontrada['estado']) {
             $citaModel = new Cita();
             $citaEncontrada = $citaModel->obtenerPorDerivacionId((int) $derivacionId);
             return $this->response->setJSON([
@@ -99,6 +100,19 @@ class DerivacionController extends BaseController
 
             if (!$derivacionId)
                 throw new \Exception("Error al registrar la derivación");
+
+            $derivacion = $derivacionModel->obtenerPorId($derivacionId);
+
+            $notificacionModel = new Notificacion();
+            $notificacionModel->crear([
+                "tipoNotificacion" => "CREACIÓN",
+                "entidad" => "DERIVACIÓN",
+                "emisor" => $this->request->getPost('docente'),
+                "receptor" => null,
+                "descripcion" => "El docente {$derivacion['docente_nombres_completos']} ha derivado al alumno {$derivacion['alumno_nombres_completos']}",
+                "leido" => false
+            ]);
+
             return redirect()->to('/derivaciones')->with('success', 'Derivación registrada con éxito');
         } catch (\Throwable $e) {
             return redirect()->back()->withInput()->with('error', 'Hubo un error: ' . $e->getMessage());

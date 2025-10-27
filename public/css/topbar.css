@@ -71,3 +71,31 @@
     color: #0056b3;
     transition: .4s;
 }
+
+/* Icono notifiacion*/
+.notification-icon-container {
+    font-size: 2rem;
+    color: var(--blue);
+    cursor: pointer;
+    margin-right: 5rem;
+}
+
+.notification-icon-container:hover {
+    color: #0375ef;
+    font-size: 2.1rem;
+    transition: .2s;
+}
+
+.conteoNotif {
+  position: absolute;
+  top: 3px;
+  margin-left: -10px;
+  padding: 0 5px;
+  font-size: 16px;
+  line-height: 22px;
+  height: 22px;
+  background: orange;
+  color: #FFF;
+  border-radius: 11px;
+  white-space: nowrap;
+}

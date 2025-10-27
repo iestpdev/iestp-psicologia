@@ -8,6 +8,7 @@ use App\Models\Derivacion;
 use App\Models\DetalleCita;
 use App\Models\Familiar;
 use App\Models\Mantenimiento\ProgramaEstudio;
+use App\Models\Notificacion;
 use App\Models\Usuario;
 use App\Services\SmsService;
 
@@ -212,6 +213,19 @@ class CitaController extends BaseController
 
             if ($derivacionEncontrada && isset($derivacionEncontrada['id'])) {
                 $derivacionModel->marcarComoRecibido($derivacionEncontrada['id']);
+
+                $usuarioModel = new Usuario();
+                $usuarioPsicologo = $usuarioModel->obtenerPorId($this->request->getPost('usuario_id'));
+
+                $notificacionModel = new Notificacion();
+                $notificacionModel->crear([
+                    "tipoNotificacion" => "CREACIÓN",
+                    "entidad" => "CITA",
+                    "emisor" => $this->request->getPost('usuario_id'),
+                    "receptor" => $derivacionEncontrada['docente_usuario_id'],
+                    "descripcion" => "El psicologo/a {$usuarioPsicologo['nombres']} {$usuarioPsicologo['apellidos']} atendió la derivación del docente {$derivacionEncontrada['docente_nombres_completos']}",
+                    "leido" => false
+                ]);
             }
 
             if ($asistencia == 'ASISTIDO') {

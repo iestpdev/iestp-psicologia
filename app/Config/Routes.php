@@ -10,6 +10,7 @@ use CodeIgniter\Router\RouteCollection;
 require APPPATH . 'Routes/AuthRoutes.php';
 require APPPATH . 'Routes/ProfileRoutes.php';
 require APPPATH . 'Routes/HomeRoutes.php';
+require APPPATH . 'Routes/NotificacionRoutes.php';
 require APPPATH . 'Routes/UsuarioRoutes.php';
 require APPPATH . 'Routes/AlumnoRoutes.php';
 require APPPATH . 'Routes/DerivacionRoutes.php';

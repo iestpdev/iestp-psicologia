@@ -114,9 +114,9 @@ CREATE TABLE usuarios(
    persona_id   		   BIGINT NOT NULL,
    rol             		ENUM('ADMIN', 'PSICOLOGO','DOCENTE'),
    estado					BOOLEAN DEFAULT TRUE,
-	created_at				DATETIME NULL,
 	codigo_2fa 				VARCHAR(6) NULL,
    codigo_2fa_expira 	DATETIME NULL,
+	created_at				DATETIME NULL,
 	updated_at				DATETIME NULL,
 	deleted_at				DATETIME NULL,
 	FOREIGN KEY (persona_id) REFERENCES personas(id)			
@@ -179,3 +179,18 @@ CREATE TABLE detalle_cita(
 	conducta				TEXT NULL,
 	FOREIGN KEY (cita_id) REFERENCES citas(id)
 )ENGINE=INNODB;
+
+CREATE TABLE notificaciones(
+	id                  BIGINT AUTO_INCREMENT PRIMARY KEY,
+	tipoNotificacion    VARCHAR(50) NOT NULL,
+	entidad				  VARCHAR(50) NOT NULL,
+	emisor				  BIGINT NOT NULL,
+	receptor				  BIGINT NULL,
+	descripcion			  TEXT NOT NULL,
+	leido					  BOOLEAN DEFAULT 0,
+	created_at				DATETIME NULL,
+	updated_at				DATETIME NULL,
+	deleted_at				DATETIME NULL,
+	FOREIGN KEY (emisor) REFERENCES usuarios(id),
+	FOREIGN KEY (receptor) REFERENCES usuarios(id)
+);
