@@ -30,7 +30,6 @@
             <col width="10%"><!-- Username -->
             <col width="10%"><!-- Telefono -->
             <col width="10%"><!-- Rol -->
-            <col width="15%"><!-- Fecha de creación -->
             <col width="5%"><!-- Estado -->
             <col width="10%"><!-- Acciones -->
         </colgroup>
@@ -43,7 +42,6 @@
                 <th>Username</th>
                 <th>Telefono</th>
                 <th>Rol</th>
-                <th>Fecha de creación</th>
                 <th>Estado</th>
                 <th>Acciones</th>
             </tr>
@@ -74,7 +72,6 @@
             { data: "username" },
             { data: "telefono", render: function (data) { return renderNullable(data); } },
             { data: "rol" },
-            { data: "created_at", render: function (data) { return dateFormat(data); } },
             {
                 data: "estado", render: function (data) {
                     return data == 1
