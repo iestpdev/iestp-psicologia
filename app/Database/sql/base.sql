@@ -179,26 +179,3 @@ CREATE TABLE detalle_cita(
 	conducta				TEXT NULL,
 	FOREIGN KEY (cita_id) REFERENCES citas(id)
 )ENGINE=INNODB;
-
-CREATE TABLE notificaciones (
-    id                  BIGINT AUTO_INCREMENT PRIMARY KEY,
-    tipoNotificacion    VARCHAR(50) NOT NULL,
-    entidad             VARCHAR(50) NOT NULL,
-    emisor              BIGINT NOT NULL,
-    descripcion         TEXT NOT NULL,
-    created_at          DATETIME NULL,
-    updated_at          DATETIME NULL,
-    deleted_at          DATETIME NULL,
-    FOREIGN KEY (emisor) REFERENCES usuarios(id)
-) ENGINE=INNODB;
-
-CREATE TABLE notificaciones_usuarios (
-    id                BIGINT AUTO_INCREMENT PRIMARY KEY,
-    notificacion_id   BIGINT NOT NULL,
-    usuario_id        BIGINT NOT NULL,
-    leido             BOOLEAN DEFAULT FALSE,
-    fecha_leido       DATETIME NULL,
-    FOREIGN KEY (notificacion_id) REFERENCES notificaciones(id),
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
-    UNIQUE (notificacion_id, usuario_id)
-) ENGINE=INNODB;

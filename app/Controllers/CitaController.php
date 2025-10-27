@@ -214,27 +214,6 @@ class CitaController extends BaseController
 
             if ($derivacionEncontrada && isset($derivacionEncontrada['id'])) {
                 $derivacionModel->marcarComoRecibido($derivacionEncontrada['id']);
-
-                $usuarioModel = new Usuario();
-                $usuarioPsicologo = $usuarioModel->obtenerPorId($this->request->getPost('usuario_id'));
-
-                $notificacionModel = new Notificacion();
-                $notificacionId = $notificacionModel->crear([
-                    "tipoNotificacion" => "CREACIÓN",
-                    "entidad" => "CITA",
-                    "emisor" => $this->request->getPost('usuario_id'),
-                    "descripcion" => "El psicologo/a {$usuarioPsicologo['nombres']} {$usuarioPsicologo['apellidos']} atendió la derivación del docente {$derivacionEncontrada['docente_nombres_completos']}",
-                ]);
-                
-                if($notificacionId){
-                    $notificacionUsuarioModel = new NotificacionUsuario();
-                    $notificacionUsuarioModel->crear([
-                        "notificacion_id" => $notificacionId,
-                        "usuario_id" => $derivacionEncontrada["id"],
-                        "leido" => false,
-                        "fecha_leido" => null,
-                    ]);
-                }
             }
 
             if ($asistencia == 'ASISTIDO') {

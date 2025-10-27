@@ -97,19 +97,8 @@ class DerivacionController extends BaseController
             ]);
             $derivacionModel = new Derivacion();
             $derivacionId = $derivacionModel->crear($derivacionData);
-
             if (!$derivacionId)
                 throw new \Exception("Error al registrar la derivación");
-
-            $derivacion = $derivacionModel->obtenerPorId($derivacionId);
-
-            $notificacionModel = new Notificacion();
-            $notificacionModel->crear([
-                "tipoNotificacion" => "CREACIÓN",
-                "entidad" => "DERIVACIÓN",
-                "emisor" => $this->request->getPost('docente'),
-                "descripcion" => "El docente {$derivacion['docente_nombres_completos']} ha derivado al alumno {$derivacion['alumno_nombres_completos']}",
-            ]);   
 
             return redirect()->to('/derivaciones')->with('success', 'Derivación registrada con éxito');
         } catch (\Throwable $e) {
