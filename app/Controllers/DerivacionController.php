@@ -7,6 +7,7 @@ use App\Models\Cita;
 use App\Models\Derivacion;
 use App\Models\Mantenimiento\ProgramaEstudio;
 use App\Models\Usuario;
+use App\Services\AblyService;
 
 class DerivacionController extends BaseController
 {
@@ -99,6 +100,9 @@ class DerivacionController extends BaseController
             if (!$derivacionId)
                 throw new \Exception("Error al registrar la derivación");
 
+            // actualización en tiempo real
+            (new AblyService())->publishUpdate('derivaciones_created');
+
             return redirect()->to('/derivaciones')->with('success', 'Derivación registrada con éxito');
         } catch (\Throwable $e) {
             return redirect()->back()->withInput()->with('error', 'Hubo un error: ' . $e->getMessage());
@@ -129,6 +133,10 @@ class DerivacionController extends BaseController
             ]);
 
             $derivacionModel->actualizar($id, $data);
+
+            // actualización en tiempo real
+            (new AblyService())->publishUpdate('derivaciones_updated');
+
             return redirect()->to('/derivaciones')->with('success', 'Derivación actualizada correctamente');
         } catch (\Throwable $e) {
             return redirect()->back()->withInput()->with('error', 'Error al actualizar: ' . $e->getMessage());
@@ -145,6 +153,9 @@ class DerivacionController extends BaseController
 
             if (!$derivacionModel->eliminar($id))
                 throw new \Exception("Error al eliminar Derivación");
+
+            // actualización en tiempo real
+            (new AblyService())->publishUpdate('derivaciones_deleted');
 
             return redirect()->to('/derivaciones')->with('success', 'Derivación eliminada correctamente');
         } catch (\Throwable $e) {

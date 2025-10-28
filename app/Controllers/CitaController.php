@@ -10,6 +10,7 @@ use App\Models\Familiar;
 use App\Models\Mantenimiento\ProgramaEstudio;
 use App\Models\Usuario;
 use App\Services\SmsService;
+use App\Services\AblyService;
 
 class CitaController extends BaseController
 {
@@ -231,6 +232,9 @@ class CitaController extends BaseController
 
             $db->transCommit();
 
+            // actualización en tiempo real
+            (new AblyService())->publishUpdate('citas_created');
+
             // =========================================================================
             // ENVÍO DE SMS
             // =========================================================================
@@ -332,6 +336,9 @@ class CitaController extends BaseController
 
             $db->transCommit();
 
+            //actualización en tiempo real
+            (new AblyService())->publishUpdate('citas_updated');
+
             // =========================================================================
             // ENVÍO DE SMS
             // =========================================================================
@@ -383,6 +390,9 @@ class CitaController extends BaseController
                 throw new \Exception("Error al eliminar Consulta");
 
             $db->transCommit();
+
+            // actualización en tiempo real
+            (new AblyService())->publishUpdate('citas_deleted');
             return redirect()->to('/citas')->with('success', 'Consulta eliminada correctamente');
         } catch (\Throwable $e) {
             $db->transRollback();
