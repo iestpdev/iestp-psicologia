@@ -2,54 +2,79 @@
 
 namespace App\Services;
 
+use Ably\AblyRest;
+use Ably\Models\ClientOptions;
+use Ably\Models\TokenRequest;
+
 class AblyService
 {
-    protected \Config\AblyConfig $config;
-    protected \CodeIgniter\HTTP\CURLRequest $client;
+    /**
+     * @var \Ably\AblyRest
+     */
+    protected $ably;
+
+    /**
+     * @var \Config\AblyConfig
+     */
+    protected $config;
 
     public function __construct()
     {
         $this->config = new \Config\AblyConfig();
-        
-        // Inicializa el cliente CURLRequest con la URL base y la autenticación
-        $this->client = \Config\Services::curlrequest([
-            'baseURI' => 'https://rest.ably.io',
-            'auth' => [$this->config->apiKey, '', 'basic'], // [key, secret, type] -> basic auth con la API Key completa
-            'timeout' => 5,
-        ]);
+
+        // 1. Inicializar ClientOptions usando la clave de la config
+        $options = new ClientOptions(['key' => $this->config->apiKey]);
+
+        // 2. Inicializar el SDK de Ably con el objeto Options
+        $this->ably = new AblyRest($options);
     }
 
     /**
-     * Publica un mensaje en el canal configurado de Ably.
-     * @param string $context Un contexto para el mensaje (ej: 'citas', 'derivaciones', 'home')
-     * @param string $message El mensaje a enviar (opcional)
-     * @return bool
+     * Publica una actualización en el canal de dashboard.
+     * @param string $data El contenido de la actualización.
      */
-    public function publishUpdate(string $context = 'general', string $message = 'Update needed'): bool
+    public function publishUpdate(string $eventData): bool
     {
-        // El endpoint es /channels/{channelName}/messages
-        $url = "/channels/{$this->config->channelName}/messages";
-        
-        $payload = [
-            'name' => $this->config->eventName, // 'dashboard_update'
-            'data' => [
-                'context' => $context,
-                'message' => $message,
-                'timestamp' => time()
-            ]
-        ];
-
         try {
-            $response = $this->client->post($url, [
-                'json' => $payload, // Content-Type: application/json se maneja automáticamente
-            ]);
+            $channel = $this->ably->channels->get($this->config->channelName);
 
-            // Ably REST API devuelve 201 Created al publicar con éxito.
-            return $response->getStatusCode() === 201;
+            // Publica el evento con el nombre del evento y los datos.
+            $channel->publish($this->config->eventName, [
+                'event_data' => $eventData,
+                'timestamp' => date('Y-m-d H:i:s'),
+            ]);
+            return true;
         } catch (\Throwable $e) {
-            // Loguea el error, pero no bloquea la ejecución de la app principal
-            log_message('error', 'Ably Publish Error: ' . $e->getMessage());
-            return false; 
+            // Registrar el error para depuración
+            log_message('error', 'Error Ably Publish: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    // En app/Services/AblyService.php
+
+    /**
+     * Genera un TokenRequest seguro para el frontend.
+     * @return \Ably\Models\TokenRequest|null 
+     */
+    public function createTokenRequest(): ?TokenRequest
+    {
+        try {
+            // 1. Usar un array asociativo simple, que el SDK maneja internamente.
+            $tokenParams = [
+                'capability' => [
+                    $this->config->channelName => ['subscribe']
+                ],
+                'clientId' => uniqid('user-'), // ID único para el cliente
+            ];
+
+            // 2. Pasar el array asociativo al método. ¡Esto soluciona el error!
+            return $this->ably->auth->createTokenRequest($tokenParams);
+
+        } catch (\Throwable $e) {
+            // Loguear el error real para futuras depuraciones
+            log_message('error', 'Error Ably Token Request - Falla del SDK: ' . $e->getMessage() . ' en línea ' . $e->getLine());
+            return null;
         }
     }
 }
