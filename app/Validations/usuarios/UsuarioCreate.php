@@ -2,8 +2,25 @@
 
 namespace App\Validations\Usuarios;
 
+/**
+ * Validación para la creación de usuarios.
+ *
+ * Define las reglas y mensajes de error utilizados al registrar
+ * un nuevo usuario dentro del sistema.
+ */
 class UsuarioCreate
 {
+    /**
+     * Reglas de validación para los campos del formulario de creación.
+     *
+     * - correo: debe ser institucional, único y válido.
+     * - username: requerido, único y con longitud entre 4 y 70 caracteres.
+     * - password: mínimo una mayúscula, un número y un carácter especial.
+     * - rol: debe ser uno de los roles válidos (ADMIN, PSICOLOGO, DOCENTE).
+     * - estado: opcional, solo puede ser 0 o 1.
+     *
+     * @var array
+     */
     public array $rules = [
         'correo' => 'trim|required|valid_email|regex_match[/^[\w\.-]+@iestpchincha\.edu\.pe$/]|is_unique_soft[usuarios.correo_institucional]',
         'username' => 'trim|required|is_unique_soft[usuarios.username]|min_length[4]|max_length[70]',
@@ -12,6 +29,11 @@ class UsuarioCreate
         'estado' => 'in_list[0,1]',
     ];
 
+    /**
+     * Mensajes personalizados para los errores de validación.
+     *
+     * @var array
+     */
     public array $errors = [
         'correo' => [
             'required' => 'Debe ingresar el correo institucional',

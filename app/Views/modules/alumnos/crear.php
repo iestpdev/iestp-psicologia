@@ -15,46 +15,52 @@
             'backUrl' => base_url('alumnos')
           ]) ?>
 
-          <form action="<?= base_url('api/alumnos/add') ?>" method="POST"
-            data-confirm
-            data-title="Registrar Alumno"
-            data-text="¿Desea registrar este nuevo alumno?"
-            data-icon="question">
-            
+          <form action="<?= base_url('api/alumnos/add') ?>" method="POST" data-confirm data-title="Registrar Alumno"
+            data-text="¿Desea registrar este nuevo alumno?" data-icon="question">
+
             <?= csrf_field() ?>
 
             <div class="row">
-              <!-- DNI, Nombres y Apellidos-->
+              <!-- DNI, email-->
               <div class="col-md-4">
                 <div class="form-group">
                   <label class="form-label">
                     DNI <span class="required-mark">*</span>
                   </label>
-                  <input type="text" name="dni" class="form-control-custom"
-                    placeholder="Ingrese el DNI"
-                    maxlength="8" pattern="[0-9]{8}" required
-                    value="<?= set_value('dni') ?>">
+                  <input type="text" name="dni" class="form-control-custom" placeholder="Ingrese el DNI" maxlength="8"
+                    pattern="[0-9]{8}" required value="<?= set_value('dni') ?>">
                 </div>
               </div>
 
-              <div class="col-md-4">
+              <div class="col-md-8">
+                <div class="form-group">
+                  <label class="form-label">
+                    Correo institucional <span class="required-mark">*</span>
+                  </label>
+                  <input type="email" name="correo" class="form-control-custom" value="<?= set_value('correo') ?>"
+                    placeholder="ejemplo@iestpchincha.edu.pe" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <!-- Nombres y Apellidos-->
+              <div class="col-md-6">
                 <div class="form-group">
                   <label class="form-label">
                     Nombres <span class="required-mark">*</span>
                   </label>
-                  <input type="text" name="nombres" class="form-control-custom"
-                    placeholder="Ingrese los nombres"
+                  <input type="text" name="nombres" class="form-control-custom" placeholder="Ingrese los nombres"
                     required value="<?= set_value('nombres') ?>">
                 </div>
               </div>
 
-              <div class="col-md-4">
+              <div class="col-md-6">
                 <div class="form-group">
                   <label class="form-label">
                     Apellidos <span class="required-mark">*</span>
                   </label>
-                  <input type="text" name="apellidos" class="form-control-custom"
-                    placeholder="Ingrese los apellidos"
+                  <input type="text" name="apellidos" class="form-control-custom" placeholder="Ingrese los apellidos"
                     required value="<?= set_value('apellidos') ?>">
                 </div>
               </div>
@@ -104,8 +110,10 @@
                     Turno <span class="required-mark">*</span>
                   </label>
                   <div>
-                    <label><input type="radio" name="turno" value="M" <?= set_radio('turno', 'M') ?> required> Mañana</label>
-                    <label><input type="radio" name="turno" value="T" <?= set_radio('turno', 'T') ?> required> Tarde</label>
+                    <label><input type="radio" name="turno" value="M" <?= set_radio('turno', 'M') ?> required>
+                      Mañana</label>
+                    <label><input type="radio" name="turno" value="T" <?= set_radio('turno', 'T') ?> required>
+                      Tarde</label>
                   </div>
                 </div>
               </div>
@@ -116,18 +124,15 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label class="form-label">Teléfono</label>
-                  <input type="tel" name="telefono" class="form-control-custom"
-                    placeholder="Ingrese el teléfono"
-                    maxlength="9" pattern="[0-9]{9}"
-                    value="<?= set_value('telefono') ?>">
+                  <input type="tel" name="telefono" class="form-control-custom" placeholder="Ingrese el teléfono"
+                    maxlength="9" pattern="[0-9]{9}" value="<?= set_value('telefono') ?>">
                 </div>
               </div>
 
               <div class="col-md-4">
                 <div class="form-group">
                   <label class="form-label">Domicilio</label>
-                  <input type="text" name="domicilio" class="form-control-custom"
-                    placeholder="Ingrese el domicilio"
+                  <input type="text" name="domicilio" class="form-control-custom" placeholder="Ingrese el domicilio"
                     value="<?= set_value('domicilio') ?>">
                 </div>
               </div>
@@ -138,8 +143,10 @@
                     Sexo <span class="required-mark">*</span>
                   </label>
                   <div>
-                    <label><input type="radio" name="sexo" value="M" <?= set_radio('sexo', 'M') ?> required> Masculino</label>
-                    <label><input type="radio" name="sexo" value="F" <?= set_radio('sexo', 'F') ?> required> Femenino</label>
+                    <label><input type="radio" name="sexo" value="M" <?= set_radio('sexo', 'M') ?> required>
+                      Masculino</label>
+                    <label><input type="radio" name="sexo" value="F" <?= set_radio('sexo', 'F') ?> required>
+                      Femenino</label>
                   </div>
                 </div>
               </div>
@@ -151,16 +158,14 @@
                 <div class="form-group">
                   <label class="form-label">Dirección de nacimiento</label>
                   <input type="text" name="direccion_nac" class="form-control-custom"
-                    placeholder="Ingrese la dirección de nacimiento"
-                    value="<?= set_value('direccion_nac') ?>">
+                    placeholder="Ingrese la dirección de nacimiento" value="<?= set_value('direccion_nac') ?>">
                 </div>
               </div>
 
               <div class="col-md-6">
                 <div class="form-group">
                   <label class="form-label">Fecha de nacimiento</label>
-                  <input type="date" name="fecha_nac" class="form-control-custom"
-                    value="<?= set_value('fecha_nac') ?>">
+                  <input type="date" name="fecha_nac" class="form-control-custom" value="<?= set_value('fecha_nac') ?>">
                 </div>
               </div>
             </div>
@@ -170,9 +175,9 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label class="form-label">
-                    Religión <span class="required-mark">*</span>
+                    Religión
                   </label>
-                  <select name="religion" class="form-control-custom" required>
+                  <select name="religion" class="form-control-custom">
                     <option value="">-- Seleccione una religión--</option>
                     <?php foreach ($religiones as $religion): ?>
                       <option value="<?= $religion['id'] ?>" <?= set_select('religion', $religion['id']) ?>>
@@ -186,9 +191,9 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label class="form-label">
-                    Estado civil <span class="required-mark">*</span>
+                    Estado civil
                   </label>
-                  <select name="estado_civil" class="form-control-custom" required>
+                  <select name="estado_civil" class="form-control-custom">
                     <option value="">-- Seleccione un estado civil--</option>
                     <?php foreach ($estados_civiles as $estado_civil): ?>
                       <option value="<?= $estado_civil['id'] ?>" <?= set_select('estado_civil', $estado_civil['id']) ?>>

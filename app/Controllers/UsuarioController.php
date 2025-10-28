@@ -2,22 +2,47 @@
 
 namespace App\Controllers;
 
+use App\Models\Configuracion;
 use App\Models\Persona;
 use App\Models\Usuario;
 
+/**
+ * Controlador responsable de la gestión de usuarios dentro del sistema.
+ *
+ * Permite crear, editar, eliminar y actualizar usuarios, así como manejar sus datos
+ * personales asociados (tabla `personas`). También ofrece métodos para actualizar contraseñas
+ * y obtener listados de docentes.
+ *
+ * @package App\Controllers
+ */
 class UsuarioController extends BaseController
 {
-    /* return VIEW -- */
+    /**
+     * Muestra la vista principal del módulo de usuarios.
+     *
+     * @return string Vista principal de usuarios.
+     */
     public function index(): string
     {
         return view('modules/usuarios/index');
     }
 
+    /**
+     * Muestra el formulario para crear un nuevo usuario.
+     *
+     * @return string Vista de creación de usuario.
+     */
     public function crear(): string
     {
         return view('modules/usuarios/crear');
     }
 
+    /**
+     * Muestra la vista para editar un usuario existente.
+     *
+     * @param int $usuarioId ID del usuario a editar.
+     * @return string Vista de edición o vista de error si el usuario no existe.
+     */
     public function editar($usuarioId): string
     {
         $usuarioModel = new Usuario();
@@ -32,8 +57,13 @@ class UsuarioController extends BaseController
         $data['usuario'] = $usuarioEncontrado;
         return view('modules/usuarios/editar', $data);
     }
-    /* -- return VIEW */
 
+    /**
+     * Elimina un usuario y su persona asociada dentro de una transacción.
+     *
+     * @param int $id ID del usuario a eliminar.
+     * @return \CodeIgniter\HTTP\RedirectResponse Redirección con mensaje de éxito o error.
+     */
     public function deleteUsuario($id)
     {
         $usuarioModel = new Usuario();
@@ -59,6 +89,13 @@ class UsuarioController extends BaseController
         }
     }
 
+    /**
+     * Crea un nuevo usuario junto con su persona asociada y configuración predeterminada.
+     *
+     * Aplica validaciones, normaliza los datos y ejecuta la transacción completa.
+     *
+     * @return \CodeIgniter\HTTP\RedirectResponse Redirección con mensajes de éxito o error.
+     */
     public function saveUsuario()
     {
         helper(['validation', 'input']);
@@ -96,6 +133,15 @@ class UsuarioController extends BaseController
             if (!$usuarioId)
                 throw new \Exception("Error al crear Usuario");
 
+            $configuracionModel = new Configuracion();
+            $configuracionId = $configuracionModel->crear([
+                "usuario_id" => $usuarioId,
+                "auth_email" => false,
+                "notif_email" => false,
+            ]);
+            if (!$configuracionId)
+                throw new \Exception("Error al crear configuraciones predeterminadas");
+
             $db->transCommit();
             return redirect()->to('/usuarios')->with('success', 'Usuario registrado con éxito');
         } catch (\Throwable $e) {
@@ -104,6 +150,14 @@ class UsuarioController extends BaseController
         }
     }
 
+    /**
+     * Actualiza los datos de un usuario y su persona asociada.
+     *
+     * Ejecuta las validaciones necesarias y aplica los cambios dentro de una transacción.
+     *
+     * @param int $id ID del usuario a actualizar.
+     * @return \CodeIgniter\HTTP\RedirectResponse Redirección con mensaje de éxito o error.
+     */
     public function updateUsuario($id)
     {
         helper(['validation', 'input']);
@@ -148,6 +202,14 @@ class UsuarioController extends BaseController
         }
     }
 
+    /**
+     * Actualiza la contraseña de un usuario específico.
+     *
+     * Recibe el nuevo password en formato JSON y actualiza su hash en la base de datos.
+     *
+     * @param int $id ID del usuario cuya contraseña se actualizará.
+     * @return \CodeIgniter\HTTP\Response JSON con mensaje de resultado.
+     */
     public function updatePassword($id)
     {
         $usuarioModel = new Usuario();
@@ -172,6 +234,14 @@ class UsuarioController extends BaseController
         }
     }
 
+    /**
+     * Obtiene un listado de usuarios con rol docente.
+     *
+     * Si se proporciona un DNI, se filtra el resultado.
+     *
+     * @param string|null $dni DNI del docente a buscar (opcional).
+     * @return \CodeIgniter\HTTP\Response JSON con la lista de docentes.
+     */
     public function obtenerDocentes($dni = null)
     {
         $usuarioModel = new Usuario();

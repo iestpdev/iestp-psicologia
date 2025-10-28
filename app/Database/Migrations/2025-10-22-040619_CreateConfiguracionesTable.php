@@ -18,10 +18,6 @@ class CreateConfiguracionesTable extends Migration
                 'type' => 'BIGINT',
                 'null' => false,
             ],
-            'auth_SMS' => [
-                'type' => 'BOOLEAN',
-                'default' => false,
-            ],
             'auth_email' => [
                 'type' => 'BOOLEAN',
                 'default' => false,

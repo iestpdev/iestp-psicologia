@@ -29,6 +29,9 @@ class PersonasSeeder extends Seeder
             ['Pedro', 'Lopez Medina', '33445566', '934126589', '2025-09-27 20:00:00'],
             ['Lucia', 'Salazar Rojas', '44556677', '945612398', '2025-09-27 21:00:00'],
             ['Diego', 'Reyes Campos', '55667788', '956781234', '2025-09-27 22:00:00'],
+
+            // Dante admin
+            ['Dante', 'Luque', '87654321', '922836571', '2025-09-27 23:00:00'],
         ];
 
         $rows = [];

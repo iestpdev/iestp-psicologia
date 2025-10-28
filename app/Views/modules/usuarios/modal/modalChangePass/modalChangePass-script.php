@@ -21,7 +21,6 @@
     // Cuando se hace clic en el botón key-outline
     $(document).on("click", "button[id^='key-']", function () {
         selectedUserId = this.id.replace("key-", "");
-        console.log(selectedUserId)
         passwordInput.value = "";
         modalPassword.show();
     });

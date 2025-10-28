@@ -4,118 +4,104 @@ namespace Config;
 
 use CodeIgniter\Config\BaseConfig;
 
+/**
+ * Configuración de correo electrónico para la aplicación.
+ *
+ * Define los parámetros necesarios para enviar correos a través de SMTP u otros protocolos.
+ * Los valores pueden ser sobreescritos mediante variables de entorno en el archivo `.env`.
+ *
+ * @package Config
+ */
 class Email extends BaseConfig
 {
+    /** @var string Correo electrónico del remitente por defecto. */
     public string $fromEmail  = '';
+
+    /** @var string Nombre del remitente por defecto. */
     public string $fromName   = '';
+
+    /** @var string Destinatarios predefinidos (usualmente vacío). */
     public string $recipients = '';
 
-    /**
-     * The "user agent"
-     */
+    /** @var string Nombre del agente de usuario usado en el encabezado. */
     public string $userAgent = 'CodeIgniter';
 
-    /**
-     * The mail sending protocol: mail, sendmail, smtp
-     */
-    public string $protocol = 'mail';
+    /** @var string Protocolo usado para el envío de correos (smtp, mail, sendmail). */
+    public string $protocol = 'smtp';
 
-    /**
-     * The server path to Sendmail.
-     */
+    /** @var string Ruta al ejecutable de sendmail (si aplica). */
     public string $mailPath = '/usr/sbin/sendmail';
 
-    /**
-     * SMTP Server Hostname
-     */
-    public string $SMTPHost = '';
+    /** @var string Host del servidor SMTP. */
+    public string $SMTPHost;
 
-    /**
-     * SMTP Username
-     */
-    public string $SMTPUser = '';
+    /** @var string Usuario SMTP. */
+    public string $SMTPUser;
 
-    /**
-     * SMTP Password
-     */
-    public string $SMTPPass = '';
+    /** @var string Contraseña del usuario SMTP. */
+    public string $SMTPPass;
 
-    /**
-     * SMTP Port
-     */
-    public int $SMTPPort = 25;
+    /** @var int Puerto del servidor SMTP. */
+    public int $SMTPPort;
 
-    /**
-     * SMTP Timeout (in seconds)
-     */
+    /** @var string Tipo de cifrado (tls, ssl o vacío). */
+    public string $SMTPCrypto;
+
+    /** @var int Tiempo máximo de espera en segundos para conexión SMTP. */
     public int $SMTPTimeout = 5;
 
-    /**
-     * Enable persistent SMTP connections
-     */
+    /** @var bool Indica si debe mantener la conexión SMTP activa. */
     public bool $SMTPKeepAlive = false;
 
-    /**
-     * SMTP Encryption.
-     *
-     * @var string '', 'tls' or 'ssl'. 'tls' will issue a STARTTLS command
-     *             to the server. 'ssl' means implicit SSL. Connection on port
-     *             465 should set this to ''.
-     */
-    public string $SMTPCrypto = 'tls';
-
-    /**
-     * Enable word-wrap
-     */
+    /** @var bool Habilita el ajuste automático de línea. */
     public bool $wordWrap = true;
 
-    /**
-     * Character count to wrap at
-     */
+    /** @var int Número máximo de caracteres por línea al ajustar texto. */
     public int $wrapChars = 76;
 
-    /**
-     * Type of mail, either 'text' or 'html'
-     */
-    public string $mailType = 'text';
+    /** @var string Tipo de contenido del correo (text o html). */
+    public string $mailType = 'html';
 
-    /**
-     * Character set (utf-8, iso-8859-1, etc.)
-     */
+    /** @var string Codificación de caracteres usada en los correos. */
     public string $charset = 'UTF-8';
 
-    /**
-     * Whether to validate the email address
-     */
+    /** @var bool Indica si debe validarse la dirección de correo. */
     public bool $validate = false;
 
-    /**
-     * Email Priority. 1 = highest. 5 = lowest. 3 = normal
-     */
+    /** @var int Prioridad del correo (1 = alta, 5 = baja). */
     public int $priority = 3;
 
-    /**
-     * Newline character. (Use “\r\n” to comply with RFC 822)
-     */
+    /** @var string Carácter CRLF usado en los encabezados. */
     public string $CRLF = "\r\n";
 
-    /**
-     * Newline character. (Use “\r\n” to comply with RFC 822)
-     */
+    /** @var string Nueva línea usada en los encabezados. */
     public string $newline = "\r\n";
 
-    /**
-     * Enable BCC Batch Mode.
-     */
+    /** @var bool Habilita el modo de envío por lotes (BCC). */
     public bool $BCCBatchMode = false;
 
-    /**
-     * Number of emails in each BCC batch
-     */
+    /** @var int Cantidad máxima de correos por lote si BCC está activado. */
     public int $BCCBatchSize = 200;
 
-    /**
-     * Enable notify message from server
-     */
+    /** @var bool Habilita notificaciones de entrega (Delivery Status Notification). */
     public bool $DSN = false;
+
+    /**
+     * Constructor de configuración de correo.
+     *
+     * Carga los valores desde variables de entorno o aplica valores por defecto.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->fromEmail  = env('email.fromEmail', 'default@example.com');
+        $this->fromName   = env('email.fromName', 'IESTP Psicología');
+
+        $this->SMTPHost   = env('email.SMTPHost', 'smtp.gmail.com');
+        $this->SMTPUser   = env('email.SMTPUser', '');
+        $this->SMTPPass   = env('email.SMTPPass', '');
+        $this->SMTPPort   = (int) env('email.SMTPPort', 587);
+        $this->SMTPCrypto = env('email.SMTPCrypto', 'tls');
+    }
 }

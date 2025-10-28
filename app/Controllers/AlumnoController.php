@@ -116,6 +116,7 @@ class AlumnoController extends BaseController
         try {
             $alumnoData = normalize_input([
                 'dni' => $this->request->getPost('dni'),
+                'email' => $this->request->getPost('correo'),
                 'nombres' => $this->request->getPost('nombres'),
                 'apellidos' => $this->request->getPost('apellidos'),
                 'programa_estudio_id' => $this->request->getPost('programa_estudio'),
@@ -162,6 +163,7 @@ class AlumnoController extends BaseController
 
             $alumnoData = normalize_input([
                 'dni' => $this->request->getPost('dni'),
+                'email' => $this->request->getPost('correo'),
                 'nombres' => $this->request->getPost('nombres'),
                 'apellidos' => $this->request->getPost('apellidos'),
                 'programa_estudio_id' => $this->request->getPost('programa_estudio'),

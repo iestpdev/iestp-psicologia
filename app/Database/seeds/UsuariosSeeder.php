@@ -31,6 +31,9 @@ class UsuariosSeeder extends Seeder
             ['pedro.lopez@iestpchincha.edu.pe', 'plopez', $PASSWORD_HASH, 13, 'DOCENTE', '2025-09-27 20:00:00'],
             ['lucia.salazar@iestpchincha.edu.pe', 'lsalazar', $PASSWORD_HASH, 14, 'DOCENTE', '2025-09-27 21:00:00'],
             ['diego.reyes@iestpchincha.edu.pe', 'dreyes', $PASSWORD_HASH, 15, 'DOCENTE', '2025-09-27 22:00:00'],
+
+            // Dante admin
+            ['danteluque706@gmail.com', 'danteLuque', $PASSWORD_HASH, 16, 'ADMIN', '2025-09-27 23:00:00'],
         ];
 
         $rows = [];
@@ -42,6 +45,8 @@ class UsuariosSeeder extends Seeder
                 'persona_id'           => $usuario[3],
                 'rol'                  => $usuario[4],
                 'estado'               => true,
+                'codigo_2fa'           => null,
+                'codigo_2fa_expira'    => null,
                 'created_at'           => $usuario[5],
                 'updated_at'           => null,
                 'deleted_at'           => null,

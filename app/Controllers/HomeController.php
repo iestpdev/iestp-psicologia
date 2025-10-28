@@ -13,7 +13,7 @@ class HomeController extends BaseController
         $user = $session->get('user');
 
         $citaModel = new Cita();
-        
+
         if ($user && $user['rol'] === 'PSICOLOGO') {
             $data['citas'] = $citaModel->obtenerPendientes($user['id']);
         } else {
@@ -23,5 +23,29 @@ class HomeController extends BaseController
         $derivacionModel = new Derivacion();
         $data['derivaciones'] = $derivacionModel->obtenerPendientesParaHome();
         return view('modules/home/index', $data);
+    }
+
+    public function getHomeData()
+    {
+        $session = session();
+        $user = $session->get('user');
+
+        $citaModel = new Cita();
+
+        if($user && $user['rol'] === 'PSICOLOGO') {
+            $citas = $citaModel->obtenerPendientes($user['id']);
+        } else {
+            $citas = $citaModel->obtenerPendientes();
+        }
+
+        $derivacionModel = new Derivacion();
+        $derivaciones = $derivacionModel->obtenerPendientesParaHome();
+
+        return $this->response->setJSON([
+            'citas' => $citas,
+            'derivaciones' => $derivaciones,
+            'citas_count' => count($citas),
+            'derivaciones_count' => count($derivaciones)
+        ]);
     }
 }

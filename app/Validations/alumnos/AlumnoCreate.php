@@ -6,6 +6,7 @@ class AlumnoCreate
 {
     public array $rules = [
         'dni'               => 'trim|required|exact_length[8]|numeric|is_unique_soft[alumnos.dni]',
+        'correo'            => 'trim|required|valid_email|regex_match[/^[\w\.-]+@iestpchincha\.edu\.pe$/]|is_unique_soft[alumnos.email]',
         'nombres'           => 'trim|required|min_length[2]|max_length[100]',
         'apellidos'         => 'trim|required|min_length[2]|max_length[100]',
         'telefono'          => 'trim|permit_empty|exact_length[9]|numeric',
@@ -16,8 +17,8 @@ class AlumnoCreate
         'direccion_nac'     => 'trim|permit_empty|min_length[5]|max_length[255]',
         'domicilio'         => 'trim|permit_empty|min_length[5]|max_length[255]',
         'fecha_nac'         => 'permit_empty|valid_date',
-        'religion'          => 'required|is_natural_no_zero',
-        'estado_civil'      => 'required|is_natural_no_zero',
+        'religion'          => 'permit_empty',
+        'estado_civil'      => 'permit_empty',
     ];
 
     public array $errors = [
@@ -26,6 +27,12 @@ class AlumnoCreate
             'exact_length'    => 'El DNI debe tener exactamente 8 dígitos',
             'numeric'         => 'El DNI debe ser numérico',
             'is_unique_soft'  => 'Este DNI ya está registrado',
+        ],
+        'correo' => [
+            'required' => 'Debe ingresar el correo institucional',
+            'valid_email' => 'El correo no es válido',
+            'regex_match' => 'El correo debe ser del dominio @iestpchincha.edu.pe',
+            'is_unique_soft' => 'Este correo ya está registrado',
         ],
         'nombres' => [
             'required'        => 'Los nombres son obligatorios',
@@ -67,14 +74,6 @@ class AlumnoCreate
         ],
         'fecha_nac' => [
             'valid_date'      => 'La fecha de nacimiento no es válida',
-        ],
-        'religion' => [
-            'required'        => 'La religión es obligatoria',
-            'is_natural_no_zero' => 'Seleccione una religión válida',
-        ],
-        'estado_civil' => [
-            'required'        => 'El estado civil es obligatorio',
-            'is_natural_no_zero' => 'Seleccione un estado civil válido',
         ],
     ];
 }
