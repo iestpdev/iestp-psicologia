@@ -124,23 +124,17 @@ $primerApellido = explode(' ', trim($userLogged['apellidos']))[0] ?? '';
 
 <script src="https://cdn.ably.com/lib/ably.min-1.js"></script>
 <script>
-    // 1. Configuración y Conexión de Ably
-    // Eliminamos la clave completa. Ably la obtendrá de forma segura a través de authUrl.
     const ABLY_CHANNEL_NAME = 'iestp-psycho-updates';
     const ABLY_EVENT_NAME = 'dashboard_update';
 
-    // Inicializa el cliente Ably con el Token Request.
-    // Llama a api/ably-token, que devuelve el token seguro.
+    // Inicializa el cliente Ably con el Token Request
     const ably = new Ably.Realtime({ 
         authUrl: '<?= base_url('api/ably-token') ?>',
         authMethod: 'GET',
     });
-    
     const channel = ably.channels.get(ABLY_CHANNEL_NAME);
 
-    // 2. Función para recargar la tabla y los contadores
     async function reloadHomeDashboard() {
-        console.log('Mensaje Ably recibido. Recargando Dashboard...');
         try {
             const response = await fetch('<?= base_url('api/home-data') ?>', {
                 method: 'GET',
@@ -149,41 +143,32 @@ $primerApellido = explode(' ', trim($userLogged['apellidos']))[0] ?? '';
                     'X-Requested-With': 'XMLHttpRequest'
                 }
             });
-
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-
+            if (!response.ok) throw new Error('Conexión fallida - websocket ably');
             const data = await response.json();
-            
-            // 3. Actualizar Contadores (Tarjetas resumen)
+
+            // Actualizar Contadores
             const citasCountDiv = document.querySelector('.card-custom:nth-child(1) .numbers');
             const derivacionesCountDiv = document.querySelector('.card-custom:nth-child(2) .numbers');
             
             if (citasCountDiv) citasCountDiv.textContent = data.citas_count;
             if (derivacionesCountDiv) derivacionesCountDiv.textContent = data.derivaciones_count;
 
-            // 4. Actualizar Tabla de Citas Pendientes
+            // Actualizar Tabla de Citas Pendientes
             const citasTableBody = document.querySelector('.consultasPendientes tbody');
             const citasTableContent = generateCitasTableHtml(data.citas);
             if (citasTableBody) citasTableBody.innerHTML = citasTableContent;
 
-            // 5. Actualizar Lista de Derivaciones Pendientes
+            // Actualizar Lista de Derivaciones Pendientes
             const derivacionesListDiv = document.querySelector('.alumnosDerivados .deriv-items');
             const derivacionesListContent = generateDerivacionesListHtml(data.derivaciones);
             if (derivacionesListDiv) derivacionesListDiv.innerHTML = derivacionesListContent;
-
         } catch (error) {
             console.error('Error al recargar el Dashboard:', error);
         }
     }
 
-    // 6. Funciones auxiliares para generar HTML (MANTENER TU LÓGICA)
     function generateCitasTableHtml(citas) {
-        if (!citas || citas.length === 0) {
-            return '<tr><td colspan="5" class="text-center">No hay consultas pendientes.</td></tr>';
-        }
-
+        if (!citas || citas.length === 0) return '<tr><td colspan="5" class="text-center">No hay consultas pendientes.</td></tr>';
         return citas.map(cita => {
             return `
                 <tr>
@@ -211,18 +196,15 @@ $primerApellido = explode(' ', trim($userLogged['apellidos']))[0] ?? '';
         }
         
         return derivaciones.map(derivacion => {
-            let emoji = '🟢'; // BAJA
+            let emoji = '🟢';
             if (derivacion.urgencia === 'ALTA') {
                 emoji = '🔴';
             } else if (derivacion.urgencia === 'MEDIA') {
                 emoji = '🟠';
             }
-
-            // Lógica para obtener el primer nombre/apellido
             const alumnoApellidos = derivacion.alumno_apellidos.trim().split(' ')[0];
             const alumnoNombres = derivacion.alumno_nombres.trim().split(' ')[0];
             const nombreCompleto = `${alumnoApellidos}, ${alumnoNombres}`;
-
             return `
                 <div class="deriv-item">
                     <span class="emoji">${emoji}</span>
@@ -238,23 +220,20 @@ $primerApellido = explode(' ', trim($userLogged['apellidos']))[0] ?? '';
         }).join('');
     }
 
-
-    // 7. Suscripción al Canal
+    // Suscripción al Canal
     channel.subscribe(ABLY_EVENT_NAME, (message) => {
-        // Ejecuta la función de actualización cada vez que se publica un mensaje
         if (message.name === ABLY_EVENT_NAME) {
             reloadHomeDashboard();
         }
     });
 
-    // Manejo de la conexión de Ably (opcional, pero útil para depurar)
+    // depuración
     ably.connection.on('connected', () => {
         console.log('Conectado a Ably con un Token seguro.');
     });
     ably.connection.on('failed', (error) => {
-        console.error('Ably connection failed (Revisa el endpoint /api/ably-token):', error);
+        console.error('Fallo al conectar con el servicio Ably:', error);
     });
-
 </script>
 
 <style>
