@@ -8,7 +8,7 @@ use CodeIgniter\Validation\StrictRules\FileRules;
 use CodeIgniter\Validation\StrictRules\FormatRules;
 use CodeIgniter\Validation\StrictRules\Rules;
 use App\Rules\CustomRules;
-
+use App\Rules\CitaRules;
 /**
  * Configuración de validación del sistema.
  *
@@ -29,7 +29,9 @@ class Validation extends BaseConfig
         FormatRules::class,
         FileRules::class,
         CreditCardRules::class,
-        CustomRules::class, // Reglas personalizadas
+
+        CustomRules::class,
+        CitaRules::class,
     ];
 
     /**

@@ -88,15 +88,14 @@ class Cita extends BaseModel
             ->where('c.alumno_id', $alumnoId)
             ->where('c.deleted_at', null);
 
-            if (!empty($usuarioId)) {
-                $builder->orderBy("usuario_id = {$usuarioId}", 'DESC', false);
-            }
+        if (!empty($usuarioId)) {
+            $builder->orderBy("usuario_id = {$usuarioId}", 'DESC', false);
+        }
 
-            $builder->orderBy('c.atencion_fech', 'ASC');
+        $builder->orderBy('c.atencion_fech', 'ASC');
 
         return $builder->get()->getResultArray();
     }
-
 
     public function obtenerPorDerivacionId(int $derivacionId): ?array
     {
