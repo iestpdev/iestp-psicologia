@@ -176,3 +176,13 @@ CREATE TABLE detalle_cita(
 	conducta				TEXT NULL,
 	FOREIGN KEY (cita_id) REFERENCES citas(id)
 )ENGINE=INNODB;
+
+CREATE TABLE notificaciones_pendientes (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  tipo ENUM('SMS','EMAIL') NOT NULL,
+  destinatario VARCHAR(255) NOT NULL,
+  asunto VARCHAR(255) NULL,
+  mensaje TEXT NOT NULL,
+  procesado TINYINT(1) DEFAULT 0,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);

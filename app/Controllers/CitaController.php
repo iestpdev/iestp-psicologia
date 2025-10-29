@@ -248,11 +248,12 @@ class CitaController extends BaseController
                     $configDocenteNotif = $configuracionModel->obtenerPorUsuarioId($derivacionEncontrada['docente_usuario_id']);
 
                     if ($configDocenteNotif['notif_email']) {
-                        $this->emailService->sendEmail(
-                            $derivacionEncontrada['usuario_correo'],
-                            $subject,
-                            $messageBody
-                        );
+                        $db->table('notificaciones_pendientes')->insert([
+                            'tipo' => 'EMAIL',
+                            'destinatario' => $derivacionEncontrada['usuario_correo'],
+                            'asunto' => $subject,
+                            'mensaje' => $messageBody,
+                        ]);
                     }
                 }
             }
@@ -285,23 +286,25 @@ class CitaController extends BaseController
                 $alumnoModel = new Alumno();
                 $alumnoEncontrado = $alumnoModel->obtenerPorId($alumnoId);
                 if ($alumnoEncontrado && !empty($alumnoEncontrado['telefono']) && $asistencia === 'PENDIENTE') {
-                    $smsService = new SmsService();
-
                     // Formatear los datos para el mensaje
                     $fecha = date('d/m/Y', strtotime($citaData['atencion_fech']));
                     $horaInicio = $citaData['hora_inicio'];
                     $horaFin = $citaData['hora_fin'];
-                    $recipients = '+51' . $alumnoEncontrado['telefono'];
 
-                    // Construir el mensaje
-                    $mensaje = "IESTP Psicología: Estimado alumno, has sido citado a una sesión. "
-                        . "Fecha: {$fecha}, Hora: {$horaInicio} - {$horaFin}. "
-                        . "Por favor, asiste puntualmente.";
+                    // SMS
+                    if (!empty($alumnoEncontrado['telefono'])) {
+                        $mensaje = "IESTP Psicología: Estimado alumno, has sido citado a una sesión. "
+                            . "Fecha: {$fecha}, Hora: {$horaInicio} - {$horaFin}. "
+                            . "Por favor, asiste puntualmente.";
 
-                    // Enviar el SMS
-                    $smsService->sendSms($recipients, $mensaje);
+                        $db->table('notificaciones_pendientes')->insert([
+                            'tipo' => 'SMS',
+                            'destinatario' => '+51' . $alumnoEncontrado['telefono'],
+                            'mensaje' => $mensaje,
+                        ]);
+                    }
 
-                    // Enviar Correo
+                    // EMAIL
                     if (!empty($alumnoEncontrado['email'])) {
                         $emailDataAlumno = [
                             'alumno_nombre' => ($alumnoEncontrado['nombres'] . ' ' . $alumnoEncontrado['apellidos']),
@@ -313,11 +316,12 @@ class CitaController extends BaseController
                         $subjectAlumno = "Citación al Área de Psicología IESTP - {$fecha}";
                         $messageBodyAlumno = view('emails/cita_notificacion_alumno', ['data' => $emailDataAlumno]);
 
-                        $this->emailService->sendEmail(
-                            $alumnoEncontrado['email'],
-                            $subjectAlumno,
-                            $messageBodyAlumno
-                        );
+                        $db->table('notificaciones_pendientes')->insert([
+                            'tipo' => 'EMAIL',
+                            'destinatario' => $alumnoEncontrado['email'],
+                            'asunto' => $subjectAlumno,
+                            'mensaje' => $messageBodyAlumno,
+                        ]);
                     }
                 }
             }
@@ -410,13 +414,11 @@ class CitaController extends BaseController
                 if ($alumnoEncontrado && !empty($alumnoEncontrado['telefono'])) {
                     $smsService = new SmsService();
 
-                    // Usamos los datos $data ACTUALIZADOS para el mensaje
                     $fecha = date('d/m/Y', strtotime($data['atencion_fech']));
                     $horaInicio = $data['hora_inicio'];
                     $horaFin = $data['hora_fin'];
                     $recipients = '+51' . $alumnoEncontrado['telefono'];
 
-                    // El mensaje indica que la cita fue modificada
                     $mensaje = "IESTP Psicología: ¡IMPORTANTE! Su cita ha sido MODIFICADA. "
                         . "Nueva Fecha: {$fecha}, Hora: {$horaInicio} - {$horaFin}. "
                         . "Por favor, verifique los detalles.";

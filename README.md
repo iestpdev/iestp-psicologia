@@ -36,3 +36,9 @@ si quisieramos revetir solo la migración del paso 2, basta con retroceder un pa
 php spark migrate:rollback --step=1
 ```
 Podemos indicar la cantidad de pasos.
+
+
+### Comando para ejecutar proceso cron
+```
+php spark process:notifications
+```
