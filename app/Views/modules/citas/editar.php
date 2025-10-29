@@ -41,6 +41,7 @@
                     data-text="¿Desea actualizar esta consulta?"
                     data-icon="question">
                         <?= csrf_field() ?>
+                        <input type="hidden" name="id" value="<?= $cita['id'] ?>">
                         <input type="hidden" name="isAlumnoEnviado" value="<?= esc($desdePerfil) ?>">
                         <div class="row">
                             <!-- Tipo de derivación -->

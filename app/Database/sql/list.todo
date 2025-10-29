@@ -1,0 +1,3 @@
+TODO: Actualizar los inserts de prueba dentro de (sql/inserts), actualmente los seeders están actualizados pero estas sentencias sql no lo están.
+
+TODO: la relacion entre parientes y familiares está mal hecha... pero se hizo lo que se pudo, solo queda impedir la duplicidad desde el backend

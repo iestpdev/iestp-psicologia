@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\Alumno;
 use App\Models\Cita;
+use App\Models\Configuracion;
 use App\Models\Derivacion;
 use App\Models\DetalleCita;
 use App\Models\Familiar;
@@ -14,6 +15,12 @@ use App\Services\AblyService;
 
 class CitaController extends BaseController
 {
+    protected $emailService;
+    public function __construct()
+    {
+        $this->emailService = service('emailService');
+    }
+
     public function index(): string
     {
         return view('modules/citas/index');
@@ -154,7 +161,7 @@ class CitaController extends BaseController
         $html = view('reports/citas/reporteCitasAsistidas', $data);
 
         try {
-            $html2pdf = new \Spipu\Html2Pdf\Html2Pdf('P', 'A4', 'es', true, 'UTF-8', [10, 10, 10, 10]);
+            $html2pdf = new \Spipu\Html2Pdf\Html2Pdf('L', 'A4', 'es', true, 'UTF-8', [10, 10, 10, 10]);
             $html2pdf->writeHTML($html);
             $this->response->setHeader('Content-Type', 'application/pdf');
             $html2pdf->output('Reporte-citas-asistidas.pdf');
@@ -211,8 +218,43 @@ class CitaController extends BaseController
             if (!$citaId)
                 throw new \Exception("Error al crear Consulta");
 
+            // =========================================================================
+            // LÓGICA DE DERIVACIÓN Y ENVÍO DE CORREO A DOCENTE
+            // =========================================================================
             if ($derivacionEncontrada && isset($derivacionEncontrada['id'])) {
                 $derivacionModel->marcarComoRecibido($derivacionEncontrada['id']);
+
+                // notificacion por correo
+                $usuarioModel = new Usuario();
+                $psicologo = $usuarioModel->obtenerPorId($citaData['usuario_id']);
+
+                if (!empty($derivacionEncontrada['usuario_correo']) && $psicologo) {
+                    $alumnoModel = new Alumno();
+                    $alumno = $alumnoModel->obtenerPorId($derivacionEncontrada['alumno_id']);
+
+                    $emailData = [
+                        'derivador_nombre' => $derivacionEncontrada['docente_nombres_completos'],
+                        'psicologo_nombre' => $psicologo['nombres'] . ' ' . $psicologo['apellidos'],
+                        'alumno_nombre' => ($alumno['nombres'] . ' ' . $alumno['apellidos']),
+                        'atencion_fech' => date('d/m/Y', strtotime($citaData['atencion_fech'])),
+                        'hora_inicio' => $citaData['hora_inicio'],
+                        'hora_fin' => $citaData['hora_fin'],
+                        'motivo' => $derivacionEncontrada['motivo'],
+                    ];
+                    $subject = "Confirmación: Derivación del alumno {$emailData['alumno_nombre']} recibida y citada";
+                    $messageBody = view('emails/cita_recibida_notif_docente', ['data' => $emailData]);
+
+                    $configuracionModel = new Configuracion();
+                    $configDocenteNotif = $configuracionModel->obtenerPorUsuarioId($derivacionEncontrada['docente_usuario_id']);
+
+                    if ($configDocenteNotif['notif_email']) {
+                        $this->emailService->sendEmail(
+                            $derivacionEncontrada['usuario_correo'],
+                            $subject,
+                            $messageBody
+                        );
+                    }
+                }
             }
 
             if ($asistencia == 'ASISTIDO') {
@@ -236,7 +278,7 @@ class CitaController extends BaseController
             (new AblyService())->publishUpdate('citas_created');
 
             // =========================================================================
-            // ENVÍO DE SMS
+            // ENVÍO DE SMS Y/O EMAIL A ALUMNO
             // =========================================================================
             if ($citaId) {
                 $alumnoId = $derivacionEncontrada ? $derivacionEncontrada['alumno_id'] : $this->request->getPost('alumno');
@@ -258,6 +300,25 @@ class CitaController extends BaseController
 
                     // Enviar el SMS
                     $smsService->sendSms($recipients, $mensaje);
+
+                    // Enviar Correo
+                    if (!empty($alumnoEncontrado['email'])) {
+                        $emailDataAlumno = [
+                            'alumno_nombre' => ($alumnoEncontrado['nombres'] . ' ' . $alumnoEncontrado['apellidos']),
+                            'atencion_fech' => $fecha,
+                            'hora_inicio' => $horaInicio,
+                            'hora_fin' => $horaFin,
+                        ];
+
+                        $subjectAlumno = "Citación al Área de Psicología IESTP - {$fecha}";
+                        $messageBodyAlumno = view('emails/cita_notificacion_alumno', ['data' => $emailDataAlumno]);
+
+                        $this->emailService->sendEmail(
+                            $alumnoEncontrado['email'],
+                            $subjectAlumno,
+                            $messageBodyAlumno
+                        );
+                    }
                 }
             }
 

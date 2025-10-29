@@ -1,6 +1,7 @@
 <?php
 $session = session();
 $userLogged = $session->get('user');
+$current = uri_string();
 ?>
 
 <aside id="sidebar" class="navegacion">
@@ -16,7 +17,7 @@ $userLogged = $session->get('user');
     </li>
 
     <?php if ($userLogged['rol'] === 'ADMIN' || $userLogged['rol'] === 'PSICOLOGO'): ?>
-    <li>
+    <li class="<?= $current === '' ? 'active' : '' ?>">
       <a href="<?= base_url('/') ?>">
         <span class="icon"><ion-icon name="home-outline"></ion-icon></span>
         <span class="title">Home</span>
@@ -25,7 +26,7 @@ $userLogged = $session->get('user');
     <?php endif; ?>
 
     <?php if ($userLogged['rol'] === 'ADMIN'): ?>
-    <li>
+    <li class="<?= $current === 'usuarios' ? 'active' : '' ?>">
       <a href="<?= base_url('/usuarios') ?>">
         <span class="icon"><ion-icon name="people-outline"></ion-icon></span>
         <span class="title">Usuarios</span>
@@ -33,14 +34,14 @@ $userLogged = $session->get('user');
     </li>
     <?php endif; ?>
 
-    <li>
+    <li class="<?= $current === 'alumnos' ? 'active' : '' ?>">
       <a href="<?= base_url('/alumnos') ?>">
         <span class="icon"><ion-icon name="school-outline"></ion-icon></span>
         <span class="title">Alumnos</span>
       </a>
     </li>
 
-    <li>
+    <li class="<?= $current === 'derivaciones' ? 'active' : '' ?>">
       <a href="<?= base_url('/derivaciones') ?>">
         <span class="icon"><ion-icon name="radio-outline"></ion-icon></span>
         <span class="title">Derivaciones</span>
@@ -48,7 +49,7 @@ $userLogged = $session->get('user');
     </li>
 
     <?php if ($userLogged['rol'] === 'ADMIN' || $userLogged['rol'] === 'PSICOLOGO'): ?>
-    <li>
+    <li class="<?= $current === 'citas' ? 'active' : '' ?>">
       <a href="<?= base_url('/citas') ?>">
         <span class="icon"><ion-icon name="heart-circle-outline"></ion-icon></span>
         <span class="title">Consultas</span>

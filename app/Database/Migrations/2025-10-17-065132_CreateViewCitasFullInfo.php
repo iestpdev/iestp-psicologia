@@ -27,6 +27,9 @@ class CreateViewCitasFullInfo extends Migration
                 c.alumno_id,
                 CONCAT(a.nombres, ' ', a.apellidos) AS alumno_nombres_completos,
                 a.dni AS alumno_dni,
+                a.fecha_nac as alumno_fecha_nacimiento,
+                a.ciclo AS alumno_ciclo,
+                pe.nombre AS alumno_programa_estudio,
 
                 d.id AS detalle_id,
                 d.problema,
@@ -45,6 +48,7 @@ class CreateViewCitasFullInfo extends Migration
             LEFT JOIN usuarios u ON u.id = c.usuario_id
             LEFT JOIN personas p ON p.id = u.persona_id
             LEFT JOIN alumnos a ON a.id = c.alumno_id
+            LEFT JOIN programas_estudios pe ON pe.id = a.programa_estudio_id
             LEFT JOIN detalle_cita d ON d.cita_id = c.id;
         ");
     }

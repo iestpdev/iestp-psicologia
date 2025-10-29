@@ -24,6 +24,9 @@ class CitaFullInfo extends BaseModel
         'alumno_id',
         'alumno_nombres_completos',
         'alumno_dni',
+        'alumno_fecha_nacimiento',
+        'alumno_ciclo',
+        'alumno_programa_estudio',
 
         'detalle_id',
         'motivo',

@@ -45,19 +45,26 @@
     box-sizing: border-box;
 }
 
+/* --- Hover y estado activo --- */
 .navegacion li:hover,
-.navegacion li.hovered {
+.navegacion li.hovered,
+.navegacion li.active,
+.navegacion li.active:hover {
     background: var(--white);
 }
 
 .navegacion li:hover a,
-.navegacion li.hovered a {
+.navegacion li.hovered a,
+.navegacion li.active a,
+.navegacion li.active:hover a {
     color: var(--blue);
 }
 
-/* Pseudoelementos para la curva */
+/* Pseudoelementos para la curva (hover y activo) */
 .navegacion ul li:hover a::before,
-.navegacion ul li.hovered a::before { /* curva superior derecha*/
+.navegacion ul li.hovered a::before,
+.navegacion ul li.active a::before,
+.navegacion ul li.active:hover a::before { /* curva superior derecha */
     content: "";
     position: absolute;
     right: 0;
@@ -71,7 +78,9 @@
 }
 
 .navegacion ul li:hover a::after,
-.navegacion ul li.hovered a::after { /* curva inferior derecha*/
+.navegacion ul li.hovered a::after,
+.navegacion ul li.active a::after,
+.navegacion ul li.active:hover a::after { /* curva inferior derecha */
     content: "";
     position: absolute;
     right: 0;
@@ -84,6 +93,7 @@
     pointer-events: none;
 }
 
+/* --- Iconos y títulos --- */
 .navegacion .icon {
     min-width: 45px;
     height: 45px;
@@ -107,13 +117,13 @@
     white-space: nowrap;
 }
 
+/* --- Marca superior --- */
 .brand {
     position: relative;
     margin-bottom: 40px;
     margin-left: -5px;
     pointer-events: none; 
 }
-
 
 .brand a .title {
     margin-top: 20px;
@@ -125,6 +135,7 @@
     font-size: 2rem;
 }
 
+/* --- Botón cerrar sidebar --- */
 .navegacion.activado .cerrar-sidebar {
     position: absolute;
     top: 65%;
@@ -141,6 +152,7 @@
     border: none;
     display: none;
 }
-.navegacion .cerrar-sidebar{
+
+.navegacion .cerrar-sidebar {
     display: none;
 }

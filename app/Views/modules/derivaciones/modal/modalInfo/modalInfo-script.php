@@ -54,7 +54,23 @@
             document.getElementById("motivo").textContent = derivacion.motivo || '---------';
 
             // --- FECHA DE CREACIÓN ---
-            document.getElementById("created-at").textContent = derivacion.created_at || '---------';
+            if (derivacion.created_at) {
+                const utcDate = new Date(derivacion.created_at.replace(' ', 'T') + 'Z');
+                const localDate = new Date(derivacion.created_at.replace(' ', 'T') + 'Z');
+
+                const formatted = localDate.toLocaleString('es-PE', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false
+                });
+
+                document.getElementById("created-at").textContent = formatted;
+            } else {
+                document.getElementById("created-at").textContent = '---------';
+            }
 
             // --- INFO DE CITA (solo si existe) ---
             const existingCitaBlock = document.getElementById("cita-info-block");
@@ -82,14 +98,14 @@
                                 <i class="fa fa-clock"></i>
                                 <div class="cita-item-content">
                                     <span class="cita-label">Hora inicio</span>
-                                    <span class="cita-value">${cita.hora_inicio?.substring(0,5) || '---------'}</span>
+                                    <span class="cita-value">${cita.hora_inicio?.substring(0, 5) || '---------'}</span>
                                 </div>
                             </div>
                             <div class="cita-item">
                                 <i class="fa fa-clock"></i>
                                 <div class="cita-item-content">
                                     <span class="cita-label">Hora fin</span>
-                                    <span class="cita-value">${cita.hora_fin?.substring(0,5) || '---------'}</span>
+                                    <span class="cita-value">${cita.hora_fin?.substring(0, 5) || '---------'}</span>
                                 </div>
                             </div>
                         </div>

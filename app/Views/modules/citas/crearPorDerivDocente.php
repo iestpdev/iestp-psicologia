@@ -35,7 +35,9 @@
                         'backUrl' => base_url('citas')
                     ]) ?>
 
-                    <form action="<?= base_url('api/citas/add') ?>" method="POST">
+                    <form action="<?= base_url('api/citas/add') ?>" method="POST" data-confirm
+                        data-title="Registrar Consulta" data-text="¿Desea registrar esta nueva consulta?"
+                        data-icon="question">
                         <?= csrf_field() ?>
                         <input type="hidden" name="isDerivacionDocente" value="<?= esc($derivacionEnviada['id']) ?>">
                         <div class="row">
@@ -202,6 +204,40 @@
         // inicializar al cargar
         radiosAsistencia[0].checked = true;
         toggleDetallesCita();
+    });
+</script>
+<?= $this->include('shared/alerts/sweetAlert2') ?>
+
+</script>
+<?= $this->include('shared/alerts/sweetAlert2') ?>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.querySelector('form[data-confirm]');
+        const submitButton = document.getElementById('btnSubmit');
+
+        if (form && submitButton) {
+            // Interceptar el submit del SweetAlert
+            form.addEventListener('submit', function (e) {
+                // Este preventDefault ya lo hace sweetAlert2.js,
+                // pero lo dejamos por seguridad.
+                e.preventDefault();
+
+                // Solo dejamos que sweetAlert2.js maneje la lógica.
+                // Por eso NO desactivamos el botón aquí.
+            });
+
+            // Escuchamos el evento global del SweetAlert
+            document.addEventListener('click', (ev) => {
+                if (ev.target && ev.target.classList.contains('swal2-confirm')) {
+                    // Usuario confirmó -> desactivar el botón justo antes del envío real
+                    submitButton.disabled = true;
+                    submitButton.textContent = 'Guardando...';
+                    submitButton.style.opacity = '0.7';
+                    submitButton.style.cursor = 'not-allowed';
+                }
+            });
+        }
     });
 </script>
 

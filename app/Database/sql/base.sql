@@ -68,9 +68,6 @@ CREATE TABLE alumnos (
     FOREIGN KEY (estado_civil_id) REFERENCES estados_civiles(id)
 ) ENGINE=INNODB;
 
-/*
- //TODO: la relacion entre parientes y familiares está mal hecha :')
- */
 CREATE TABLE parientes(
 	id						BIGINT AUTO_INCREMENT PRIMARY KEY,
 	nombres				VARCHAR(70) NOT NULL,
