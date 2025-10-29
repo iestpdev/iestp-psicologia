@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\Alumno;
 use App\Models\Cita;
+use App\Models\Configuracion;
 use App\Models\Derivacion;
 use App\Models\DetalleCita;
 use App\Models\Familiar;
@@ -14,6 +15,12 @@ use App\Services\AblyService;
 
 class CitaController extends BaseController
 {
+    protected $emailService;
+    public function __construct()
+    {
+        $this->emailService = service('emailService');
+    }
+
     public function index(): string
     {
         return view('modules/citas/index');
@@ -212,7 +219,7 @@ class CitaController extends BaseController
                 throw new \Exception("Error al crear Consulta");
 
             // =========================================================================
-            // LÓGICA DE DERIVACIÓN Y ENVÍO DE CORREO
+            // LÓGICA DE DERIVACIÓN Y ENVÍO DE CORREO A DOCENTE
             // =========================================================================
             if ($derivacionEncontrada && isset($derivacionEncontrada['id'])) {
                 $derivacionModel->marcarComoRecibido($derivacionEncontrada['id']);
@@ -237,12 +244,16 @@ class CitaController extends BaseController
                     $subject = "Confirmación: Derivación del alumno {$emailData['alumno_nombre']} recibida y citada";
                     $messageBody = view('emails/cita_recibida_notif_docente', ['data' => $emailData]);
 
-                    $emailService = service('emailService');
-                    $emailService->sendEmail(
-                        $derivacionEncontrada['usuario_correo'],
-                        $subject,
-                        $messageBody
-                    );
+                    $configuracionModel = new Configuracion();
+                    $configDocenteNotif = $configuracionModel->obtenerPorUsuarioId($derivacionEncontrada['docente_usuario_id']);
+
+                    if ($configDocenteNotif['notif_email']) {
+                        $this->emailService->sendEmail(
+                            $derivacionEncontrada['usuario_correo'],
+                            $subject,
+                            $messageBody
+                        );
+                    }
                 }
             }
 
@@ -267,7 +278,7 @@ class CitaController extends BaseController
             (new AblyService())->publishUpdate('citas_created');
 
             // =========================================================================
-            // ENVÍO DE SMS
+            // ENVÍO DE SMS Y/O EMAIL A ALUMNO
             // =========================================================================
             if ($citaId) {
                 $alumnoId = $derivacionEncontrada ? $derivacionEncontrada['alumno_id'] : $this->request->getPost('alumno');
@@ -302,7 +313,7 @@ class CitaController extends BaseController
                         $subjectAlumno = "Citación al Área de Psicología IESTP - {$fecha}";
                         $messageBodyAlumno = view('emails/cita_notificacion_alumno', ['data' => $emailDataAlumno]);
 
-                        $emailService->sendEmail(
+                        $this->emailService->sendEmail(
                             $alumnoEncontrado['email'],
                             $subjectAlumno,
                             $messageBodyAlumno
