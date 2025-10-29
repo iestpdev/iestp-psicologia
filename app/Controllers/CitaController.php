@@ -211,8 +211,39 @@ class CitaController extends BaseController
             if (!$citaId)
                 throw new \Exception("Error al crear Consulta");
 
+            // =========================================================================
+            // LÓGICA DE DERIVACIÓN Y ENVÍO DE CORREO
+            // =========================================================================
             if ($derivacionEncontrada && isset($derivacionEncontrada['id'])) {
                 $derivacionModel->marcarComoRecibido($derivacionEncontrada['id']);
+
+                // notificacion por correo
+                $usuarioModel = new Usuario();
+                $psicologo = $usuarioModel->obtenerPorId($citaData['usuario_id']);
+
+                if (!empty($derivacionEncontrada['usuario_correo']) && $psicologo) {
+                    $alumnoModel = new Alumno();
+                    $alumno = $alumnoModel->obtenerPorId($derivacionEncontrada['alumno_id']);
+
+                    $emailData = [
+                        'derivador_nombre' => $derivacionEncontrada['docente_nombres_completos'],
+                        'psicologo_nombre' => $psicologo['nombres'] . ' ' . $psicologo['apellidos'],
+                        'alumno_nombre' => ($alumno['nombres'] . ' ' . $alumno['apellidos']),
+                        'atencion_fech' => date('d/m/Y', strtotime($citaData['atencion_fech'])),
+                        'hora_inicio' => $citaData['hora_inicio'],
+                        'hora_fin' => $citaData['hora_fin'],
+                        'motivo' => $derivacionEncontrada['motivo'],
+                    ];
+                    $subject = "Confirmación: Derivación del alumno {$emailData['alumno_nombre']} recibida y citada";
+                    $messageBody = view('emails/cita_recibida_notif_docente', ['data' => $emailData]);
+
+                    $emailService = service('emailService');
+                    $emailService->sendEmail(
+                        $derivacionEncontrada['usuario_correo'],
+                        $subject,
+                        $messageBody
+                    );
+                }
             }
 
             if ($asistencia == 'ASISTIDO') {
@@ -258,6 +289,25 @@ class CitaController extends BaseController
 
                     // Enviar el SMS
                     $smsService->sendSms($recipients, $mensaje);
+
+                    // Enviar Correo
+                    if (!empty($alumnoEncontrado['email'])) {
+                        $emailDataAlumno = [
+                            'alumno_nombre' => ($alumnoEncontrado['nombres'] . ' ' . $alumnoEncontrado['apellidos']),
+                            'atencion_fech' => $fecha,
+                            'hora_inicio' => $horaInicio,
+                            'hora_fin' => $horaFin,
+                        ];
+
+                        $subjectAlumno = "Citación al Área de Psicología IESTP - {$fecha}";
+                        $messageBodyAlumno = view('emails/cita_notificacion_alumno', ['data' => $emailDataAlumno]);
+
+                        $emailService->sendEmail(
+                            $alumnoEncontrado['email'],
+                            $subjectAlumno,
+                            $messageBodyAlumno
+                        );
+                    }
                 }
             }
 
