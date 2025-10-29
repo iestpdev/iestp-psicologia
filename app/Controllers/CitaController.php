@@ -154,7 +154,7 @@ class CitaController extends BaseController
         $html = view('reports/citas/reporteCitasAsistidas', $data);
 
         try {
-            $html2pdf = new \Spipu\Html2Pdf\Html2Pdf('P', 'A4', 'es', true, 'UTF-8', [10, 10, 10, 10]);
+            $html2pdf = new \Spipu\Html2Pdf\Html2Pdf('L', 'A4', 'es', true, 'UTF-8', [10, 10, 10, 10]);
             $html2pdf->writeHTML($html);
             $this->response->setHeader('Content-Type', 'application/pdf');
             $html2pdf->output('Reporte-citas-asistidas.pdf');
