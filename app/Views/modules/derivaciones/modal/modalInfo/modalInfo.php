@@ -54,8 +54,6 @@
                 </div>
             </div>
 
-            <!-- //TODO: En caso de ser recibido, debe mostrarse la fecha que asigno el psicologo para atender esta situacion -->
-
             <!-- Footer -->
             <div class="modal-footer-custom">
                 <button type="button" class="btn-custom btn-custom-secondary" data-bs-dismiss="modal">Cerrar</button>
