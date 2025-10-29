@@ -35,7 +35,9 @@
                         'backUrl' => base_url('citas')
                     ]) ?>
 
-                    <form action="<?= base_url('api/citas/add') ?>" method="POST">
+                    <form action="<?= base_url('api/citas/add') ?>" method="POST" data-confirm
+                        data-title="Registrar Consulta" data-text="¿Desea registrar esta nueva consulta?"
+                        data-icon="question">
                         <?= csrf_field() ?>
                         <input type="hidden" name="isDerivacionDocente" value="<?= esc($derivacionEnviada['id']) ?>">
                         <div class="row">
@@ -204,5 +206,5 @@
         toggleDetallesCita();
     });
 </script>
-
+<?= $this->include('shared/alerts/sweetAlert2') ?>
 <?= $this->endSection() ?>
