@@ -49,7 +49,7 @@ class SmsService
         try {
             $client = Services::curlrequest([
                 'baseURI' => $this->config->apiUrl,
-                'timeout' => 5,
+                'timeout' => 30,
             ]);
 
             // Enviar la solicitud POST
