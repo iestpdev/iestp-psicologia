@@ -110,7 +110,7 @@
                                         Username <span class="required-mark">*</span>
                                     </label>
                                     <input type="text" name="username" class="form-control-custom"
-                                        value="<?= set_value('username') ?>" placeholder="Ingrese el username" required>
+                                        value="<?= set_value('username') ?>" placeholder="Ingrese el username" maxlength="18" required>
                                 </div>
                             </div>
 

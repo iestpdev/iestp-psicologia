@@ -6,9 +6,9 @@ use App\Models\BaseModel;
 
 class EstadoCivil extends BaseModel
 {
-    protected $table            = 'estados_civiles';
-    protected $primaryKey       = 'id';
-    protected $allowedFields    = [
+    protected $table = 'estados_civiles';
+    protected $primaryKey = 'id';
+    protected $allowedFields = [
         'nombre',
     ];
 
@@ -20,5 +20,16 @@ class EstadoCivil extends BaseModel
     public function obtenerPorId($id)
     {
         return $this->where('id', $id)->first();
+    }
+
+    public function obtenerPorNombre(string $nombre): ?int
+    {
+        $nombreLimpio = trim($nombre);
+
+        $resultado = $this->select('id')
+            ->where('nombre', $nombreLimpio)
+            ->first();
+
+        return $resultado ? (int) $resultado['id'] : null;
     }
 }

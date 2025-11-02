@@ -228,7 +228,7 @@ class CitaController extends BaseController
                 $usuarioModel = new Usuario();
                 $psicologo = $usuarioModel->obtenerPorId($citaData['usuario_id']);
 
-                if (!empty($derivacionEncontrada['usuario_correo']) && $psicologo) {
+                if (!empty($derivacionEncontrada['usuario_correo']) && $citaId) {
                     $alumnoModel = new Alumno();
                     $alumno = $alumnoModel->obtenerPorId($derivacionEncontrada['alumno_id']);
 

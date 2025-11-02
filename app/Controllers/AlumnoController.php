@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Libraries\ExcelImporter;
 use App\Models\Alumno;
 use App\Models\Cita;
 use App\Models\Familiar;
@@ -21,7 +22,7 @@ class AlumnoController extends BaseController
     {
         $session = session();
         $user = $session->get('user');
-        
+
         $alumnoModel = new Alumno();
         $alumno = $alumnoModel->obtenerPorId($alumnoId);
         if (!$alumno) {
@@ -38,7 +39,7 @@ class AlumnoController extends BaseController
 
         $citaModel = new Cita();
         if ($user && $user['rol'] === 'PSICOLOGO') {
-        $citas = $citaModel->listarPorAlumnoId($alumnoId);
+            $citas = $citaModel->listarPorAlumnoId($alumnoId);
         } else {
             $citas = $citaModel->listarPorAlumnoId($alumnoId, $user['id']);
         }
@@ -202,5 +203,90 @@ class AlumnoController extends BaseController
             'status' => 'success',
             'data' => $alumnos
         ]);
+    }
+
+    public function importarDataExcel()
+    {
+        $file = $this->request->getFile('archivo_excel');
+
+        if (!$file || !$file->isValid() || $file->hasMoved()) {
+            return redirect()->back()->with('error', 'Error al subir el archivo Excel. Selecciona un archivo válido.');
+        }
+
+        $allowedMimeTypes = [
+            'application/vnd.ms-excel',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        ];
+
+        if (!in_array($file->getMimeType(), $allowedMimeTypes)) {
+            return redirect()->back()->with('error', 'Formato de archivo no válido. Solo se permiten archivos .xls o .xlsx.');
+        }
+
+        $db = \Config\Database::connect();
+        $db->transBegin(); // *** INICIO DE LA TRANSACCIÓN ***
+
+        try {
+            $filePath = $file->getTempName();
+            $importer = new ExcelImporter();
+            $alumnosData = $importer->importAlumnosData($filePath);
+
+            // Manejar errores de lectura/formato
+            if (isset($alumnosData['error'])) {
+                throw new \Exception($alumnosData['error']);
+            }
+
+            if (empty($alumnosData)) {
+                throw new \Exception('El archivo Excel no contiene datos de alumnos válidos para importar.');
+            }
+
+            $alumnoModel = new Alumno();
+            $insertCount = 0;
+            $updateCount = 0;
+            $now = date('Y-m-d H:i:s');
+
+            // 2. Iteración y Lógica UPSERT
+            foreach ($alumnosData as $data) {
+                $dni = $data['dni'];
+
+                // Buscar si existe un alumno activo con ese DNI
+                $alumnoExistente = $alumnoModel->obtenerActivoPorDni($dni);
+
+                if ($alumnoExistente) {
+                    // Si existe, es un UPDATE
+                    $data['updated_at'] = $now;
+                    // Se usa el ID del alumno existente para actualizarlo
+                    if ($alumnoModel->actualizar($alumnoExistente['id'], $data)) {
+                        $updateCount++;
+                    } else {
+                        // Error específico si el update falla (e.g., violación de unicidad en email/teléfono)
+                        throw new \Exception("Error al actualizar alumno con DNI: {$dni}. Verifique que email y teléfono no estén duplicados en otros alumnos activos.");
+                    }
+                } else {
+                    // Si no existe, es un INSERT
+                    $data['created_at'] = $now;
+                    $data['updated_at'] = $now;
+                    // Se crea el nuevo registro
+                    if ($alumnoModel->crear($data)) {
+                        $insertCount++;
+                    } else {
+                        // Error específico si el insert falla
+                        throw new \Exception("Error al insertar nuevo alumno con DNI: {$dni}. Verifique que el DNI, email y teléfono no estén duplicados.");
+                    }
+                }
+            }
+
+            $db->transCommit(); // *** CONFIRMAR TRANSACCIÓN ***
+
+            return redirect()->to('/alumnos')->with('success', "Carga masiva completada con éxito. Se insertaron {$insertCount} alumnos y se actualizaron {$updateCount} alumnos.");
+
+        } catch (\Throwable $e) {
+            $db->transRollback(); // *** REVERTIR TRANSACCIÓN EN CASO DE ERROR ***
+
+            // Logueamos el error para debugging
+            log_message('error', 'Error en carga masiva de alumnos (UPSERT): ' . $e->getMessage());
+
+            // Devolvemos el mensaje de error al usuario
+            return redirect()->back()->withInput()->with('error', 'Hubo un error durante la carga masiva. Se revirtieron todos los cambios. Detalle: ' . $e->getMessage());
+        }
     }
 }

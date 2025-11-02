@@ -23,7 +23,7 @@ class PersonaUpdate
         'persona_id'=> 'permit_empty',
         'nombres'  => 'trim|required|min_length[2]|max_length[100]',
         'apellidos'=> 'trim|required|min_length[2]|max_length[100]',
-        'dni'      => 'trim|required|exact_length[8]|numeric|is_unique_soft[personas.dni,id,{persona_id}]',
+        'dni'      => 'trim|required|exact_length[8]|numeric',
         'telefono' => 'trim|permit_empty|exact_length[9]|numeric',
     ];
 
@@ -47,7 +47,6 @@ class PersonaUpdate
             'required' => 'El DNI es obligatorio',
             'exact_length' => 'El DNI debe tener exactamente 8 dígitos',
             'numeric' => 'El DNI solo puede contener números',
-            'is_unique_soft' => 'Este DNI ya está registrado',
         ],
         'telefono' => [
             'exact_length' => 'El teléfono debe tener exactamente 9 dígitos',

@@ -13,4 +13,5 @@ $routes->group('api',['filter' => 'auth'], function ($routes) {
     $routes->get('alumnos/delete/(:num)', 'AlumnoController::deleteAlumno/$1');
 
     $routes->get('alumnos/obtener-alumnos', 'AlumnoController::obtenerAlumnos');
+    $routes->post('alumnos/importar-xlsx', 'AlumnoController::importarDataExcel');
 });

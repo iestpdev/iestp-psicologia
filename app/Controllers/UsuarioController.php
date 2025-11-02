@@ -67,7 +67,6 @@ class UsuarioController extends BaseController
     public function deleteUsuario($id)
     {
         $usuarioModel = new Usuario();
-        $personaModel = new Persona();
 
         $db = \Config\Database::connect();
         $db->transBegin();
@@ -78,8 +77,6 @@ class UsuarioController extends BaseController
                 throw new \Exception("Usuario no encontrado");
             if (!$usuarioModel->eliminar($id))
                 throw new \Exception("Error al eliminar usuario");
-            if (!$personaModel->eliminar($usuario['persona_id']))
-                throw new \Exception("Error al eliminar persona asociada");
 
             $db->transCommit();
             return redirect()->to('/usuarios')->with('success', 'Usuario eliminado correctamente');
@@ -103,27 +100,44 @@ class UsuarioController extends BaseController
         $errors = array_merge($errors, runValidation('persona_create', $this->request));
         $errors = array_merge($errors, runValidation('usuario_create', $this->request));
 
+        $dni = $this->request->getPost('dni');
+        $rol = $this->request->getPost('rol');
+
+        if (empty($errors) && $dni && $rol) {
+            $usuarioModel = new Usuario();
+            if ($usuarioModel->existeUsuarioConDniYRol($dni, $rol)) {
+                $errors['rol'] = 'La persona con DNI ' . $dni . ' ya tiene un usuario registrado con el rol ' . $rol . '. Para asignarle otro, el rol debe ser diferente.';
+            }
+        }
         if (!empty($errors))
             return redirect()->to('/usuarios/crear')->withInput()->with('errors', $errors);
 
         $db = \Config\Database::connect();
         $db->transBegin();
         try {
+            $personaModel = new Persona();
+            $personaExistente = $personaModel->where('dni', $dni)->first();
             $personaData = normalize_input([
                 'nombres' => $this->request->getPost('nombres'),
                 'apellidos' => $this->request->getPost('apellidos'),
                 'dni' => $this->request->getPost('dni'),
                 'telefono' => $this->request->getPost('telefono'),
             ]);
-            $personaModel = new Persona();
-            $personaId = $personaModel->crear($personaData);
-            if (!$personaId)
-                throw new \Exception("Error al crear Persona");
+
+            if ($personaExistente) {
+                $personaId = (int) $personaExistente['id'];
+                $personaModel->update($personaId, $personaData);
+
+            } else {
+                $personaId = $personaModel->crear($personaData);
+                if (!$personaId)
+                    throw new \Exception("Error al crear Persona");
+            }
 
             $usuarioData = normalize_input([
                 'correo_institucional' => $this->request->getPost('correo'),
                 'username' => $this->request->getPost('username'),
-                'userpass' => $this->request->getPost('userpass'),
+                'userpass' => $this->request->getPost('password'),
                 'persona_id' => $personaId,
                 'rol' => $this->request->getPost('rol'),
                 'estado' => $this->request->getPost('estado') ?? 1,
@@ -141,7 +155,6 @@ class UsuarioController extends BaseController
             ]);
             if (!$configuracionId)
                 throw new \Exception("Error al crear configuraciones predeterminadas");
-
             $db->transCommit();
             return redirect()->to('/usuarios')->with('success', 'Usuario registrado con éxito');
         } catch (\Throwable $e) {
@@ -165,17 +178,22 @@ class UsuarioController extends BaseController
         $errors = array_merge($errors, runValidation('persona_update', $this->request));
         $errors = array_merge($errors, runValidation('usuario_update', $this->request));
 
-        if (!empty($errors))
-            return redirect()->back()->withInput()->with('errors', $errors);
+        $usuarioModel = new Usuario();
+        $dni = $this->request->getPost('dni');
+        $rol = $this->request->getPost('rol');
+        if ($dni && $rol) {
+            if ($usuarioModel->existeOtroUsuarioConDniYRol($dni, $rol, (int) $id)) {
+                $errors['dni'] = "Ya existe otro usuario registrado con el DNI {$dni} y el Rol {$rol}.";
+            }
+        }
+        if (!empty($errors)) return redirect()->back()->withInput()->with('errors', $errors);
 
         $db = \Config\Database::connect();
         $db->transBegin();
 
         try {
-            $usuarioModel = new Usuario();
             $usuarioActual = $usuarioModel->obtenerPorId($id);
-            if (!$usuarioActual)
-                throw new \Exception("Usuario no encontrado");
+            if (!$usuarioActual) throw new \Exception("Usuario no encontrado (ID: {$id})");
 
             $usuarioData = normalize_input([
                 'correo_institucional' => $this->request->getPost('correo'),
