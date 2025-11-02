@@ -23,6 +23,14 @@ class Alumno extends BaseModel
         'estado_civil_id',
     ];
 
+    public function obtenerActivoPorDni(string $dni): ?array
+    {
+        return $this->select('id, dni')
+            ->where('dni', $dni)
+            ->where('deleted_at', null)
+            ->first();
+    }
+
     public function eliminar(int $id): bool
     {
         return $this->delete($id);
