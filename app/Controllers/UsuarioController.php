@@ -105,7 +105,7 @@ class UsuarioController extends BaseController
 
         if (empty($errors) && $dni && $rol) {
             $usuarioModel = new Usuario();
-            if ($usuarioModel->existeUsuarioConDniYRol($dni, $rol)) {
+            if ($usuarioModel->existeOtroUsuarioConDniYRol($dni, $rol)) {
                 $errors['rol'] = 'La persona con DNI ' . $dni . ' ya tiene un usuario registrado con el rol ' . $rol . '. Para asignarle otro, el rol debe ser diferente.';
             }
         }
