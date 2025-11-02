@@ -67,8 +67,4 @@ class Persona extends BaseModel
      * @param int $id ID de la persona a eliminar.
      * @return bool true si la eliminación fue exitosa, false si falló.
      */
-    public function eliminar(int $id): bool
-    {
-        return $this->delete($id);
-    }
 }

@@ -22,8 +22,8 @@ class UsuarioCreate
      * @var array
      */
     public array $rules = [
-        'correo' => 'trim|required|valid_email|regex_match[/^[\w\.-]+@iestpchincha\.edu\.pe$/]|is_unique_soft[usuarios.correo_institucional]',
-        'username' => 'trim|required|is_unique_soft[usuarios.username]|min_length[4]|max_length[70]',
+        'correo' => 'trim|required|valid_email|regex_match[/^[\w\.-]+@iestpchincha\.edu\.pe$/]',
+        'username' => 'trim|required|min_length[4]|max_length[18]|is_unique_soft[usuarios.username]',
         'password' => 'required|regex_match[/^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/]',
         'rol' => 'required|in_list[ADMIN,PSICOLOGO,DOCENTE]',
         'estado' => 'in_list[0,1]',
@@ -39,13 +39,12 @@ class UsuarioCreate
             'required' => 'Debe ingresar el correo institucional',
             'valid_email' => 'El correo no es válido',
             'regex_match' => 'El correo debe ser del dominio @iestpchincha.edu.pe',
-            'is_unique_soft' => 'Este correo ya está registrado',
         ],
         'username' => [
             'required' => 'El usuario es obligatorio',
             'is_unique_soft' => 'Este nombre de usuario ya está registrado',
             'min_length' => 'El usuario debe tener mínimo 4 caracteres',
-            'max_length' => 'El usuario no puede superar 70 caracteres',
+            'max_length' => 'El usuario no puede superar 18 caracteres',
         ],
         'password' => [
             'required' => 'Debe ingresar una contraseña',

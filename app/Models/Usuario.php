@@ -36,6 +36,18 @@ class Usuario extends BaseModel
         'codigo_2fa_expira',
     ];
 
+    public function existeOtroUsuarioConDniYRol(string $dni, string $rol, ?int $idExcluir = null): bool
+    {
+        $builder = $this->db->table($this->table . ' u');
+        $builder->join('personas p', 'u.persona_id = p.id', 'left');
+        $builder->where('p.dni', $dni);
+        $builder->where('u.rol', $rol);
+        $builder->where('u.deleted_at', null);
+        if ($idExcluir !== null) $builder->where('u.id !=', $idExcluir);
+        
+        return $builder->countAllResults() > 0;
+    }
+
     /**
      * Obtiene un usuario por su nombre de usuario.
      *
